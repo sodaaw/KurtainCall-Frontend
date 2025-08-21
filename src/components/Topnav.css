@@ -237,30 +237,41 @@ header.topnav::after {
 .topnav .search-icon {
   font-size: 20px;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
   transition: all 0.3s ease;
   outline: none;
   color: var(--gold);
-  background: rgba(139, 0, 0, 0.2);
-  border: 1px solid transparent;
+  background: rgba(139, 0, 0, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 23px;
+  min-height: 25px;
 }
 
 .topnav .search-icon:hover {
-  background: rgba(139, 0, 0, 0.4);
+  background: rgba(139, 0, 0, 0.25);
   border-color: var(--gold);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(139, 0, 0, 0.3);
+  color: var(--gold-light);
 }
 
 .topnav .search-icon:active {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(139, 0, 0, 0.3);
+}
+
+.topnav .search-icon svg {
+  transition: all 0.3s ease;
+}
+
+.topnav .search-icon:hover svg {
+  transform: scale(1.1);
 }
 
 
@@ -269,29 +280,67 @@ header.topnav::after {
 .topnav .lang-btn {
   font-size: 20px;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
   transition: all 0.3s ease;
   color: var(--gold);
-  background: rgba(139, 0, 0, 0.2);
-  border: 1px solid transparent;
+  background: rgba(139, 0, 0, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .topnav .lang-btn:hover {
-  background: rgba(139, 0, 0, 0.4);
+  background: rgba(139, 0, 0, 0.25);
   border-color: var(--gold);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(139, 0, 0, 0.3);
+  color: var(--gold-light);
 }
 
 .topnav .lang-btn:active {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(139, 0, 0, 0.3);
+}
+
+.topnav .lang-btn svg {
+  transition: all 0.3s ease;
+}
+
+.topnav .lang-btn:hover svg {
+  transform: scale(1.1);
+}
+
+/* 아이콘 공통 스타일 */
+.topnav .search-icon,
+.topnav .lang-btn {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.topnav .search-icon::before,
+.topnav .lang-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(139, 0, 0, 0.1));
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.topnav .search-icon:hover::before,
+.topnav .lang-btn:hover::before {
+  opacity: 1;
 }
 
 
