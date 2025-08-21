@@ -1,0 +1,230 @@
+/* TestResults 페이지 전체 컨테이너 */
+.testresults-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+  color: #e0e0e0;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 커튼 배경 효과 */
+.testresults-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(45deg, 
+    rgba(139, 0, 0, 0.1) 0%, 
+    rgba(255, 215, 0, 0.05) 25%, 
+    rgba(139, 0, 0, 0.1) 50%, 
+    rgba(255, 215, 0, 0.05) 75%, 
+    rgba(139, 0, 0, 0.1) 100%);
+  transform: skewX(-15deg);
+  z-index: -1;
+  animation: curtainFloat 20s ease-in-out infinite;
+}
+
+.testresults-container::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(-45deg, 
+    rgba(255, 215, 0, 0.05) 0%, 
+    rgba(139, 0, 0, 0.1) 25%, 
+    rgba(255, 215, 0, 0.05) 50%, 
+    rgba(139, 0, 0, 0.1) 75%, 
+    rgba(255, 215, 0, 0.05) 100%);
+  transform: skewX(15deg);
+  z-index: -1;
+  animation: curtainFloat 25s ease-in-out infinite reverse;
+}
+
+@keyframes curtainFloat {
+  0%, 100% { transform: skewX(-15deg) translateX(0); }
+  50% { transform: skewX(-15deg) translateX(20px); }
+}
+
+/* 메인 콘텐츠 */
+.testresults-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 헤더 */
+.testresults-header {
+  text-align: center;
+  margin: 40px 0 50px 0;
+}
+
+.testresults-title {
+  color: #FFD700;
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 20px 0;
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+  letter-spacing: -1px;
+}
+
+.testresults-subtitle {
+  color: #9ca3af;
+  font-size: 1.2rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 타입 히어로 섹션 */
+.type-hero {
+  background: rgba(139, 0, 0, 0.18);
+  border: 2px solid #8B0000;
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.type-code {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #FFD700;
+  text-shadow: 0 0 24px rgba(255, 215, 0, 0.35);
+  margin-bottom: 10px;
+}
+
+.type-desc {
+  color: #e0e0e0;
+  margin: 0;
+}
+
+/* 추천 섹션 */
+.recommendations {
+  margin-top: 28px;
+  background: rgba(139, 0, 0, 0.1);
+  border: 1px solid #8B0000;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.recommendations h2 {
+  color: #FFD700;
+  margin: 0 0 14px 0;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag {
+  background: rgba(139, 0, 0, 0.25);
+  border: 1px solid #FFD700;
+  color: #FFD700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid #8B0000;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+/* 액션 버튼 */
+.action-buttons {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.retake-btn {
+  background: linear-gradient(135deg, #8B0000, #A52A2A);
+  border: 3px solid #FFD700;
+  color: #FFD700;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.retake-btn:hover {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #8B0000;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .testresults-title {
+    font-size: 2.5rem;
+  }
+  
+  .type-code {
+    font-size: 2.5rem;
+  }
+  
+  .recommendations {
+    padding: 16px;
+  }
+  
+  .cards {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .testresults-content {
+    padding: 15px;
+  }
+  
+  .testresults-title {
+    font-size: 2rem;
+  }
+  
+  .type-code {
+    font-size: 2rem;
+    letter-spacing: 2px;
+  }
+  
+  .type-hero {
+    padding: 20px 16px;
+  }
+  
+  .recommendations {
+    padding: 14px;
+  }
+  
+  .tag {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+  }
+  
+  .card {
+    padding: 12px;
+  }
+  
+  .retake-btn {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+}
