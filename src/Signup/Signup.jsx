@@ -22,7 +22,6 @@ export default function Signup() {
   const [gender, setGender] = useState('');      // "0" | "1"
   const [userid, setUserid] = useState('');
   const [password, setPassword] = useState('');
-  const [age, setAge] = useState('');
 
   // 토글
   const [country, setCountry] = useState('Korea');
@@ -37,7 +36,6 @@ export default function Signup() {
   const navigate = useNavigate();
 
   // 타입 주석 제거
-  const isInt = (v) => /^\d+$/.test(String(v));
   const isValidGender = gender === '0' || gender === '1';
 
   const canSubmit =
@@ -45,7 +43,6 @@ export default function Signup() {
     userid.trim() &&
     password &&
     isValidGender &&
-    isInt(age) &&
     country &&
     language &&
     selectedTags.length > 0 &&
@@ -69,7 +66,6 @@ export default function Signup() {
       password,
       country,
       language,
-      age: parseInt(age, 10),
       interestTag: selectedTags.map(tag => `#${tag}`).join(','),   // #tag1,#tag2 형태로 전송
     };
 
@@ -212,19 +208,7 @@ export default function Signup() {
             </div>
           </div>
 
-          {/* 나이 */}
-          <div className="form-group">
-            <label htmlFor="age" className="form-label">나이</label>
-            <input
-              id="age"
-              type="number"
-              className="form-input"
-              placeholder="예: 23"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              min="0"
-            />
-          </div>
+
 
           {/* 관심 태그(다중선택) */}
           <div className="form-group">

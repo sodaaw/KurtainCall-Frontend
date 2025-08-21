@@ -319,6 +319,23 @@ const Genre = () => {
       <h2 className="genre-title">
         Recommendation For U
         <span className="genre-subtitle">* 테스트를 진행하면 맞춤 추천결과를 볼 수 있습니다.</span>
+        <button 
+          className="test-button"
+          onClick={() => navigate('/test/my-test')}
+          style={{
+            marginLeft: '15px',
+            padding: '8px 16px',
+            backgroundColor: '#B36B00',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: '500'
+          }}
+        >
+          Test
+        </button>
       </h2>
       {category && <span className="category-chip">{category}</span>}
 
