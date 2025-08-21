@@ -8,36 +8,85 @@ const AITranslation = () => {
   const [translationResult, setTranslationResult] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  
+  // Web Speech API 관련 상태
+  const [recognition, setRecognition] = useState(null);
 
-  const handleVoiceInput = () => {
-    if (!isListening) {
-      // 음성 인식 시작
-      setIsListening(true);
-      setIsProcessing(true);
-      setTranslationResult('음성 인식 중... 말씀해 주세요.');
+    // Web Speech API 초기화
+  React.useEffect(() => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognitionInstance = new SpeechRecognition();
       
-      // 실제 음성 인식 API를 여기에 연결할 수 있습니다
-      // 현재는 시뮬레이션으로 3초 후 결과 표시
-      setTimeout(() => {
-        const sampleTexts = [
-          '안녕하세요, 오늘 날씨가 정말 좋네요.',
-          '저는 한국어를 공부하고 있어요.',
-          '맛있는 음식을 먹고 싶어요.',
-          '한국 여행을 계획하고 있어요.',
-          '친구들과 만나서 이야기하고 싶어요.'
-        ];
-        
-        const randomText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
-        setTranslationResult(randomText);
+      recognitionInstance.continuous = false;
+      recognitionInstance.interimResults = false;
+      recognitionInstance.lang = 'ko-KR'; // 한국어 설정
+      
+      recognitionInstance.onstart = () => {
+        setIsListening(true);
+        setTranslationResult('음성 인식 중... 말씀해 주세요.');
+      };
+      
+             recognitionInstance.onresult = (event) => {
+         const transcript = event.results[0][0].transcript;
+         setTranslationResult(transcript);
+         setIsListening(false);
+         setIsProcessing(false);
+         // 음성 인식 완료 후 자동으로 중지
+         recognitionInstance.stop();
+       };
+      
+      recognitionInstance.onerror = (event) => {
+        console.error('음성 인식 오류:', event.error);
+        if (event.error === 'not-allowed') {
+          setTranslationResult('마이크 접근이 거부되었습니다. 브라우저에서 마이크 권한을 허용해주세요.');
+        } else if (event.error === 'no-speech') {
+          setTranslationResult('음성이 감지되지 않았습니다. 다시 시도해주세요.');
+        } else {
+          setTranslationResult(`음성 인식 오류: ${event.error}`);
+        }
+        setIsListening(false);
         setIsProcessing(false);
-        // setIsListening(false); // 자동으로 꺼지지 않도록 주석 처리
-      }, 3000);
+      };
       
+      recognitionInstance.onend = () => {
+        setIsListening(false);
+        setIsProcessing(false);
+      };
+      
+      setRecognition(recognitionInstance);
     } else {
-      // 음성 인식 중지 (사용자가 버튼을 다시 눌렀을 때)
+      setTranslationResult('이 브라우저는 음성 인식을 지원하지 않습니다.');
+    }
+  }, []);
+
+  // 음성 인식 시작
+  const startRecording = () => {
+    if (recognition) {
+      // 이전 결과 초기화
+      setTranslationResult('');
+      setIsProcessing(true);
+      recognition.start();
+    }
+  };
+
+  // 음성 인식 중지
+  const stopRecording = () => {
+    if (recognition && isListening) {
+      recognition.stop();
       setIsListening(false);
       setIsProcessing(false);
       setTranslationResult('음성 인식이 중지되었습니다.');
+    }
+  };
+
+     
+
+  const handleVoiceInput = () => {
+    if (!isListening) {
+      startRecording();
+    } else {
+      stopRecording();
     }
   };
 
@@ -112,26 +161,51 @@ const AITranslation = () => {
             <p className="sub-greeting">마이크로 말하고, 스피커로 들어보세요!</p>
           </div>
 
-          {/* 번역 결과 표시 영역 */}
-          <div className="translation-results">
-            <div className="result-card">
-              <h3>번역 결과</h3>
-              <div className="result-content">
-                {translationResult ? (
-                  <p className={`result-text ${isProcessing ? 'processing' : ''}`}>
-                    {translationResult}
-                  </p>
-                ) : (
-                  <p className="placeholder-text">마스코트의 마이크를 눌러서 음성 인식을 시작하세요</p>
-                )}
-              </div>
+                     {/* 번역 결과 표시 영역 */}
+           <div className="translation-results">
+             <div className="result-card">
+               <h3>번역 결과</h3>
+               <div className="result-content">
+                 {translationResult ? (
+                   <p className={`result-text ${isProcessing ? 'processing' : ''}`}>
+                     {translationResult}
+                   </p>
+                 ) : (
+                   <p className="placeholder-text">마스코트의 마이크를 눌러서 음성 인식을 시작하세요</p>
+                 )}
+                 
+                 {/* 마이크 권한 문제 시 해결 방법 안내 */}
+                 {translationResult && translationResult.includes('마이크 접근') && (
+                   <div className="permission-help">
+                     <button 
+                       className="permission-btn"
+                       onClick={() => window.location.reload()}
+                       style={{
+                         marginTop: '15px',
+                         padding: '8px 16px',
+                         backgroundColor: '#FFD700',
+                         color: '#000',
+                         border: 'none',
+                         borderRadius: '6px',
+                         cursor: 'pointer',
+                         fontSize: '14px'
+                       }}
+                     >
+                       🔄 페이지 새로고침
+                     </button>
+                     <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '8px' }}>
+                       마이크 권한을 허용한 후 이 버튼을 클릭하세요
+                     </p>
+                   </div>
+                 )}
+               </div>
               
-              {/* 상태 표시 */}
-              {isListening && (
-                <div className="status-indicator">
-                  <p className="status-text">🎤 음성 인식 중... 다시 눌러서 중지하세요!</p>
-                </div>
-              )}
+                             {/* 상태 표시 */}
+               {isListening && (
+                 <div className="status-indicator">
+                   <p className="status-text">🎤 음성 인식 중... 마이크 버튼을 다시 눌러서 중지하세요!</p>
+                 </div>
+               )}
               
               {isSpeaking && (
                 <div className="status-indicator">

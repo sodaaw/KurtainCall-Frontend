@@ -80,13 +80,13 @@ export default function Topnav() {
           >
             🔍
           </span>
-          <button 
-            className="lang-btn" 
-            onClick={() => setIsLanguageModalOpen(true)}
-            aria-label="Change language"
-          >
-            🌐
-          </button>
+                     <button 
+             className="lang-btn" 
+             onClick={() => setIsLanguageModalOpen(true)}
+             aria-label="Change language"
+           >
+             🌐
+           </button>
         </div>
       </header>
 

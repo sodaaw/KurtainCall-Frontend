@@ -13,53 +13,38 @@ const CATS = [
   { 
     label: "Comedy", 
     slug: "comedy", 
-    icon: `<svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-      <circle cx="8" cy="9" r="1"/>
-      <circle cx="16" cy="9" r="1"/>
-      <path d="M12 16c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
-    </svg>`
+    icon: "😄",
+    description: "웃음과 유머"
   },
   { 
     label: "Romance", 
     slug: "romance", 
-    icon: `<svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-    </svg>`
+    icon: "💕",
+    description: "사랑과 로맨스"
   },
   { 
     label: "Horror", 
     slug: "horror", 
-    icon: `<svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-      <path d="M12 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-      <path d="M12 12c-2.5 0-4.5 1.5-4.5 4.5h9c0-3-2-4.5-4.5-4.5z"/>
-    </svg>`
+    icon: "👻",
+    description: "공포와 스릴"
   },
   { 
     label: "Tragedy", 
     slug: "tragedy", 
-    icon: `<svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-      <path d="M12 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-      <path d="M12 12c-2.5 0-4.5 1.5-4.5 4.5h9c0-3-2-4.5-4.5-4.5z"/>
-    </svg>`
+    icon: "😢",
+    description: "비극과 슬픔"
   },
   { 
     label: "Thriller", 
     slug: "thriller", 
-    icon: `<svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-      <path d="M12 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-      <path d="M12 12c-2.5 0-4.5 1.5-4.5 4.5h9c0-3-2-4.5-4.5-4.5z"/>
-    </svg>`
+    icon: "💥",
+    description: "긴장과 액션"
   },
   { 
     label: "Musical", 
     slug: "musical", 
-    icon: `<svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-    </svg>`
+    icon: "🎵",
+    description: "음악과 노래"
   },
 ];
 
@@ -130,12 +115,10 @@ function CategoryGrid({ onPick }) {
         {CATS.map((c) => (
           <button key={c.slug} className="cat" onClick={() => onPick(c.slug)}>
             <div className="cat-box">
-              <div 
-                className="cat-icon" 
-                dangerouslySetInnerHTML={{ __html: c.icon }}
-              ></div>
+              <div className="cat-icon">{c.icon}</div>
             </div>
             <div className="cat-label">{c.label}</div>
+            <div className="cat-description">{c.description}</div>
           </button>
         ))}
       </div>
