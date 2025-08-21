@@ -105,7 +105,7 @@ export default function Topnav() {
             <li><a href="/" onClick={closeSideMenu}>Home</a></li>
             <li><a href="/genre" onClick={closeSideMenu}>Genre</a></li>
             <li><a href="/community" onClick={closeSideMenu}>Community</a></li>
-            <li><a href="/foodmap" onClick={closeSideMenu}>Food Map</a></li>
+            <li><a href="/map" onClick={closeSideMenu}>Map</a></li>
             <li><a href="/test/my-test" onClick={closeSideMenu}>Test</a></li>
             <li><a href="/ai-translation" onClick={closeSideMenu}>AI Translation</a></li>
             <li><a href="/login" onClick={closeSideMenu}>Login</a></li>

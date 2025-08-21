@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Foodmap from "./foodmap/foodmap";
+import Map from "./Map/Map";
 import Genre from './Genre/Genre';
 import Community from './Community/Community';
 import CountryBoard from './Community/CountryBoard';
@@ -28,8 +28,8 @@ const router = createBrowserRouter([
     element: <Main />,
   },
   {
-    path: "/foodmap",
-    element: <Foodmap />,
+    path: "/map",
+    element: <Map />,
   },
   {
     path: "/genre",

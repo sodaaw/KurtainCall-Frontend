@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topnav from '../components/Topnav';
-import './Foodmap.css';
+import './Map.css';
 
 // @ts-ignore
 import { feature } from 'topojson-client';
 
-const Foodmap = () => {
+const Map = () => {
   const navigate = useNavigate();
   const mapRef = useRef(null);
 
@@ -246,8 +246,8 @@ const Foodmap = () => {
       <Topnav />
 
       <div className="map-header-text">
-        <h2>우리 지역 근처 맛집 찾기</h2>
-        <p>서울시에서 원하는 구역을 선택하세요.</p>
+        <h2>Map</h2>
+        <p>Select the desired district in Seoul.</p>
       </div>
 
       <div className="map-content">
@@ -301,4 +301,4 @@ const Foodmap = () => {
   );
 };
 
-export default Foodmap;
+export default Map;
