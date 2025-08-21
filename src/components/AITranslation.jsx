@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Topnav from './Topnav';
 import './AITranslation.css';
-
+const API_BASE = 'https://re-local.onrender.com';
+  
 const AITranslation = () => {
-  const [userName, setUserName] = useState('User');
+
   const [isListening, setIsListening] = useState(false);
   const [translationResult, setTranslationResult] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -222,65 +223,32 @@ const AITranslation = () => {
     }
   };
 
-  // 백엔드로 음성 파일 업로드
   const uploadAudioToBackend = async (audioBlob) => {
     const formData = new FormData();
-    
-    // 1. 필드 이름이 정확히 'audio'인지 확인
     formData.append('audio', audioBlob, 'recording.webm');
-    
-    console.log('백엔드로 음성 파일 업로드 시작...', {
-      type: audioBlob.type,
-      size: audioBlob.size,
-      filename: 'recording.webm'
-    });
-    
-    // 2. Content-Type은 FormData가 자동으로 설정 (multipart/form-data)
-    const response = await fetch('/api/transcribe/upload', {
+  
+    const res = await fetch(`${API_BASE}/api/transcribe/upload`, {
       method: 'POST',
       body: formData,
-      // Content-Type은 자동 설정되므로 명시하지 않음
     });
-    
-    if (!response.ok) {
-      throw new Error(`업로드 실패: ${response.status}`);
-    }
-    
-    const result = await response.json();
-    console.log('업로드 성공, 서버 응답:', result);
-    
-    // 3. 서버가 돌려준 filename 반환
-    return result.filename;
+    if (!res.ok) throw new Error(`업로드 실패: ${res.status}`);
+  
+    const json = await res.json();
+    console.log('업로드 성공, 서버 응답:', json); // { filename, mimetype, size ... }
+    return json.filename;
   };
+  
 
   // 백엔드에서 번역된 음성 파일 받아오기 (GET)
   const getSTSResult = async (filename) => {
-    try {
-      console.log('번역된 음성 파일 요청 시작:', filename);
-      
-      // GET /api/transcribe/sts로 번역된 mp3 파일 받아오기
-      const response = await fetch(`/api/transcribe/sts?filename=${filename}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'audio/mpeg'  // mp3 파일 요청
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`번역된 음성 파일 요청 실패: ${response.status}`);
-      }
-      
-      // 응답을 mp3 Blob으로 변환
-      const audioBlob = await response.blob();
-      console.log('번역된 음성 파일 수신 성공:', audioBlob.size, 'bytes');
-      
-      return audioBlob;
-      
-    } catch (error) {
-      console.error('번역된 음성 파일 요청 오류:', error);
-      throw error;
-    }
+    const res = await fetch(
+      `${API_BASE}/api/transcribe/sts?filename=${encodeURIComponent(filename)}`,
+      { headers: { Accept: 'audio/mpeg' } }
+    );
+    if (!res.ok) throw new Error(`번역된 음성 파일 요청 실패: ${res.status}`);
+    return await res.blob(); // mp3 Blob
   };
+  
 
   // 받은 mp3 파일 재생
   const playAudioResult = async (audioBlob) => {
@@ -302,32 +270,6 @@ const AITranslation = () => {
     } catch (error) {
       console.error('오디오 재생 오류:', error);
       throw error;
-    }
-  };
-
-  // 모드별 동작 함수들 (기존)
-  const handleRealtimeTranslation = async (speechText) => {
-    setIsProcessing(true);
-    
-    try {
-      // 1. STT 결과 저장
-      setIntermediateResults(prev => ({ ...prev, stt: speechText }));
-      
-      // 2. 번역 수행 (실제 API 호출)
-      const translatedText = await performTranslation(speechText, fromLanguage, toLanguage);
-      setIntermediateResults(prev => ({ ...prev, translation: translatedText }));
-      
-      // 3. TTS 출력 (활성화된 경우)
-      if (ttsEnabled) {
-        await performTTS(translatedText, toLanguage);
-      }
-      
-      setTranslationResult(translatedText);
-    } catch (error) {
-      console.error('실시간 통역 오류:', error);
-      setTranslationResult('통역 중 오류가 발생했습니다.');
-    } finally {
-      setIsProcessing(false);
     }
   };
 
@@ -453,19 +395,6 @@ const AITranslation = () => {
     }
   };
 
-  const handleVoiceOutput = () => {
-    if (translationResult && !isProcessing) {
-      setIsSpeaking(true);
-      
-      // 실제 TTS API를 여기에 연결할 수 있습니다
-      // 현재는 시뮬레이션으로 2초 후 완료
-      setTimeout(() => {
-        setIsSpeaking(false);
-        // 여기에 실제 음성 출력 로직 추가
-        console.log('음성 출력:', translationResult);
-      }, 2000);
-    }
-  };
 
   return (
     <div className="ai-translation-container">
@@ -487,7 +416,7 @@ const AITranslation = () => {
               className="mode-dropdown"
             >
               <option value="realtime">🗣️ 바로 통역 (실시간 STS)</option>
-              <option value="text">🔤 텍스트 입력 번역</option>
+              <option value="text">🔤 텍스트 번역</option>
               <option value="stt">🗣️ 음성 → 텍스트 (STT)</option>
               <option value="tts">🔊 텍스트 → 음성 출력 (TTS)</option>
               <option value="text-tts">🌐 텍스트로 통역 (Text → 번역 → TTS)</option>
@@ -541,7 +470,7 @@ const AITranslation = () => {
                 <textarea
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder="번역할 텍스트를 입력하세요..."
+                  placeholder={selectedMode === 'text' ? "번역할 텍스트를 입력하세요 (음성 없이 텍스트만 번역)" : "번역할 텍스트를 입력하세요..."}
                   className="text-input"
                   rows="4"
                 />
@@ -551,7 +480,7 @@ const AITranslation = () => {
                     className="translate-btn"
                     disabled={!inputText.trim() || isProcessing}
                   >
-                    번역하기
+                    {selectedMode === 'text' ? '텍스트 번역하기' : '번역하기'}
                   </button>
                 )}
                 {selectedMode === 'tts' && (
