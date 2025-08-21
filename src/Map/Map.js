@@ -246,7 +246,7 @@ const Map = () => {
       <Topnav />
 
       <div className="map-header-text">
-        <h2>Map</h2>
+        <h2>Map 실험</h2>
         <p>Select the desired district in Seoul.</p>
       </div>
 
