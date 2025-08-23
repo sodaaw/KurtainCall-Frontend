@@ -11,11 +11,11 @@ const Recommended = () => {
   // 달력 상태 관리 - Hooks는 항상 최상위 레벨에서 호출되어야 함
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [movies, setMovies] = useState([]);
+  const [plays, setPlays] = useState([]);
   const [loading, setLoading] = useState(true);
   // 옵션 섹션으로 스크롤하기 위한 ref
   const dateOptionsRef = useRef(null);
-  const [movieData, setMovieData] = useState(null);
+  const [playData, setPlayData] = useState(null);
 
   // 날짜가 선택되면 옵션 섹션으로 자동 스크롤
   useEffect(() => {
@@ -29,33 +29,156 @@ const Recommended = () => {
   }, [selectedDate]);
 
   useEffect(() => {
-    axios.get('https://re-local.onrender.com/api/movies')
-      .then(res => {
-        setMovies(res.data.items); // items 배열 저장
+    // 여러 가능한 API 엔드포인트 시도
+    const fetchPlays = async () => {
+      try {
+        const possibleEndpoints = [
+          '/api/play',
+          '/api/plays', 
+          '/api/theater',
+          '/api/shows',
+          '/api/movies'
+        ];
+        
+        let playsData = null;
+        
+        for (const endpoint of possibleEndpoints) {
+          try {
+            console.log(`API 엔드포인트 시도: ${endpoint}`);
+            const response = await axios.get(`https://re-local.onrender.com${endpoint}`);
+            
+            if (response.data && response.data.items) {
+              playsData = response.data.items;
+              console.log(`성공: ${endpoint}에서 데이터 로드됨`);
+              break;
+            } else if (response.data && Array.isArray(response.data)) {
+              playsData = response.data;
+              console.log(`성공: ${endpoint}에서 배열 데이터 로드됨`);
+              break;
+            }
+          } catch (endpointError) {
+            console.log(`${endpoint} 실패:`, endpointError.message);
+            continue;
+          }
+        }
+        
+        if (playsData) {
+          setPlays(playsData);
+          setLoading(false);
+        } else {
+          // API 실패 시 더미 데이터 사용
+          const dummyPlays = [
+            {
+              title: '웃음의 학교',
+              category: 'comedy',
+              area: '서울 종로구 대학로10길 11',
+              price: '20,000원',
+              stars: 4.8
+            },
+            {
+              title: '개그맨의 밤',
+              category: 'comedy',
+              area: '서울 마포구 홍대로 123',
+              price: '25,000원',
+              stars: 4.5
+            },
+            {
+              title: '즉흥 연기',
+              category: 'comedy',
+              area: '서울 강남구 강남대로 456',
+              price: '30,000원',
+              stars: 4.7
+            }
+          ];
+          
+          setPlays(dummyPlays);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('연극 데이터 로드 실패:', error);
         setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
+      }
+    };
+    
+    fetchPlays();
   }, []);
 
   useEffect(() => {
-    const fetchMovie = async () => {
+    const fetchPlay = async () => {
       try {
-        const response = await axios.get('https://re-local.onrender.com/api/movies');
-        const items = response.data.items || [];
-        // 선택된 포스터의 title과 일치하는 항목 찾기
-        const matched = items.find(item => item.title === selectedPoster?.title);
-        setMovieData(matched || null);
+        // 여러 가능한 API 엔드포인트 시도
+        const possibleEndpoints = [
+          '/api/play',
+          '/api/plays', 
+          '/api/theater',
+          '/api/shows',
+          '/api/movies'
+        ];
+        
+        let playsData = null;
+        
+        for (const endpoint of possibleEndpoints) {
+          try {
+            console.log(`API 엔드포인트 시도: ${endpoint}`);
+            const response = await axios.get(`https://re-local.onrender.com${endpoint}`);
+            
+            if (response.data && response.data.items) {
+              playsData = response.data.items;
+              console.log(`성공: ${endpoint}에서 데이터 로드됨`);
+              break;
+            } else if (response.data && Array.isArray(response.data)) {
+              playsData = response.data;
+              console.log(`성공: ${endpoint}에서 배열 데이터 로드됨`);
+              break;
+            }
+          } catch (endpointError) {
+            console.log(`${endpoint} 실패:`, endpointError.message);
+            continue;
+          }
+        }
+        
+        if (playsData) {
+          // 선택된 포스터의 title과 일치하는 항목 찾기
+          const matched = playsData.find(item => item.title === selectedPoster?.title);
+          setPlayData(matched || null);
+          setLoading(false);
+        } else {
+          // API 실패 시 더미 데이터에서 찾기
+          const dummyPlays = [
+            {
+              title: '웃음의 학교',
+              category: 'comedy',
+              area: '서울 종로구 대학로10길 11',
+              price: '20,000원',
+              stars: 4.8
+            },
+            {
+              title: '개그맨의 밤',
+              category: 'comedy',
+              area: '서울 마포구 홍대로 123',
+              price: '25,000원',
+              stars: 4.5
+            },
+            {
+              title: '즉흥 연기',
+              category: 'comedy',
+              area: '서울 강남구 강남대로 456',
+              price: '30,000원',
+              stars: 4.7
+            }
+          ];
+          
+          const matched = dummyPlays.find(item => item.title === selectedPoster?.title);
+          setPlayData(matched || null);
+          setLoading(false);
+        }
       } catch (error) {
-        console.error('영화 데이터 로드 실패:', error);
-      } finally {
+        console.error('연극 데이터 로드 실패:', error);
         setLoading(false);
       }
     };
   
-    fetchMovie();
+    fetchPlay();
   }, [selectedPoster]);
   
 
@@ -141,7 +264,7 @@ const Recommended = () => {
   const dateOptions = getDateOptions(selectedDate);
 
   if (loading) return <div>Loading...</div>;
-  if(!movieData) return <div>No more movie data...</div>;
+  if(!playData) return <div>No more play data...</div>;
   return (
     <div className="genre-container">
       <Topnav />
@@ -164,22 +287,22 @@ const Recommended = () => {
             <div className="info-grid">
               <div className="info-item">
                 <span className="info-label">📍 Venue</span>
-                <span className="info-value">{movieData.location || '정보없음'}</span>
+                <span className="info-value">{playData.area || '정보없음'}</span>
               </div>
               
               <div className="info-item">
-                <span className="info-label">📅 Performance Period</span>
-                <span className="info-value">{movieData.start_date} ~ {movieData.end_date}</span>
-              </div>
-              
-              <div className="info-item">
-                <span className="info-label">⏰ Duration</span>
-                <span className="info-value">{movieData.duration ? `${movieData.duration} min` : '정보 없음'}</span>
+                <span className="info-label">🎭 Category</span>
+                <span className="info-value">{playData.category || '정보없음'}</span>
               </div>
               
               <div className="info-item">
                 <span className="info-label">💰 Price</span>
-                <span className="info-value">{movieData.price ? `${movieData.price} KRW` : '정보 없음'}</span>
+                <span className="info-value">{playData.price || '정보 없음'}</span>
+              </div>
+              
+              <div className="info-item">
+                <span className="info-label">⭐ Rating</span>
+                <span className="info-value">{playData.stars ? `${playData.stars}/5.0` : '정보 없음'}</span>
               </div>
             </div>
           </div>

@@ -27,6 +27,25 @@ const AITranslation = () => {
   // Web Speech API 관련 상태
   const [recognition, setRecognition] = useState(null);
 
+  // From 언어가 변경될 때 To 언어를 자동으로 반대 언어로 설정
+  React.useEffect(() => {
+    if (fromLanguage === 'ko') {
+      setToLanguage('en');
+    } else if (fromLanguage === 'en') {
+      setToLanguage('ko');
+    }
+  }, [fromLanguage]);
+
+  // 컴포넌트 언마운트 시 오디오 정리
+  React.useEffect(() => {
+    return () => {
+      if (window.currentAudio) {
+        window.currentAudio.pause();
+        window.currentAudio = null;
+      }
+    };
+  }, []);
+
     // MediaRecorder 초기화 (백엔드 연동용)
   React.useEffect(() => {
     const initializeMediaRecorder = async () => {
@@ -209,12 +228,13 @@ const AITranslation = () => {
         tts: '음성 합성 완료'
       }));
       
-      // 3. 받은 번역된 음성 파일 재생
+      // 3. 받은 번역된 음성 파일 재생 (TTS가 활성화된 경우에만)
       if (ttsEnabled && translatedAudioBlob) {
         await playAudioResult(translatedAudioBlob);
+        setTranslationResult('실시간 통역이 완료되었습니다. 번역된 음성을 재생합니다.');
+      } else {
+        setTranslationResult('실시간 통역이 완료되었습니다.');
       }
-      
-      setTranslationResult('실시간 통역이 완료되었습니다. 번역된 음성을 재생합니다.');
     } catch (error) {
       console.error('백엔드 연동 실시간 통역 오류:', error);
       setTranslationResult('백엔드 연동 중 오류가 발생했습니다.');
@@ -253,18 +273,35 @@ const AITranslation = () => {
   // 받은 mp3 파일 재생
   const playAudioResult = async (audioBlob) => {
     try {
+      // 이전에 재생 중인 오디오가 있다면 중지
+      if (window.currentAudio) {
+        window.currentAudio.pause();
+        window.currentAudio = null;
+      }
+      
       // Blob을 오디오 URL로 변환
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
+      
+      // 전역 변수에 현재 재생 중인 오디오 저장
+      window.currentAudio = audio;
       
       // 오디오 재생
       await audio.play();
       console.log('번역된 음성 재생 시작');
       
-      // 재생 완료 후 URL 해제
+      // 재생 완료 후 정리
       audio.onended = () => {
         URL.revokeObjectURL(audioUrl);
+        window.currentAudio = null;
         console.log('번역된 음성 재생 완료');
+      };
+      
+      // 오류 발생 시 정리
+      audio.onerror = () => {
+        URL.revokeObjectURL(audioUrl);
+        window.currentAudio = null;
+        console.error('오디오 재생 중 오류 발생');
       };
       
     } catch (error) {
@@ -297,60 +334,47 @@ const AITranslation = () => {
     setTranslationResult(speechText);
   };
 
-  const handleTTSOnly = async () => {
-    if (!inputText.trim()) return;
-    
-    setIsSpeaking(true);
-    try {
-      await performTTS(inputText, fromLanguage);
-    } catch (error) {
-      console.error('TTS 오류:', error);
-    } finally {
-      setIsSpeaking(false);
-    }
-  };
+
 
   // 번역 API 호출 (백엔드 연동)
   const performTranslation = async (text, from, to) => {
     try {
-      // 실제 백엔드 번역 API 호출 (실제 구현 시 아래 주석 해제)
-      /*
-      const response = await fetch('/api/translate', {
+      const res = await fetch(`${API_BASE}/api/transcribe/tt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
-          text: text,
-          from: from,
-          to: to
-        })
+          text,
+          targetLang: to,
+        }),
       });
-      
-      if (!response.ok) {
-        throw new Error(`번역 실패: ${response.status}`);
+  
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => '');
+        throw new Error(`번역 실패: ${res.status} ${errBody}`);
       }
-      
-      const result = await response.json();
-      return result.translatedText;
-      */
-      
-      // 시뮬레이션: 실제 번역 처리 시간을 고려한 지연
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // 간단한 번역 시뮬레이션
-      if (from === 'ko' && to === 'en') {
-        return `[${from}→${to}] Hello, this is a test voice.`;
-      } else if (from === 'en' && to === 'ko') {
-        return `[${from}→${to}] 안녕하세요, 이것은 테스트 음성입니다.`;
-      } else {
-        return `[${from}→${to}] ${text}`;
-      }
-    } catch (error) {
-      console.error('번역 API 오류:', error);
-      throw error;
+  
+      const result = await res.json().catch(async () => {
+        // 혹시 서버가 JSON이 아닌 걸 보냈을 때 대비
+        const fallbackText = await res.text().catch(() => '');
+        return { translated: fallbackText };
+      });
+  
+      // 응답 키 호환 처리
+      const out =
+        result.translated ?? result.translatedText ?? result.text ?? '';
+  
+      return out || '번역 결과를 받지 못했습니다.';
+    } catch (err) {
+      console.error('번역 API 오류:', err);
+      throw err; // 상위 handleTextTranslation에서 메시지 표출
     }
   };
+  
+
+      
 
   // TTS API 호출 (백엔드 연동)
   const performTTS = async (text, language) => {
@@ -415,11 +439,9 @@ const AITranslation = () => {
               onChange={(e) => setSelectedMode(e.target.value)}
               className="mode-dropdown"
             >
-              <option value="realtime">🗣️ 바로 통역 (실시간 STS)</option>
+              <option value="realtime">🗣️ 바로통역</option>
               <option value="text">🔤 텍스트 번역</option>
-              <option value="stt">🗣️ 음성 → 텍스트 (STT)</option>
-              <option value="tts">🔊 텍스트 → 음성 출력 (TTS)</option>
-              <option value="text-tts">🌐 텍스트로 통역 (Text → 번역 → TTS)</option>
+              <option value="stt">🗣️ 음성 → TEXT</option>
             </select>
           </div>
 
@@ -428,23 +450,17 @@ const AITranslation = () => {
             <div className="language-pair">
               <div className="language-input">
                 <label>From:</label>
-                <select value={fromLanguage} onChange={(e) => setFromLanguage(e.target.value)}>
-                  <option value="ko">한국어</option>
-                  <option value="en">English</option>
-                  <option value="ja">日本語</option>
-                  <option value="zh">中文</option>
-                  <option value="es">Español</option>
+                  <select value={fromLanguage} onChange={(e) => setFromLanguage(e.target.value)}>
+                  <option value="ko">KR</option>
+                  <option value="en">ENG</option>
                 </select>
               </div>
               <div className="language-arrow">→</div>
               <div className="language-output">
                 <label>To:</label>
                 <select value={toLanguage} onChange={(e) => setToLanguage(e.target.value)}>
-                  <option value="en">English</option>
-                  <option value="ko">한국어</option>
-                  <option value="ja">日本語</option>
-                  <option value="zh">中文</option>
-                  <option value="es">Español</option>
+                  <option value="en">ENG</option>
+                  <option value="ko">KR</option>
                 </select>
               </div>
             </div>
@@ -470,28 +486,17 @@ const AITranslation = () => {
                 <textarea
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder={selectedMode === 'text' ? "번역할 텍스트를 입력하세요 (음성 없이 텍스트만 번역)" : "번역할 텍스트를 입력하세요..."}
+                  placeholder="번역할 텍스트를 입력하세요 (음성 없이 텍스트만 번역)"
                   className="text-input"
                   rows="4"
                 />
-                {(selectedMode === 'text' || selectedMode === 'text-tts') && (
-                  <button 
-                    onClick={handleTextTranslation}
-                    className="translate-btn"
-                    disabled={!inputText.trim() || isProcessing}
-                  >
-                    {selectedMode === 'text' ? '텍스트 번역하기' : '번역하기'}
-                  </button>
-                )}
-                {selectedMode === 'tts' && (
-                  <button 
-                    onClick={handleTTSOnly}
-                    className="tts-btn"
-                    disabled={!inputText.trim() || isSpeaking}
-                  >
-                    음성 출력
-                  </button>
-                )}
+                <button 
+                  onClick={handleTextTranslation}
+                  className="translate-btn"
+                  disabled={!inputText.trim() || isProcessing}
+                >
+                  텍스트 번역하기
+                </button>
               </div>
             )}
 
@@ -508,32 +513,32 @@ const AITranslation = () => {
                   </p>
                 </div>
                 
-                                 <button 
-                   className={`microphone-btn ${isListening ? (isRecording ? 'recording' : 'listening') : ''}`}
-                   onClick={handleVoiceInput}
-                   disabled={isProcessing}
-                 >
-                   {selectedMode === 'realtime' 
-                     ? (isRecording ? '🔴 녹음 중...' : '🎤 녹음 시작')
-                     : (isListening ? '🔴 음성 인식 중...' : '🎤 음성 입력 시작')
-                   }
-                 </button>
-                 
-                 {isListening && (
-                   <div className="listening-status">
-                     <div className="listening-animation">
-                       <div className="wave"></div>
-                       <div className="wave"></div>
-                       <div className="wave"></div>
-                     </div>
-                     <p>
-                       {selectedMode === 'realtime' 
-                         ? '녹음 중입니다. 다시 눌러서 중지하세요...' 
-                         : '말씀해 주세요...'
-                       }
-                     </p>
-                   </div>
-                 )}
+                  <button 
+                  className={`microphone-btn ${isListening ? (isRecording ? 'recording' : 'listening') : ''}`}
+                  onClick={handleVoiceInput}
+                  disabled={isProcessing}
+                >
+                  {selectedMode === 'realtime' 
+                    ? (isRecording ? '🔴 녹음 중...' : '🎤 녹음 시작')
+                    : (isListening ? '🔴 음성 인식 중...' : '🎤 음성 입력 시작')
+                  }
+                </button>
+            
+                {isListening && (
+                  <div className="listening-status">
+                    <div className="listening-animation">
+                      <div className="wave"></div>
+                      <div className="wave"></div>
+                    <div className="wave"></div>
+                    </div>
+                    <p>
+                      {selectedMode === 'realtime' 
+                        ? '녹음 중입니다. 다시 눌러서 중지하세요...' 
+                        : '말씀해 주세요...'
+                      }
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -578,8 +583,6 @@ const AITranslation = () => {
                   {selectedMode === 'realtime' && '🔄 실시간 통역 결과'}
                   {selectedMode === 'text' && '🌐 번역 결과'}
                   {selectedMode === 'stt' && '🎤 음성 인식 결과'}
-                  {selectedMode === 'tts' && '🔊 음성 출력'}
-                  {selectedMode === 'text-tts' && '🌐 통역 결과'}
                 </h4>
                 <div className="result-content">
                   {translationResult ? (
@@ -591,24 +594,22 @@ const AITranslation = () => {
                       {selectedMode === 'realtime' && '🎤 마이크를 눌러서 실시간 통역을 시작하세요'}
                       {selectedMode === 'text' && '📝 텍스트를 입력하고 번역하기를 클릭하세요'}
                       {selectedMode === 'stt' && '🎤 마이크를 눌러서 음성을 텍스트로 변환하세요'}
-                      {selectedMode === 'tts' && '🔊 텍스트를 입력하고 음성 출력을 클릭하세요'}
-                      {selectedMode === 'text-tts' && '🌐 텍스트를 입력하고 번역 후 음성 출력하세요'}
                     </p>
                   )}
                 </div>
               </div>
               
                              {/* 상태 표시 */}
-               {isListening && (
-                 <div className="status-indicator">
-                   <p className="status-text">
-                     {selectedMode === 'realtime' 
-                       ? '🎤 녹음 중입니다. 마이크 버튼을 다시 눌러서 중지하세요!' 
-                       : '🎤 음성 인식 중... 마이크 버튼을 다시 눌러서 중지하세요!'
-                     }
-                   </p>
-                 </div>
-               )}
+              {isListening && (
+                <div className="status-indicator">
+                  <p className="status-text">
+                    {selectedMode === 'realtime' 
+                      ? '🎤 녹음 중입니다. 마이크 버튼을 다시 눌러서 중지하세요!' 
+                      : '🎤 음성 인식 중... 마이크 버튼을 다시 눌러서 중지하세요!'
+                    }
+                  </p>
+                </div>
+              )}
               
               {isProcessing && (
                 <div className="status-indicator">
