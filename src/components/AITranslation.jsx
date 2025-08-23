@@ -15,7 +15,7 @@ const AITranslation = () => {
   const [inputText, setInputText] = useState(''); // 텍스트 입력
   const [fromLanguage, setFromLanguage] = useState('ko'); // 출발 언어
   const [toLanguage, setToLanguage] = useState('en'); // 도착 언어
-  const [ttsEnabled, setTtsEnabled] = useState(true); // TTS 활성화
+  const [ttsEnabled, setTtsEnabled] = useState(true); // TTS 활성화 (realtime에서는 '텍스트도 같이 출력' 토글로 사용)
   const [intermediateResults, setIntermediateResults] = useState({}); // 중간 결과들
   
   // 백엔드 연동 상태
@@ -24,8 +24,7 @@ const AITranslation = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   
-  // Web Speech API 관련 상태
-  const [recognition, setRecognition] = useState(null);
+  
 
   // From 언어가 변경될 때 To 언어를 자동으로 반대 언어로 설정
   React.useEffect(() => {
@@ -89,65 +88,7 @@ const AITranslation = () => {
     initializeMediaRecorder();
   }, [selectedMode]);
   
-  // Web Speech API 초기화 (기존 STT용)
-  React.useEffect(() => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognitionInstance = new SpeechRecognition();
-      
-      recognitionInstance.continuous = false;
-      recognitionInstance.interimResults = false;
-      recognitionInstance.lang = 'ko-KR'; // 한국어 설정
-      
-      recognitionInstance.onstart = () => {
-        setIsListening(true);
-        setTranslationResult('음성 인식 중... 말씀해 주세요.');
-      };
-      
-      recognitionInstance.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setIsListening(false);
-        setIsProcessing(false);
-        
-        // 선택된 모드에 따라 처리
-        switch (selectedMode) {
-          case 'realtime':
-            // 실시간 모드에서는 MediaRecorder 사용
-            break;
-          case 'stt':
-            handleSTTOnly(transcript);
-            break;
-          default:
-            setTranslationResult(transcript);
-        }
-        
-        // 음성 인식 완료 후 자동으로 중지
-        recognitionInstance.stop();
-      };
-      
-      recognitionInstance.onerror = (event) => {
-        console.error('음성 인식 오류:', event.error);
-        if (event.error === 'not-allowed') {
-          setTranslationResult('마이크 접근이 거부되었습니다. 브라우저에서 마이크 권한을 허용해주세요.');
-        } else if (event.error === 'no-speech') {
-          setTranslationResult('음성이 감지되지 않았습니다. 다시 시도해주세요.');
-        } else {
-          setTranslationResult(`음성 인식 오류: ${event.error}`);
-        }
-        setIsListening(false);
-        setIsProcessing(false);
-      };
-      
-      recognitionInstance.onend = () => {
-        setIsListening(false);
-        setIsProcessing(false);
-      };
-      
-      setRecognition(recognitionInstance);
-    } else {
-      setTranslationResult('이 브라우저는 음성 인식을 지원하지 않습니다.');
-    }
-  }, [selectedMode]);
+  
 
     // 음성 녹음 시작 (백엔드 연동용)
   const startRecording = () => {
@@ -175,32 +116,17 @@ const AITranslation = () => {
     }
   };
 
-  // 음성 입력 처리 (모드별로 다르게)
-  const handleVoiceInput = () => {
-    if (selectedMode === 'realtime') {
-      // 실시간 모드: MediaRecorder 사용
-      if (!isRecording) {
-        startRecording();
-      } else {
-        stopRecording();
-      }
-    } else {
-      // STT 모드: Web Speech API 사용
-      if (!isListening) {
-        if (recognition) {
-          setTranslationResult('');
-          setIsProcessing(true);
-          recognition.start();
-        }
-      } else {
-        if (recognition) {
-          recognition.stop();
-          setIsListening(false);
-          setIsProcessing(false);
-        }
-      }
-    }
-  };
+     // 음성 입력 처리 (바로통역 모드만)
+   const handleVoiceInput = () => {
+     if (selectedMode === 'realtime') {
+       // 실시간 모드: MediaRecorder 사용
+       if (!isRecording) {
+         startRecording();
+       } else {
+         stopRecording();
+       }
+     }
+   };
 
   // 백엔드 연동 함수들 - 정확한 흐름으로 수정
   const handleRealtimeTranslationWithBackend = async (audioBlob) => {
@@ -219,22 +145,40 @@ const AITranslation = () => {
       const filename = await uploadAudioToBackend(audioBlob);
       setIntermediateResults(prev => ({ ...prev, stt: `음성 파일 업로드 완료: ${filename}` }));
       
-      // 2. 서버가 돌려준 filename으로 번역된 음성 파일 요청 (GET)
-      const translatedAudioBlob = await getSTSResult(filename);
-      setIntermediateResults(prev => ({ 
-        ...prev, 
-        stt: '음성 인식 완료',
-        translation: '번역 완료',
-        tts: '음성 합성 완료'
-      }));
-      
-      // 3. 받은 번역된 음성 파일 재생 (TTS가 활성화된 경우에만)
-      if (ttsEnabled && translatedAudioBlob) {
-        await playAudioResult(translatedAudioBlob);
-        setTranslationResult('실시간 통역이 완료되었습니다. 번역된 음성을 재생합니다.');
+      // 2. STS(오디오)와 STT(텍스트) 병렬 요청
+      const sttPromise = ttsEnabled
+        ? getSTTText(filename).catch((e) => {
+            // 서버가 STT 텍스트 엔드포인트를 제공하지 않을 수 있으므로 조용히 폴백
+            console.info('[info] STT 텍스트 엔드포인트 미지원 또는 404. 텍스트 출력 생략.', e?.message || e);
+            return '';
+          })
+        : Promise.resolve('');
+
+      const [translatedAudioBlob, sttText] = await Promise.all([
+        getSTSResult(filename), // 오디오(항상 재생)
+        sttPromise
+      ]);
+
+      // 3. 텍스트가 있으면 TT(텍스트 번역) 수행 및 화면 표시
+      if (sttText && ttsEnabled) {
+        setIntermediateResults(prev => ({ ...prev, stt: `음성 인식 텍스트: ${sttText}` }));
+        const finalTranslatedText = await performTranslation(sttText, fromLanguage, toLanguage);
+        setIntermediateResults(prev => ({ ...prev, translation: finalTranslatedText }));
+        setTranslationResult(finalTranslatedText);
       } else {
         setTranslationResult('실시간 통역이 완료되었습니다.');
       }
+      
+      // 4. 받은 번역된 음성 파일 재생 (항상 재생)
+      if (translatedAudioBlob) {
+        await playAudioResult(translatedAudioBlob);
+      }
+
+      setIntermediateResults(prev => ({ 
+        ...prev, 
+        stt: sttText ? '음성 인식 완료' : '음성 인식(텍스트 표시) 생략',
+        tts: '음성 합성(재생) 완료'
+      }));
     } catch (error) {
       console.error('백엔드 연동 실시간 통역 오류:', error);
       setTranslationResult('백엔드 연동 중 오류가 발생했습니다.');
@@ -268,6 +212,47 @@ const AITranslation = () => {
     if (!res.ok) throw new Error(`번역된 음성 파일 요청 실패: ${res.status}`);
     return await res.blob(); // mp3 Blob
   };
+
+  // ✅ 추가: STT 텍스트(인식 결과) 가져오기 (가능한 엔드포인트들을 순차 시도, 전부 실패해도 에러 던지지 않음)
+  const getSTTText = async (filename) => {
+    // 1) /stt (권장)
+    try {
+      const r = await fetch(
+        `${API_BASE}/api/transcribe/stt?filename=${encodeURIComponent(filename)}`,
+        { headers: { Accept: 'application/json' } }
+      );
+      if (r.ok) {
+        const j = await r.json().catch(() => ({}));
+        const text = j.text || j.transcript || j.recognizedText || '';
+        if (text) return text;
+      } else {
+        // 404 등일 때는 조용히 폴백
+        console.info('[info] /stt not available:', r.status);
+      }
+    } catch (e) {
+      console.info('[info] /stt request failed, fallback to /sts json', e?.message || e);
+    }
+
+    // 2) /sts 를 JSON으로 시도(서버가 텍스트도 줄 수 있는 경우)
+    try {
+      const r2 = await fetch(
+        `${API_BASE}/api/transcribe/sts?filename=${encodeURIComponent(filename)}`,
+        { headers: { Accept: 'application/json' } }
+      );
+      if (r2.ok) {
+        const j2 = await r2.json().catch(() => ({}));
+        const text = j2.text || j2.sourceText || j2.stt || j2.recognizedText || '';
+        if (text) return text;
+      } else {
+        console.info('[info] /sts json not available:', r2.status);
+      }
+    } catch (e) {
+      console.info('[info] /sts json request failed', e?.message || e);
+    }
+
+    // 모든 시도가 실패하면 빈 문자열 반환(에러 미발생)
+    return '';
+  };
   
 
   // 받은 mp3 파일 재생
@@ -285,6 +270,8 @@ const AITranslation = () => {
       
       // 전역 변수에 현재 재생 중인 오디오 저장
       window.currentAudio = audio;
+
+      setIsSpeaking(true);
       
       // 오디오 재생
       await audio.play();
@@ -292,6 +279,7 @@ const AITranslation = () => {
       
       // 재생 완료 후 정리
       audio.onended = () => {
+        setIsSpeaking(false);
         URL.revokeObjectURL(audioUrl);
         window.currentAudio = null;
         console.log('번역된 음성 재생 완료');
@@ -299,12 +287,14 @@ const AITranslation = () => {
       
       // 오류 발생 시 정리
       audio.onerror = () => {
+        setIsSpeaking(false);
         URL.revokeObjectURL(audioUrl);
         window.currentAudio = null;
         console.error('오디오 재생 중 오류 발생');
       };
       
     } catch (error) {
+      setIsSpeaking(false);
       console.error('오디오 재생 오류:', error);
       throw error;
     }
@@ -329,10 +319,7 @@ const AITranslation = () => {
     }
   };
 
-  const handleSTTOnly = async (speechText) => {
-    setIntermediateResults(prev => ({ ...prev, stt: speechText }));
-    setTranslationResult(speechText);
-  };
+  
 
 
 
@@ -441,7 +428,6 @@ const AITranslation = () => {
             >
               <option value="realtime">🗣️ 바로통역</option>
               <option value="text">🔤 텍스트 번역</option>
-              <option value="stt">🗣️ 음성 → TEXT</option>
             </select>
           </div>
 
@@ -450,7 +436,7 @@ const AITranslation = () => {
             <div className="language-pair">
               <div className="language-input">
                 <label>From:</label>
-                  <select value={fromLanguage} onChange={(e) => setFromLanguage(e.target.value)}>
+                <select value={fromLanguage} onChange={(e) => setFromLanguage(e.target.value)}>
                   <option value="ko">KR</option>
                   <option value="en">ENG</option>
                 </select>
@@ -474,7 +460,7 @@ const AITranslation = () => {
                 checked={ttsEnabled} 
                 onChange={(e) => setTtsEnabled(e.target.checked)}
               />
-              🔊 음성 출력 활성화
+              {selectedMode === 'text' ? '🔊 음성도 같이 출력' : '📝 텍스트도 같이 출력'}
             </label>
           </div>
 
@@ -500,28 +486,22 @@ const AITranslation = () => {
               </div>
             )}
 
-            {/* 음성 입력 영역 - 바로통역과 STT 모드에서 표시 */}
-            {(selectedMode === 'realtime' || selectedMode === 'stt') && (
+            {/* 음성 입력 영역 - 바로통역 모드에서만 표시 */}
+            {selectedMode === 'realtime' && (
               <div className="voice-input-area">
                 <div className="voice-input-header">
                   <h4>🎤 음성 인식</h4>
                   <p className="voice-input-description">
-                    {selectedMode === 'realtime' 
-                      ? '마이크를 눌러서 말씀하시면 실시간으로 번역됩니다' 
-                      : '마이크를 눌러서 음성을 텍스트로 변환하세요'
-                    }
+                    마이크를 눌러서 말씀하시면 실시간으로 번역됩니다
                   </p>
                 </div>
                 
-                  <button 
+                <button 
                   className={`microphone-btn ${isListening ? (isRecording ? 'recording' : 'listening') : ''}`}
                   onClick={handleVoiceInput}
                   disabled={isProcessing}
                 >
-                  {selectedMode === 'realtime' 
-                    ? (isRecording ? '🔴 녹음 중...' : '🎤 녹음 시작')
-                    : (isListening ? '🔴 음성 인식 중...' : '🎤 음성 입력 시작')
-                  }
+                  {isRecording ? '🔴 녹음 중...' : '🎤 녹음 시작'}
                 </button>
             
                 {isListening && (
@@ -529,13 +509,10 @@ const AITranslation = () => {
                     <div className="listening-animation">
                       <div className="wave"></div>
                       <div className="wave"></div>
-                    <div className="wave"></div>
+                      <div className="wave"></div>
                     </div>
                     <p>
-                      {selectedMode === 'realtime' 
-                        ? '녹음 중입니다. 다시 눌러서 중지하세요...' 
-                        : '말씀해 주세요...'
-                      }
+                      녹음 중입니다. 다시 눌러서 중지하세요...
                     </p>
                   </div>
                 )}
@@ -567,22 +544,13 @@ const AITranslation = () => {
                 </div>
               )}
               
-              {/* STT 모드 결과 표시 */}
-              {selectedMode === 'stt' && translationResult && (
-                <div className="stt-results">
-                  <h4 className="stt-title">🎤 음성 인식 결과</h4>
-                  <div className="stt-content">
-                    <p className="stt-text">{translationResult}</p>
-                  </div>
-                </div>
-              )}
+              
               
               {/* 최종 결과 */}
               <div className="final-result">
                 <h4>
                   {selectedMode === 'realtime' && '🔄 실시간 통역 결과'}
                   {selectedMode === 'text' && '🌐 번역 결과'}
-                  {selectedMode === 'stt' && '🎤 음성 인식 결과'}
                 </h4>
                 <div className="result-content">
                   {translationResult ? (
@@ -593,20 +561,16 @@ const AITranslation = () => {
                     <p className="placeholder-text">
                       {selectedMode === 'realtime' && '🎤 마이크를 눌러서 실시간 통역을 시작하세요'}
                       {selectedMode === 'text' && '📝 텍스트를 입력하고 번역하기를 클릭하세요'}
-                      {selectedMode === 'stt' && '🎤 마이크를 눌러서 음성을 텍스트로 변환하세요'}
                     </p>
                   )}
                 </div>
               </div>
               
-                             {/* 상태 표시 */}
+              {/* 상태 표시 */}
               {isListening && (
                 <div className="status-indicator">
                   <p className="status-text">
-                    {selectedMode === 'realtime' 
-                      ? '🎤 녹음 중입니다. 마이크 버튼을 다시 눌러서 중지하세요!' 
-                      : '🎤 음성 인식 중... 마이크 버튼을 다시 눌러서 중지하세요!'
-                    }
+                    🎤 녹음 중입니다. 마이크 버튼을 다시 눌러서 중지하세요!
                   </p>
                 </div>
               )}
