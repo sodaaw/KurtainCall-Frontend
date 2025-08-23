@@ -78,12 +78,12 @@ function Hero() {
 
   return (
     <header className="hero">
-      <h1>Main Event</h1>
+      <h1>Recommendation For U</h1>
       <p>Live Local. Explore Korea.</p>
 
              {/* 한 장만 표시 */}
-       <div className="poster-carousel" style={{ justifyContent: "center" }}>
-         <div className="poster-card" style={{ maxWidth: 360, width: "100%" }}>
+               <div className="poster-carousel" style={{ justifyContent: "center" }}>
+          <div className="poster-card" style={{ maxWidth: "85vw", width: "100%", minHeight: "auto" }}>
            <a 
              href="https://www.interpark.com" 
              target="_blank" 

@@ -44,52 +44,7 @@
   font-style: italic;
 }
 
-/* Test 버튼 스타일 - 메인페이지 카테고리 버튼과 조화 */
-.test-button {
-  background: linear-gradient(145deg, #8B0000, #a52a2a);
-  border: 2px solid #d4af37;
-  color: #f5f5f5;
-  padding: 12px 20px;
-  border-radius: 15px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 15px rgba(139, 0, 0, 0.3);
-  position: relative;
-  overflow: hidden;
-  margin-left: 15px;
-}
 
-.test-button:hover {
-  background: linear-gradient(145deg, #a52a2a, #8B0000);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
-  border-color: #f5f5f5;
-}
-
-.test-button:active {
-  transform: translateY(-1px);
-  transition: all 0.1s ease;
-}
-
-
-
-/* Test 버튼 호버 시 빛나는 효과 */
-.test-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
-  transition: left 0.5s ease;
-}
-
-.test-button:hover::before {
-  left: 100%;
-}
 
 .category-chip {
   display: inline-block;
