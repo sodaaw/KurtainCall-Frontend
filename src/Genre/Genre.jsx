@@ -1,8 +1,8 @@
-import React, { use, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import './Genre.css';
-import posters from './postersData';
 import Topnav from '../components/Topnav';
+import axios from 'axios';
 
 // === 샘플 리뷰 (기존과 동일) =========================================
 const SAMPLE_REVIEWS = [
@@ -175,9 +175,12 @@ const Genre = () => {
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category'); // URL에서 장르
 
-  const [current, setCurrent] = useState(0);
+  // API 데이터 상태
+  const [plays, setPlays] = useState([]);
+  const [loading, setLoading] = useState(true);
   
-  // 리뷰 상태 관리
+  // 기존 상태들
+  const [current, setCurrent] = useState(0);
   const [reviews, setReviews] = useState(SAMPLE_REVIEWS);
 
   // === 필터 상태 (요청대로 4종) =========================
@@ -192,10 +195,112 @@ const Genre = () => {
   // See all / Filtering 토글
   const [viewMode, setViewMode] = useState('all'); // 'all' | 'filtered'
 
+  // API 호출 - 여러 엔드포인트 시도
+  useEffect(() => {
+    const fetchPlays = async () => {
+      try {
+        // 여러 가능한 API 엔드포인트 시도
+        const possibleEndpoints = [
+          '/api/play',
+          '/api/plays', 
+          '/api/theater',
+          '/api/shows',
+          '/api/movies' // 기존에 작동했던 엔드포인트
+        ];
+        
+        let playsData = null;
+        
+        for (const endpoint of possibleEndpoints) {
+          try {
+            console.log(`API 엔드포인트 시도: ${endpoint}`);
+            const response = await axios.get(`https://re-local.onrender.com${endpoint}`);
+            
+            if (response.data && response.data.items) {
+              playsData = response.data.items;
+              console.log(`성공: ${endpoint}에서 데이터 로드됨`);
+              break;
+            } else if (response.data && Array.isArray(response.data)) {
+              playsData = response.data;
+              console.log(`성공: ${endpoint}에서 배열 데이터 로드됨`);
+              break;
+            }
+          } catch (endpointError) {
+            console.log(`${endpoint} 실패:`, endpointError.message);
+            continue;
+          }
+        }
+        
+        if (playsData) {
+          // API 데이터를 올바른 형식으로 변환
+          const formattedPlays = playsData.map(item => ({
+            id: item.id || item.movie_id || Math.random(),
+            title: item.title || item.name || '제목 없음',
+            category: item.category || item.genre || '카테고리 없음',
+            location: item.area || item.location || item.venue || '장소 없음',
+            image: item.image || '/images/event1.jpg',
+            price: item.price || 0,
+            rating: item.stars || item.rating || 0,
+            views: item.views || 0,
+            deadline: item.end_date || '마감일 없음'
+          }));
+          
+          setPlays(formattedPlays);
+          setLoading(false);
+        } else {
+          // 모든 API 시도 실패 시 기존 더미 데이터 사용
+          console.log('모든 API 엔드포인트 실패, 더미 데이터 사용');
+          const dummyPlays = [
+            {
+              id: 1,
+              title: '웃음의 학교',
+              category: 'comedy',
+              location: '서울 종로구 대학로10길 11',
+              image: '/images/event1.jpg',
+              price: 20000,
+              rating: 4.8,
+              views: 150,
+              deadline: '2025-08-25'
+            },
+            {
+              id: 2,
+              title: '개그맨의 밤',
+              category: 'comedy',
+              location: '서울 마포구 홍대로 123',
+              image: '/images/event2.jpg',
+              price: 25000,
+              rating: 4.5,
+              views: 120,
+              deadline: '2025-08-30'
+            },
+            {
+              id: 3,
+              title: '즉흥 연기',
+              category: 'comedy',
+              location: '서울 강남구 강남대로 456',
+              image: '/images/event3.jpg',
+              price: 30000,
+              rating: 4.7,
+              views: 180,
+              deadline: '2025-09-05'
+            }
+          ];
+          
+          setPlays(dummyPlays);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('연극 데이터 로드 실패:', error);
+        setLoading(false);
+      }
+    };
+    
+    fetchPlays();
+  }, []);
+
   // (1) 카테고리 1차 필터
   const baseList = useMemo(() => {
-    return category ? posters.filter((p) => p.category === category) : posters;
-  }, [category]);
+    return category ? plays.filter((p) => p.category === category) : plays;
+  }, [category, plays]);
 
   // (2) 상세 필터/정렬 (Filtering일 때만 적용)
   const filteredSortedList = useMemo(() => {
@@ -311,6 +416,19 @@ const Genre = () => {
       )
     );
   };
+
+  // 로딩 상태 처리
+  if (loading) {
+    return (
+      <div className="genre-container">
+        <Topnav />
+        <div style={{ textAlign: 'center', padding: '100px 20px' }}>
+          <h2>Loading...</h2>
+          <p>연극 정보를 불러오는 중입니다...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="genre-container">
