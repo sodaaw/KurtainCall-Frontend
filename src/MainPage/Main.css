@@ -157,8 +157,8 @@
 ======================== */
 .hero {
   text-align: center;
-  margin-bottom: 40px;
-  padding: 30px 0;
+  margin-bottom: 30px;
+  padding: 20px 0;
   position: relative;
   z-index: 2;
 }
@@ -181,8 +181,8 @@
 }
 
 .hero h1 {
-  font-size: 2.2rem;
-  margin-bottom: 8px;
+  font-size: 2.5rem;
+  margin-bottom: 12px;
   color: #d4af37; /* 골드 */
   font-weight: 700;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
@@ -232,8 +232,8 @@
 
 .hero p {
   color: #c5a572; /* 연한 골드 */
-  margin-bottom: 25px;
-  font-size: 1.1rem;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
   font-weight: 500;
 }
 
@@ -242,16 +242,16 @@
   display: flex;
   gap: 20px;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .poster-card {
-  flex: 0 0 90%; /* 50%에서 90%로 증가하여 거의 전체 가로 차지 */
-  max-width: 1000px; /* 600px에서 1000px로 증가하여 더 넓은 최대 너비 */
+  flex: 0 0 90%; /* 95%에서 90%로 줄여서 적절한 여백 확보 */
+  max-width: 1000px; /* 1200px에서 1000px로 줄여서 적절한 크기 */
   background: linear-gradient(145deg, #1a1a1a, #2a2a2a); /* 어두운 그라데이션 */
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.3), 0 4px 10px rgba(0,0,0,0.2);
-  padding: 30px; /* 25px에서 30px로 증가하여 여유로운 공간 확보 */
+  padding: 20px 30px 25px 30px; /* 적절한 여백으로 조정 */
   transition: all 0.3s ease;
   border: 2px solid #8B0000; /* 버건디 테두리 */
   position: relative;
@@ -276,7 +276,7 @@
 
 .poster-img {
   width: 100%; /* 700px 고정에서 100%로 변경하여 카드에 맞춤 */
-  height: 350px; /* 400px에서 350px로 약간 줄여서 균형 맞춤 */
+  height: 450px; /* 500px에서 450px로 줄여서 적절한 비율 */
   object-fit: cover;
   border-radius: 10px;
   border: 1px solid #333;
@@ -297,15 +297,16 @@
 
 .poster-title {
   font-weight: bold;
-  margin-top: 15px; /* 12px에서 15px로 증가 */
+  margin-top: 12px; /* 8px에서 12px로 늘려서 적절한 간격 */
   color: #f5f5f5; /* 밝은 회색 */
-  font-size: 1.2rem; /* 1.1rem에서 1.2rem으로 증가 */
+  font-size: 1.3rem; /* 1.2rem에서 1.3rem으로 증가 */
 }
 
 .poster-info {
-  font-size: 1rem; /* 0.9rem에서 1rem으로 증가 */
+  font-size: 1.1rem; /* 1rem에서 1.1rem으로 증가 */
   color: #d4af37; /* 골드 */
-  margin-top: 6px; /* 4px에서 6px로 증가 */
+  margin-top: 6px; /* 3px에서 6px로 늘려서 적절한 간격 */
+  margin-bottom: 8px; /* 5px에서 8px로 늘려서 적절한 간격 */
 }
 
 .slide-indicator {
@@ -313,7 +314,7 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
-  margin-top: 20px;
+  margin-top: 15px; /* 12px에서 15px로 늘려서 적절한 간격 */
 }
 
 .slide-indicator button {
@@ -775,6 +776,25 @@
     width: 2rem;
     height: 2rem;
   }
+  
+  /* Hero 섹션 반응형 */
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .hero p {
+    font-size: 1.1rem;
+  }
+  
+  .poster-card {
+    flex: 0 0 95%;
+    max-width: 95vw;
+    padding: 15px 20px 20px 20px;
+  }
+  
+  .poster-img {
+    height: 350px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -791,5 +811,32 @@
   .cat-icon {
     width: 1.8rem;
     height: 1.8rem;
+  }
+  
+  /* Hero 섹션 모바일 반응형 */
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+  
+  .hero p {
+    font-size: 1rem;
+  }
+  
+  .poster-card {
+    flex: 0 0 98%;
+    max-width: 98vw;
+    padding: 12px 15px 18px 15px;
+  }
+  
+  .poster-img {
+    height: 280px;
+  }
+  
+  .poster-title {
+    font-size: 1.1rem;
+  }
+  
+  .poster-info {
+    font-size: 1rem;
   }
 }

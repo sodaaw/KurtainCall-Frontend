@@ -247,9 +247,9 @@ const Genre = () => {
           setPlays(formattedPlays);
           setLoading(false);
         } else {
-          // 모든 API 시도 실패 시 기존 더미 데이터 사용
-          console.log('모든 API 엔드포인트 실패, 더미 데이터 사용');
-          const dummyPlays = [
+          // 모든 API 시도 실패 시 확장된 더미 데이터 사용
+          console.log('모든 API 엔드포인트 실패, 확장된 더미 데이터 사용');
+          const allDummyPlays = [
             {
               id: 1,
               title: '웃음의 학교',
@@ -282,8 +282,111 @@ const Genre = () => {
               rating: 4.7,
               views: 180,
               deadline: '2025-09-05'
+            },
+            {
+              id: 4,
+              title: '코미디 클럽',
+              category: 'comedy',
+              location: '서울 서초구 서초대로 789',
+              image: '/images/event4.jpg',
+              price: 18000,
+              rating: 4.3,
+              views: 90,
+              deadline: '2025-09-10'
+            },
+            {
+              id: 5,
+              title: '로미오와 줄리엣',
+              category: 'romance',
+              location: '서울 중구 세종대로 123',
+              image: '/images/event5.jpg',
+              price: 35000,
+              rating: 4.9,
+              views: 200,
+              deadline: '2025-08-27'
+            },
+            {
+              id: 6,
+              title: '사랑의 시',
+              category: 'romance',
+              location: '서울 종로구 대학로 456',
+              image: '/images/event1.jpg',
+              price: 28000,
+              rating: 4.6,
+              views: 160,
+              deadline: '2025-09-02'
+            },
+            {
+              id: 7,
+              title: '로맨틱 발레',
+              category: 'romance',
+              location: '서울 강남구 테헤란로 789',
+              image: '/images/event2.jpg',
+              price: 40000,
+              rating: 4.8,
+              views: 180,
+              deadline: '2025-09-07'
+            },
+            {
+              id: 8,
+              title: '사랑 이야기',
+              category: 'romance',
+              location: '서울 마포구 와우산로 321',
+              image: '/images/event3.jpg',
+              price: 32000,
+              rating: 4.4,
+              views: 140,
+              deadline: '2025-09-12'
+            },
+            {
+              id: 9,
+              title: '공포의 밤',
+              category: 'horror',
+              location: '서울 강남구 논현로 123',
+              image: '/images/event4.jpg',
+              price: 22000,
+              rating: 4.2,
+              views: 110,
+              deadline: '2025-08-28'
+            },
+            {
+              id: 10,
+              title: '스릴러 극장',
+              category: 'thriller',
+              location: '서울 서초구 강남대로 456',
+              image: '/images/event5.jpg',
+              price: 28000,
+              rating: 4.5,
+              views: 130,
+              deadline: '2025-09-01'
+            },
+            {
+              id: 11,
+              title: '뮤지컬 나이트',
+              category: 'musical',
+              location: '서울 중구 을지로 789',
+              image: '/images/event1.jpg',
+              price: 45000,
+              rating: 4.9,
+              views: 220,
+              deadline: '2025-09-15'
+            },
+            {
+              id: 12,
+              title: '오페라 하우스',
+              category: 'musical',
+              location: '서울 종로구 인사동길 123',
+              image: '/images/event2.jpg',
+              price: 50000,
+              rating: 4.7,
+              views: 190,
+              deadline: '2025-09-20'
             }
           ];
+          
+          // 랜덤으로 6개 선택
+          const shuffled = allDummyPlays.sort(() => 0.5 - Math.random());
+          const dummyPlays = shuffled.slice(0, 6);
           
           setPlays(dummyPlays);
           setLoading(false);
@@ -435,14 +538,7 @@ const Genre = () => {
       <Topnav />
 
       <h2 className="genre-title">
-        Recommendation For U
-        <span className="genre-subtitle">* 테스트를 진행하면 맞춤 추천결과를 볼 수 있습니다.</span>
-        <button 
-          className="test-button"
-          onClick={() => navigate('/test/my-test')}
-        >
-          Test
-        </button>
+        {category ? `${category} Events` : 'All Events'}
       </h2>
       {category && <span className="category-chip">{category}</span>}
 
