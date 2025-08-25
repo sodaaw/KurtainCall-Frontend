@@ -637,3 +637,140 @@
 .icon-btn[title="comment"]:active {
   transform: scale(0.95);
 }
+
+/* ===== 카테고리별 포스터 섹션 스타일 ===== */
+.category-posters-section {
+  margin: 40px 0;
+  padding: 0 20px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #d4af37;
+  text-align: center;
+  margin-bottom: 30px;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.category-group {
+  margin-bottom: 40px;
+}
+
+.category-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f5f5f5;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  border-left: 4px solid #d4af37;
+}
+
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.category-poster-card {
+  background: rgba(26, 26, 26, 0.8);
+  border: 2px solid #8B0000;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+.category-poster-card:hover {
+  transform: translateY(-5px);
+  border-color: #d4af37;
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+}
+
+.category-poster-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.category-poster-card:hover .category-poster-img {
+  transform: scale(1.05);
+}
+
+.category-poster-info {
+  padding: 15px;
+}
+
+.category-poster-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f5f5f5;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.category-poster-location {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin: 0 0 8px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.category-poster-price {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #d4af37;
+  margin: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .poster-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+  }
+  
+  .category-poster-img {
+    height: 200px;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+  }
+  
+  .category-title {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .poster-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+  }
+  
+  .category-poster-img {
+    height: 150px;
+  }
+  
+  .category-poster-info {
+    padding: 10px;
+  }
+  
+  .category-poster-title {
+    font-size: 0.9rem;
+  }
+  
+  .category-poster-location,
+  .category-poster-price {
+    font-size: 0.8rem;
+  }
+}

@@ -179,6 +179,16 @@ const Genre = () => {
   const [plays, setPlays] = useState([]);
   const [loading, setLoading] = useState(true);
   
+  // 카테고리별 포스터 데이터
+  const [categoryPlays, setCategoryPlays] = useState({
+    comedy: [],
+    romance: [],
+    horror: [],
+    thriller: [],
+    musical: [],
+    drama: []
+  });
+  
   // 기존 상태들
   const [current, setCurrent] = useState(0);
   const [reviews, setReviews] = useState(SAMPLE_REVIEWS);
@@ -195,200 +205,74 @@ const Genre = () => {
   // See all / Filtering 토글
   const [viewMode, setViewMode] = useState('all'); // 'all' | 'filtered'
 
-  // API 호출 - 여러 엔드포인트 시도
+  // 백엔드 API 호출
   useEffect(() => {
     const fetchPlays = async () => {
       try {
-        // 여러 가능한 API 엔드포인트 시도
-        const possibleEndpoints = [
-          '/api/play',
-          '/api/plays', 
-          '/api/theater',
-          '/api/shows',
-          '/api/movies' // 기존에 작동했던 엔드포인트
-        ];
+        console.log('백엔드 API에서 연극 데이터를 가져오는 중...');
+        const response = await axios.get('https://re-local.onrender.com/api/play');
         
-        let playsData = null;
-        
-        for (const endpoint of possibleEndpoints) {
-          try {
-            console.log(`API 엔드포인트 시도: ${endpoint}`);
-            const response = await axios.get(`https://re-local.onrender.com${endpoint}`);
-            
-            if (response.data && response.data.items) {
-              playsData = response.data.items;
-              console.log(`성공: ${endpoint}에서 데이터 로드됨`);
-              break;
-            } else if (response.data && Array.isArray(response.data)) {
-              playsData = response.data;
-              console.log(`성공: ${endpoint}에서 배열 데이터 로드됨`);
-              break;
-            }
-          } catch (endpointError) {
-            console.log(`${endpoint} 실패:`, endpointError.message);
-            continue;
-          }
-        }
-        
-        if (playsData) {
+                if (response.data && response.data.items) {
+          const playsData = response.data.items;
+          console.log('백엔드 API에서 데이터 로드 성공:', playsData.length, '개 항목');
+          
           // API 데이터를 올바른 형식으로 변환
           const formattedPlays = playsData.map(item => ({
             id: item.id || item.movie_id || Math.random(),
             title: item.title || item.name || '제목 없음',
             category: item.category || item.genre || '카테고리 없음',
             location: item.area || item.location || item.venue || '장소 없음',
-            image: item.image || '/images/event1.jpg',
+            image: item.posterUrl || item.image || '/images/event1.jpg',
             price: item.price || 0,
             rating: item.stars || item.rating || 0,
             views: item.views || 0,
             deadline: item.end_date || '마감일 없음'
           }));
           
+          // 카테고리별로 데이터 분류
+          const categorized = {
+            comedy: [],
+            romance: [],
+            horror: [],
+            thriller: [],
+            musical: [],
+            drama: []
+          };
+          
+          formattedPlays.forEach(play => {
+            const playCategory = play.category.toLowerCase();
+            if (categorized[playCategory]) {
+              categorized[playCategory].push(play);
+            } else if (playCategory.includes('comedy') || playCategory.includes('코미디')) {
+              categorized.comedy.push(play);
+            } else if (playCategory.includes('romance') || playCategory.includes('로맨스')) {
+              categorized.romance.push(play);
+            } else if (playCategory.includes('horror') || playCategory.includes('공포')) {
+              categorized.horror.push(play);
+            } else if (playCategory.includes('thriller') || playCategory.includes('스릴러')) {
+              categorized.thriller.push(play);
+            } else if (playCategory.includes('musical') || playCategory.includes('뮤지컬')) {
+              categorized.musical.push(play);
+            } else {
+              categorized.drama.push(play);
+            }
+          });
+          
+          setCategoryPlays(categorized);
           setPlays(formattedPlays);
           setLoading(false);
         } else {
-          // 모든 API 시도 실패 시 확장된 더미 데이터 사용
-          console.log('모든 API 엔드포인트 실패, 확장된 더미 데이터 사용');
-          const allDummyPlays = [
-            {
-              id: 1,
-              title: '웃음의 학교',
-              category: 'comedy',
-              location: '서울 종로구 대학로10길 11',
-              image: '/images/event1.jpg',
-              price: 20000,
-              rating: 4.8,
-              views: 150,
-              deadline: '2025-08-25'
-            },
-            {
-              id: 2,
-              title: '개그맨의 밤',
-              category: 'comedy',
-              location: '서울 마포구 홍대로 123',
-              image: '/images/event2.jpg',
-              price: 25000,
-              rating: 4.5,
-              views: 120,
-              deadline: '2025-08-30'
-            },
-            {
-              id: 3,
-              title: '즉흥 연기',
-              category: 'comedy',
-              location: '서울 강남구 강남대로 456',
-              image: '/images/event3.jpg',
-              price: 30000,
-              rating: 4.7,
-              views: 180,
-              deadline: '2025-09-05'
-            },
-            {
-              id: 4,
-              title: '코미디 클럽',
-              category: 'comedy',
-              location: '서울 서초구 서초대로 789',
-              image: '/images/event4.jpg',
-              price: 18000,
-              rating: 4.3,
-              views: 90,
-              deadline: '2025-09-10'
-            },
-            {
-              id: 5,
-              title: '로미오와 줄리엣',
-              category: 'romance',
-              location: '서울 중구 세종대로 123',
-              image: '/images/event5.jpg',
-              price: 35000,
-              rating: 4.9,
-              views: 200,
-              deadline: '2025-08-27'
-            },
-            {
-              id: 6,
-              title: '사랑의 시',
-              category: 'romance',
-              location: '서울 종로구 대학로 456',
-              image: '/images/event1.jpg',
-              price: 28000,
-              rating: 4.6,
-              views: 160,
-              deadline: '2025-09-02'
-            },
-            {
-              id: 7,
-              title: '로맨틱 발레',
-              category: 'romance',
-              location: '서울 강남구 테헤란로 789',
-              image: '/images/event2.jpg',
-              price: 40000,
-              rating: 4.8,
-              views: 180,
-              deadline: '2025-09-07'
-            },
-            {
-              id: 8,
-              title: '사랑 이야기',
-              category: 'romance',
-              location: '서울 마포구 와우산로 321',
-              image: '/images/event3.jpg',
-              price: 32000,
-              rating: 4.4,
-              views: 140,
-              deadline: '2025-09-12'
-            },
-            {
-              id: 9,
-              title: '공포의 밤',
-              category: 'horror',
-              location: '서울 강남구 논현로 123',
-              image: '/images/event4.jpg',
-              price: 22000,
-              rating: 4.2,
-              views: 110,
-              deadline: '2025-08-28'
-            },
-            {
-              id: 10,
-              title: '스릴러 극장',
-              category: 'thriller',
-              location: '서울 서초구 강남대로 456',
-              image: '/images/event5.jpg',
-              price: 28000,
-              rating: 4.5,
-              views: 130,
-              deadline: '2025-09-01'
-            },
-            {
-              id: 11,
-              title: '뮤지컬 나이트',
-              category: 'musical',
-              location: '서울 중구 을지로 789',
-              image: '/images/event1.jpg',
-              price: 45000,
-              rating: 4.9,
-              views: 220,
-              deadline: '2025-09-15'
-            },
-            {
-              id: 12,
-              title: '오페라 하우스',
-              category: 'musical',
-              location: '서울 종로구 인사동길 123',
-              image: '/images/event2.jpg',
-              price: 50000,
-              rating: 4.7,
-              views: 190,
-              deadline: '2025-09-20'
-            }
-          ];
-          
-          // 랜덤으로 6개 선택
-          const shuffled = allDummyPlays.sort(() => 0.5 - Math.random());
-          const dummyPlays = shuffled.slice(0, 6);
-          
-          setPlays(dummyPlays);
+          // API에서 데이터를 가져올 수 없는 경우
+          console.log('백엔드 API에서 데이터를 가져올 수 없습니다.');
+          setCategoryPlays({
+            comedy: [],
+            romance: [],
+            horror: [],
+            thriller: [],
+            musical: [],
+            drama: []
+          });
+          setPlays([]);
           setLoading(false);
         }
       } catch (error) {
@@ -542,7 +426,126 @@ const Genre = () => {
       </h2>
       {category && <span className="category-chip">{category}</span>}
 
-      {/* ===== 포스터 섹션 (위) ===== */}
+      {/* ===== 현재 카테고리 포스터 섹션 ===== */}
+      {category ? (
+        <section className="category-posters-section">
+          <h3 className="section-title">{category} Posters</h3>
+          
+          <div className="category-group">
+            <h4 className="category-title">{category}</h4>
+            <div className="poster-grid">
+              {categoryPlays[category.toLowerCase()]?.slice(0, 12).map((play) => (
+                <div 
+                  key={play.id} 
+                  className="category-poster-card"
+                  onClick={() => navigate('/genre/recommended', { state: { selectedPoster: play } })}
+                >
+                  <img src={play.image} alt={play.title} className="category-poster-img" />
+                  <div className="category-poster-info">
+                    <h5 className="category-poster-title">{play.title}</h5>
+                    <p className="category-poster-location">{play.location}</p>
+                    <p className="category-poster-price">₩{play.price?.toLocaleString()}</p>
+                  </div>
+                </div>
+              )) || (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', opacity: 0.7 }}>
+                  <p>이 카테고리에 해당하는 포스터가 없습니다.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section className="category-posters-section">
+          <h3 className="section-title">All Category Posters</h3>
+          
+          {/* 코미디 카테고리 */}
+          <div className="category-group">
+            <h4 className="category-title">Comedy</h4>
+            <div className="poster-grid">
+              {categoryPlays.comedy.slice(0, 6).map((play) => (
+                <div 
+                  key={play.id} 
+                  className="category-poster-card"
+                  onClick={() => navigate('/genre/recommended', { state: { selectedPoster: play } })}
+                >
+                  <img src={play.image} alt={play.title} className="category-poster-img" />
+                  <div className="category-poster-info">
+                    <h5 className="category-poster-title">{play.title}</h5>
+                    <p className="category-poster-location">{play.location}</p>
+                    <p className="category-poster-price">₩{play.price?.toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 로맨스 카테고리 */}
+          <div className="category-group">
+            <h4 className="category-title">Romance</h4>
+            <div className="poster-grid">
+              {categoryPlays.romance.slice(0, 6).map((play) => (
+                <div 
+                  key={play.id} 
+                  className="category-poster-card"
+                  onClick={() => navigate('/genre/recommended', { state: { selectedPoster: play } })}
+                >
+                  <img src={play.image} alt={play.title} className="category-poster-img" />
+                  <div className="category-poster-info">
+                    <h5 className="category-poster-title">{play.title}</h5>
+                    <p className="category-poster-location">{play.location}</p>
+                    <p className="category-poster-price">₩{play.price?.toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 뮤지컬 카테고리 */}
+          <div className="category-group">
+            <h4 className="category-title">Musical</h4>
+            <div className="poster-grid">
+              {categoryPlays.musical.slice(0, 6).map((play) => (
+                <div 
+                  key={play.id} 
+                  className="category-poster-card"
+                  onClick={() => navigate('/genre/recommended', { state: { selectedPoster: play } })}
+                >
+                  <img src={play.image} alt={play.title} className="category-poster-img" />
+                  <div className="category-poster-info">
+                    <h5 className="category-poster-title">{play.title}</h5>
+                    <p className="category-poster-location">{play.location}</p>
+                    <p className="category-poster-price">₩{play.price?.toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 드라마 카테고리 */}
+          <div className="category-group">
+            <h4 className="category-title">Drama</h4>
+            <div className="poster-grid">
+              {categoryPlays.drama.slice(0, 6).map((play) => (
+                <div 
+                  key={play.id} 
+                  className="category-poster-card"
+                  onClick={() => navigate('/genre/recommended', { state: { selectedPoster: play } })}
+                >
+                  <img src={play.image} alt={play.title} className="category-poster-img" />
+                  <div className="category-poster-info">
+                    <h5 className="category-poster-title">{play.title}</h5>
+                    <p className="category-poster-location">{play.location}</p>
+                    <p className="category-poster-price">₩{play.price?.toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ===== 기존 포스터 섹션 (위) ===== */}
       {len === 0 ? (
         <div style={{ opacity: 0.7, padding: '24px 0' }}>조건에 맞는 결과가 없습니다.</div>
       ) : (
@@ -556,7 +559,7 @@ const Genre = () => {
             >
               <img src={p.image} alt={p.title} className="poster-img-mine" />
               <div className="poster-title">{p.title}</div>
-              <div className="poster-info">
+              <div className="category-poster-info">
                 {p.category} {p.location && `| ${p.location}`}
               </div>
             </div>
