@@ -98,6 +98,7 @@ function Hero({ plays, isLoading, error }) {
   }
 
   const current = plays[idx % total];
+  console.log('포스터:', current.title, current.posterUrl); 
 
   // current가 유효한지 한번 더 확인
   if (!current) {
@@ -124,7 +125,8 @@ function Hero({ plays, isLoading, error }) {
             rel="noopener noreferrer"
             className="poster-link"
           >
-            <img src={current.posterUrl} alt={current.title} className="poster-img" />
+            <img src={`http://localhost:4000/image-proxy?url=${encodeURIComponent(current.posterUrl)}`}
+ alt={current.title} className="poster-img" />
           </a>
           <div className="poster-title">{current.title}</div>
           {current.location?.address && (

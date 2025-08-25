@@ -1,0 +1,161 @@
+/* 🎭 Theme */
+:root {
+    --bg: #0f0f11;
+    --panel: #17181c;
+    --panel-2: #1e2026;
+    --text: #e9e9ee;
+    --muted: #a8acb8;
+    --primary: #e11d48;          /* 포인트 레드 */
+    --primary-20: rgba(225,29,72,0.2);
+    --ring: rgba(225,29,72,0.35);
+    --card-radius: 14px;
+    --gap: 16px;
+  }
+  
+  /* 전체 페이지 컨테이너 */
+  .search-results-page {
+    color: var(--text);
+    background: radial-gradient(1200px 600px at 50% -200px, #2a0f14 0%, #12090a 40%, var(--bg) 70%);
+    min-height: 100vh;
+    padding: 24px clamp(16px, 4vw, 40px);
+  }
+  
+  /* 상단 헤더: 스티키 */
+  .results-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0 18px;
+    background: linear-gradient(to bottom, rgba(15,15,17,0.85), rgba(15,15,17,0.0));
+    backdrop-filter: blur(4px);
+  }
+  
+  .results-header h1 {
+    font-size: clamp(18px, 2.4vw, 24px);
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .results-header button {
+    border: 1px solid var(--ring);
+    background: var(--panel);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 8px 10px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .results-header button:hover { box-shadow: 0 0 0 4px var(--primary-20); border-color: var(--primary); }
+  
+  /* 결과 그리드 */
+  .results-grid {
+    list-style: none;
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    padding: 0;
+    margin: 18px 0 40px;
+  }
+  
+  /* 카드 */
+  .result-card {
+    background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .result-card a {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    color: inherit;
+    text-decoration: none;
+    height: 100%;
+  }
+  .result-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-20);
+    box-shadow: 0 10px 30px rgba(225,29,72,0.12);
+  }
+  
+  /* 포스터 */
+  .result-card img {
+    width: 100%;
+    aspect-ratio: 2 / 3;          /* 600x900 비율 느낌 */
+    object-fit: cover;
+    background: #2a2d35;
+    display: block;
+  }
+  
+  /* 메타 */
+  .result-card .meta {
+    padding: 12px 12px 14px;
+    display: grid;
+    gap: 6px;
+  }
+  .result-card .meta h3 {
+    font-size: 15px;
+    line-height: 1.35;
+    margin: 0;
+  }
+  .result-card .meta p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .result-card .meta .address {
+    font-size: 12px;
+    color: #c9cbd4;
+    opacity: .85;
+  }
+  
+  /* 하이라이트 <mark> */
+  .result-card mark {
+    background: linear-gradient(90deg, rgba(225,29,72,.15), rgba(225,29,72,.05));
+    color: #ffd6de;
+    padding: 0 2px;
+    border-radius: 4px;
+  }
+  
+  /* 비어있음 / 로딩 텍스트 */
+  .search-results-page p {
+    color: var(--muted);
+  }
+  
+  /* 스켈레톤 로더 (로딩 중 카드용) */
+  .skel {
+    background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+  }
+  .skel .ph {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: #2a2d35;
+    position: relative;
+    overflow: hidden;
+  }
+  .skel .ph::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.12) 50%, transparent 100%);
+    transform: translateX(-100%);
+    animation: shimmer 1.2s infinite;
+  }
+  .skel .lines { padding: 12px; }
+  .skel .line { height: 10px; border-radius: 6px; background: #323643; margin-bottom: 8px; }
+  .skel .line.sm { width: 60%; }
+  
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
+  }
+  
+  /* 좁은 화면 */
+  @media (max-width: 420px) {
+    .results-grid { grid-template-columns: 1fr 1fr; }
+  }
+  
