@@ -67,17 +67,19 @@
 /* 히어로 섹션 */
 .results-hero {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  max-width: 1200px;
+  justify-content: center;
+  max-width: 800px;
   margin: 0 auto;
   padding: 60px 20px;
   gap: 40px;
+  text-align: center;
 }
 
 .hero-text {
   flex: 1;
-  text-align: left;
+  text-align: center;
 }
 
 .hero-title {
@@ -97,8 +99,8 @@
 
 .hero-avatar {
   flex-shrink: 0;
-  width: 300px;
-  height: 300px;
+  width: 280px;
+  height: 280px;
   border-radius: 50%;
   overflow: hidden;
   border: 4px solid var(--accent-color);
@@ -572,6 +574,53 @@
   box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
 }
 
+/* 추천 해시태그 섹션 */
+.recommend-hashtags {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 0 20px;
+}
+
+.hashtags-title {
+  font-size: 1.8rem;
+  color: var(--accent-color);
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+.hashtag-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.hashtag {
+  background: linear-gradient(135deg, var(--accent-color), #FFA500);
+  color: var(--primary-color);
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.hashtag:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+  background: linear-gradient(135deg, #FFA500, var(--accent-color));
+}
+
+.hashtag:active {
+  transform: translateY(-1px);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .results-hero {
@@ -579,6 +628,7 @@
     text-align: center;
     padding: 40px 20px;
     gap: 30px;
+    max-width: 600px;
   }
   
   .hero-title {
@@ -607,6 +657,15 @@
   .results-actions button {
     width: 100%;
     max-width: 300px;
+  }
+  
+  .hashtag-wrap {
+    gap: 12px;
+  }
+  
+  .hashtag {
+    padding: 10px 20px;
+    font-size: 0.9rem;
   }
 }
 
@@ -637,5 +696,18 @@
   .results-actions button {
     padding: 15px 30px;
     font-size: 1rem;
+  }
+  
+  .hashtags-title {
+    font-size: 1.5rem;
+  }
+  
+  .hashtag-wrap {
+    gap: 10px;
+  }
+  
+  .hashtag {
+    padding: 8px 16px;
+    font-size: 0.85rem;
   }
 }

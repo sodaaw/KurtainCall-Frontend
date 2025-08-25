@@ -1,0 +1,184 @@
+/* UserPage 전체 컨테이너 */
+.userpage-container {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+  color: #e5e7eb;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 커튼 배경 요소들 */
+.userpage-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(139, 0, 0, 0.1) 0%, rgba(139, 0, 0, 0.05) 50%, rgba(139, 0, 0, 0.1) 100%);
+  z-index: 1;
+}
+
+.userpage-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(139, 0, 0, 0.1) 0%, transparent 50%);
+  z-index: 1;
+}
+
+/* 메인 컨텐츠 */
+.userpage-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 100px auto 0 auto;
+  text-align: center;
+}
+
+/* 헤더 */
+.userpage-header {
+  margin-bottom: 60px;
+}
+
+.userpage-title {
+  color: #d4af37;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 16px 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  letter-spacing: -0.5px;
+}
+
+.userpage-subtitle {
+  color: #9ca3af;
+  font-size: 1.1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 사용자 그리드 */
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* 사용자 버튼 */
+.user-button {
+  background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+  border: 2px solid #8B0000;
+  border-radius: 20px;
+  padding: 40px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(139, 0, 0, 0.3);
+}
+
+.user-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #d4af37, #ffd700, #d4af37);
+  animation: curtainLine 3s ease-in-out infinite;
+}
+
+@keyframes curtainLine {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.user-button:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(139, 0, 0, 0.5);
+  border-color: #d4af37;
+}
+
+.user-button:active {
+  transform: translateY(-4px);
+}
+
+/* 사용자 번호 */
+.user-number {
+  color: #d4af37;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* 사용자 라벨 */
+.user-label {
+  color: #e5e7eb;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .userpage-content {
+    margin: 80px auto 0 auto;
+    padding: 0 20px;
+  }
+  
+  .userpage-title {
+    font-size: 2rem;
+  }
+  
+  .user-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 400px;
+  }
+  
+  .user-button {
+    padding: 30px 20px;
+  }
+  
+  .user-number {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .userpage-container {
+    padding: 15px;
+  }
+  
+  .userpage-content {
+    margin: 60px auto 0 auto;
+  }
+  
+  .userpage-title {
+    font-size: 1.8rem;
+  }
+  
+  .userpage-subtitle {
+    font-size: 1rem;
+  }
+  
+  .user-button {
+    padding: 25px 15px;
+  }
+  
+  .user-number {
+    font-size: 2rem;
+  }
+  
+  .user-label {
+    font-size: 1.1rem;
+  }
+}
