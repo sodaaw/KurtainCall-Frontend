@@ -1,244 +1,216 @@
-import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import Topnav from './Topnav';
-import './TestResults.css';
 
-const TestResults = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const testResults = location.state?.testResults;
+// src/TestResults.jsx
+import React, { useEffect, useMemo } from 'react';  // 리액트 훅들 사용
+import { useLocation, useNavigate } from 'react-router-dom';  // 라우팅 훅
+import Topnav from './Topnav';  // 상단 네비
+import './TestResults.css';  // 필요시 스타일
 
-  const handleRetakeTest = () => {
-    navigate('/test/my-test');
-  };
+// 1) 캐릭터별 문항 가중치 (초간단 규칙)  -------------------------------
+// 점수 = Σ(문항점수 × 가중치). 무응답은 4점(중립) 처리.
+const WEIGHTS = {  // 문항은 1-indexed, answers 배열은 0-indexed 주의
+  Romeo:        {1:2, 2:2, 11:1},
+  Hamlet:       {3:2, 4:2, 14:1, 17:1},
+  Macbeth:      {5:2, 6:1, 15:1, 16:1, 17:1},
+  LadyMacbeth:  {6:2, 5:1, 15:1, 14:1},
+  Viola:        {9:2, 11:1, 7:1},
+  Beatrice:     {7:2, 8:2, 9:1},
+  Puck:         {10:2, 11:2, 16:1},
+  Cordelia:     {12:2, 20:2, 15:1},
+  Cyrano:       {8:2, 4:1, 7:1, 14:1},
+  JeanValjean:  {13:2, 12:1, 20:1, 15:1},
+};  // 필요시 이 맵만 바꿔도 로직 전체는 그대로 동작
 
-  // 테스트 결과를 로컬 스토리지에 저장
-  useEffect(() => {
-    if (testResults) {
-      const currentDate = new Date();
-      const dateStr = currentDate.toLocaleDateString('ko-KR');
-      const timeStr = currentDate.toLocaleTimeString('ko-KR', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      });
+// 2) 결과 카드 메타(문구/이미지/팁)  ------------------------------------
+const CHARACTER_META = {
+  Romeo: {
+    title: '로미오형 – 즉흥적 낭만주의자',
+    why: '감정이 먼저 움직이고, 빠르게 달리는 로맨스에 심장이 바로 반응한다고 하셨어요. 큰 감정선이 치고 나가는 이야기에서 가장 행복해지는 타입이에요.',
+    mood: ['로맨틱 드라마', '청춘극', '뮤지컬'],
+    imageSrc: '/images/1. 로미오.png',
+    tip: (q18, q19) => ({
+      seat: q19 >= 5 ? '근거리(감정선·호흡)' : '중간열(균형)',  // Q19=근접 선호
+      subtitle: q18 <= 3 ? '자막/해설 권장' : '자막 선택'         // Q18=복잡도 내성
+    }),
+  },
+  Hamlet: {
+    title: '햄릿형 – 깊이 사색하는 관객',
+    why: '길어도 좋은 대사와 생각할 거리가 많은 작품을 좋아한다고 하셨죠. 인물의 마음 결을 따라가며 의미를 오래 씹는 편이에요.',
+    mood: ['심리극', '고전 비극'],
+    imageSrc: '/images/2. 햄릿.png',
+    tip: (q18, q19) => ({
+      seat: q19 >= 5 ? '중전방 중앙' : '중간열',
+      subtitle: q18 <= 3 ? '자막 권장' : '자막 선택'
+    }),
+  },
+  Macbeth: {
+    title: '맥베스형 – 강렬한 속도·야망 서사 선호',
+    why: '팽팽한 긴장감과 거침없는 연출에 쾌감을 느낀다고 답하셨어요. 템포 빠르고 에너지 높은 이야기에서 몰입이 최대로 올라갑니다.',
+    mood: ['스릴러 드라마', '다크 클래식'],
+    imageSrc: '/images/3. 맥베스.png',
+    tip: (q18) => ({ seat: '중간열', subtitle: q18 <= 3 ? '자막 권장' : '자막 선택' }),
+  },
+  LadyMacbeth: {
+    title: '레이디 맥베스형 – 주도권과 심리의 파고',
+    why: '욕망과 권력의 심리전, 선택의 무게에 끌린다고 하셨어요. 인물의 결단이 판을 뒤집는 순간에 강하게 몰입하는 타입이에요.',
+    mood: ['심리극', '권력·도덕 갈등'],
+    imageSrc: '/images/4. 레이디 맥베스.png',
+    tip: (q18, q19) => ({ seat: q19 >= 5 ? '근·중거리' : '중간열', subtitle: q18 <= 3 ? '자막 권장' : '자막 선택' }),
+  },
+  Viola: {
+    title: '비올라형(〈십이야〉) – 재치와 변장의 코미디 감각',
+    why: '가볍고 유쾌한 톤, 위트 있는 상황극이 취향이라고 하셨죠. 정체성 뒤바뀜과 오해 게임에서 오는 유머를 특히 즐깁니다.',
+    mood: ['로맨틱 코미디', '상황극'],
+    imageSrc: '/images/5. 비올라형.png',
+    tip: (q18) => ({ seat: '사이드 중간열', subtitle: q18 <= 3 ? '해설 추천' : '자막 선택' }),
+  },
+  Beatrice: {
+    title: '베아트리체형(〈헛소동〉) – 말맛과 티키타카 애호가',
+    why: '말맛 좋은 대사, 빠른 티키타카에 설렌다고 하셨어요. 재치 있는 설전과 밀당 로맨스에서 재미를 가장 크게 느끼는 타입이에요.',
+    mood: ['코미디 오브 매너스', '대사 위주 로코'],
+    imageSrc: '/images/6. 베아트라체.png',
+    tip: (q18) => ({ seat: '중간열', subtitle: q18 <= 3 ? '해설 추천' : '자막 선택' }),
+  },
+  Puck: {
+    title: '퍽형(〈한여름밤의 꿈〉) – 판타지·무대마술 애호가',
+    why: '시각적인 장치와 환상적인 분위기에 끌린다고 하셨어요. 몸으로 느끼는 리듬과 무대의 ‘마술’이 있는 작품을 좋아합니다.',
+    mood: ['판타지극', '넌버벌'],
+    imageSrc: '/images/7. 퍽.png',
+    tip: () => ({ seat: '중·후열(전경)', subtitle: '자막 불필요' }),
+  },
+  Cordelia: {
+    title: '코델리아형(〈리어왕〉) – 진정성과 가족 드라마 지향',
+    why: '관계의 진심, 책임과 윤리 같은 주제가 마음에 남는다고 하셨어요. 조용하지만 묵직한 감정선을 오래 품는 타입이에요.',
+    mood: ['가족 비극', '인물 드라마'],
+    imageSrc: '/images/8. 코델리아.png',
+    tip: (q18) => ({ seat: '근거리', subtitle: q18 <= 3 ? '자막 권장' : '자막 선택' }),
+  },
+  Cyrano: {
+    title: '시라노형 – 언어와 낭만의 미학',
+    why: '시적인 표현과 우아한 낭만을 즐긴다고 하셨죠. 말의 리듬과 운율, 고전적 매무새에서 큰 만족을 느낍니다.',
+    mood: ['낭만드라마', '클래식 코미디'],
+    imageSrc: '/images/9. 시라노.png',
+    tip: (q18) => ({ seat: '중간열(대사 밸런스)', subtitle: q18 <= 3 ? '자막 권장' : '자막 선택' }),
+  },
+  JeanValjean: {
+    title: '장 발장형(〈레 미제라블〉) – 구원·도덕의 휴먼 드라마',
+    why: '선한 의지와 구원의 이야기에 약하다고 하셨어요. 사람을 살리는 선택과 눈물 포인트에서 깊게 흔들리는 타입이에요.',
+    mood: ['휴먼 드라마', '대형 뮤지컬'],
+    imageSrc: '/images/10. 장발장.png',
+    tip: (q18) => ({ seat: '중·후열(스케일)', subtitle: q18 <= 3 ? '해설 추천' : '자막 선택' }),
+  },
+};
 
-      // 6가지 캐릭터 분석 로직
-      const sum = (idxList) => idxList.reduce((acc, i) => acc + (Number(testResults[i]) || 0), 0);
+// 3) 점수 계산 유틸  ------------------------------------------------------
+function toAnswerArray(objLike) {  // {0:..,1:..} → 길이 20 배열
+  return Array.from({ length: 20 }, (_, i) => {
+    const v = Number(objLike?.[i]);        // 숫자 변환
+    return Number.isFinite(v) ? v : 4;     // 무응답은 4점(중립)
+  });
+}
 
-      // 각 차원별 점수 계산
-      const dramaticScore = sum([0, 12, 13]); // 드라마/비극, 감동, 철학적 작품
-      const comedyScore = sum([1, 18, 19]); // 코미디, 짧고 가벼운, 소통
-      const experimentalScore = sum([2, 6, 7]); // 실험적 연극, 상징적 작품, 각색 작품
-      const interactiveScore = sum([3, 4, 8]); // 인터랙티브, 몸짓/무언극, 소극장 친밀
-      const socialScore = sum([5, 9, 16]); // 사회적 메시지, 대규모 공연, 라이브 연기
-      const traditionalScore = sum([10, 11, 15]); // 새로운 배우, 유명 배우, 한국적 정서
-
-      // 가장 높은 점수를 가진 차원을 찾아 캐릭터 결정
-      const scores = [
-        { name: 'dramatic', score: dramaticScore, label: '드라마틱' },
-        { name: 'comedy', score: comedyScore, label: '코미디' },
-        { name: 'experimental', score: experimentalScore, label: '실험적' },
-        { name: 'interactive', score: interactiveScore, label: '인터랙티브' },
-        { name: 'social', score: socialScore, label: '소셜' },
-        { name: 'traditional', score: traditionalScore, label: '전통적' }
-      ];
-
-      // 점수 순으로 정렬하여 상위 3개 캐릭터 선택
-      scores.sort((a, b) => b.score - a.score);
-      const topCharacter = scores[0];
-      const secondaryCharacter = scores[1];
-      const tertiaryCharacter = scores[2];
-
-      // 저장할 테스트 결과 객체
-      const testResult = {
-        date: dateStr,
-        time: timeStr,
-        topCharacter: topCharacter.name,
-        topCharacterLabel: topCharacter.label,
-        topScore: topCharacter.score,
-        secondaryCharacter: secondaryCharacter.name,
-        secondaryCharacterLabel: secondaryCharacter.label,
-        secondaryScore: secondaryCharacter.score,
-        tertiaryCharacter: tertiaryCharacter.name,
-        tertiaryCharacterLabel: tertiaryCharacter.label,
-        tertiaryScore: tertiaryCharacter.score,
-        allScores: scores,
-        answers: testResults
-      };
-
-      // 기존 결과 불러오기
-      const existingResults = JSON.parse(localStorage.getItem('theaterCharacterResults') || '[]');
-      
-      // 새 결과 추가 (최신 순으로 정렬)
-      const updatedResults = [testResult, ...existingResults];
-      
-      // 로컬 스토리지에 저장
-      localStorage.setItem('theaterCharacterResults', JSON.stringify(updatedResults));
+function scoreCharacters(answers20) {
+  const raw = {};                           // 캐릭터별 원점수
+  for (const [name, wm] of Object.entries(WEIGHTS)) {
+    let sum = 0, wsum = 0;
+    for (const [qStr, w] of Object.entries(wm)) {
+      const idx = Number(qStr) - 1;         // 1-indexed → 0-indexed
+      sum  += (answers20[idx] ?? 4) * w;    // 무응답 4점 처리
+      wsum += w;
     }
-  }, [testResults]);
-
-  if (!testResults) {
-    return (
-      <div className="testresults-container">
-        <Topnav />
-        <div className="testresults-content">
-          <div className="testresults-header">
-            <h1 className="testresults-title">Test Results</h1>
-            <p className="testresults-subtitle">No test results found. Please take the test first.</p>
-            <button className="retake-btn" onClick={handleRetakeTest}>
-              Take Test
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+    raw[name] = { raw: sum, norm: sum / (7 * wsum), wsum };
   }
+  // Top1 선택
+  const ranked = Object.entries(raw).sort((a, b) => b[1].raw - a[1].raw);
+  const [topKey] = ranked[0];               // 최고 점수 캐릭터
+  return { topKey, detail: raw, ranked };
+}
 
-  const sum = (idxList) => idxList.reduce((acc, i) => acc + (Number(testResults[i]) || 0), 0);
+// 4) 컴포넌트 본체  --------------------------------------------------------
+const TestResults = () => {
+  const { state } = useLocation();           // MyTest에서 넘어온 answers
+  const navigate = useNavigate();
 
-  // 각 차원별 점수 계산
-  const dramaticScore = sum([0, 12, 13]); // 드라마/비극, 감동, 철학적 작품
-  const comedyScore = sum([1, 18, 19]); // 코미디, 짧고 가벼운, 소통
-  const experimentalScore = sum([2, 6, 7]); // 실험적 연극, 상징적 작품, 각색 작품
-  const interactiveScore = sum([3, 4, 8]); // 인터랙티브, 몸짓/무언극, 소극장 친밀
-  const socialScore = sum([5, 9, 16]); // 사회적 메시지, 대규모 공연, 라이브 연기
-  const traditionalScore = sum([10, 11, 15]); // 새로운 배우, 유명 배우, 한국적 정서
+  // answers 배열 및 점수 계산
+  const { answers20, topKey, resultMeta, tips, ranked } = useMemo(() => {
+    const arr = toAnswerArray(state?.testResults || {});        // 20문항 배열화
+    const { topKey, ranked } = scoreCharacters(arr);            // 점수 계산
+    const meta = CHARACTER_META[topKey];                        // 카드 메타
+    const q18 = arr[17];                                        // 자막/복잡도
+    const q19 = arr[18];                                        // 근접 선호
+    const tipObj = meta?.tip ? meta.tip(q18, q19) : null;       // 팁 산출
+    return { answers20: arr, topKey, resultMeta: meta, tips: tipObj, ranked };
+  }, [state]);
 
-  // 가장 높은 점수를 가진 차원을 찾아 캐릭터 결정
-  const scores = [
-    { name: 'dramatic', score: dramaticScore, label: '드라마틱' },
-    { name: 'comedy', score: comedyScore, label: '코미디' },
-    { name: 'experimental', score: experimentalScore, label: '실험적' },
-    { name: 'interactive', score: interactiveScore, label: '인터랙티브' },
-    { name: 'social', score: socialScore, label: '소셜' },
-    { name: 'traditional', score: traditionalScore, label: '전통적' }
-  ];
-
-  // 점수 순으로 정렬하여 상위 3개 캐릭터 선택
-  scores.sort((a, b) => b.score - a.score);
-  const topCharacter = scores[0];
-  const secondaryCharacter = scores[1];
-  const tertiaryCharacter = scores[2];
-
-  // 6가지 캐릭터 정의
-  const characterInfo = {
-    dramatic: {
-      emoji: '🎭',
-      name: '드라마틱',
-      description: '감정적 깊이와 비극적 요소를 선호하는 연극 애호가입니다. 울림을 주는 드라마와 철학적 작품에서 진정한 연극의 의미를 찾습니다.',
-      traits: ['감정적 몰입', '비극적 요소 선호', '철학적 사고', '깊이 있는 감상'],
-      recommendedGenres: ['비극', '드라마', '철학극', '사회극'],
-      recommendedPlays: ['햄릿', '오이디푸스', '맥베스', '리어왕']
-    },
-    comedy: {
-      emoji: '😄',
-      name: '코미디',
-      description: '웃음과 즐거움을 선호하는 밝은 성향의 연극 애호가입니다. 가볍고 재미있는 작품에서 일상의 스트레스를 해소합니다.',
-      traits: ['유머러스', '가벼운 분위기', '즉흥적', '소통 선호'],
-      recommendedGenres: ['코미디', '패러디', '즉흥극', '가족극'],
-      recommendedPlays: ['한여름 밤의 꿈', '웃음의 학교', '즉흥 코미디', '가족 코미디']
-    },
-    experimental: {
-      emoji: '🔬',
-      name: '실험적',
-      description: '새로운 시도와 혁신적인 형식을 추구하는 도전적인 연극 애호가입니다. 기존의 틀을 깨는 실험적 작품에 매료됩니다.',
-      traits: ['혁신적 사고', '새로운 형식 추구', '상징적 해석', '예술적 도전'],
-      recommendedGenres: ['실험극', '상징극', '아방가르드', '멀티미디어'],
-      recommendedPlays: ['상징극', '실험적 작품', '아방가르드', '혁신적 연극']
-    },
-    interactive: {
-      emoji: '🤝',
-      name: '인터랙티브',
-      description: '관객 참여와 직접적인 소통을 즐기는 적극적인 연극 애호가입니다. 무대와 객석의 경계를 허물고 함께 만드는 연극을 선호합니다.',
-      traits: ['적극적 참여', '소통 선호', '친밀감', '몸짓 표현'],
-      recommendedGenres: ['인터랙티브', '참여형', '무언극', '소극장'],
-      recommendedPlays: ['인터랙티브 쇼', '참여형 워크숍', '무언극', '소극장 작품']
-    },
-    social: {
-      emoji: '🌍',
-      name: '소셜',
-      description: '사회적 메시지와 현실 문제를 다루는 작품을 선호하는 사회의식이 높은 연극 애호가입니다. 연극을 통해 사회를 바라보고 변화를 추구합니다.',
-      traits: ['사회적 의식', '현실 문제 관심', '메시지 전달', '대규모 공연'],
-      recommendedGenres: ['사회극', '리얼리즘', '다큐멘터리', '참여극'],
-      recommendedPlays: ['사회 문제극', '현실 드라마', '다큐멘터리', '참여형 사회극']
-    },
-    traditional: {
-      emoji: '🏛️',
-      name: '전통적',
-      description: '고전적 가치와 전통적 형식을 중시하는 보수적인 연극 애호가입니다. 검증된 작품과 유명 배우의 연기에서 안정감을 찾습니다.',
-      traits: ['전통 중시', '고전 선호', '안정감', '검증된 작품'],
-      recommendedGenres: ['고전극', '전통극', '클래식', '보수적'],
-      recommendedPlays: ['고전 작품', '전통 연극', '클래식', '보수적 작품']
+  // 진입 보호 + 결과 저장(로컬스토리지)
+  useEffect(() => {
+    if (!state?.testResults) {
+      navigate('/test/my-test', { replace: true });             // 보호 라우팅
+      return;
     }
-  };
+    const prev = JSON.parse(localStorage.getItem('theaterMBTIResults') || '[]');
+    prev.push({
+      timestamp: Date.now(),
+      answers: answers20,
+      top: topKey,
+      scores: ranked.reduce((acc, [k, v]) => { acc[k] = v.norm; return acc; }, {})
+    });
+    localStorage.setItem('theaterMBTIResults', JSON.stringify(prev));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!resultMeta) return null;  // 방어
 
   return (
     <div className="testresults-container">
       <Topnav />
 
-
-      <div className="testresults-content">
-        <div className="testresults-header">
-          <h1 className="testresults-title">Your Theater Character</h1>
-                     <p className="testresults-subtitle">여러분의 연극 성향은?</p>
+      {/* 히어로 섹션 */}
+      <div className="results-hero">
+        <div className="hero-text">
+          <h1 className="hero-title">
+            당신의 연극 캐릭터는<br />
+            <span className="hero-emph">{resultMeta.title}</span>
+          </h1>
         </div>
 
-        {/* 메인 캐릭터 섹션 */}
-        <section className="main-character">
-          <div className="character-emoji">{characterInfo[topCharacter.name].emoji}</div>
-          <h2 className="character-name">{characterInfo[topCharacter.name].name}</h2>
-          <p className="character-description">{characterInfo[topCharacter.name].description}</p>
-          <div className="character-score">점수: {topCharacter.score}</div>
-        </section>
-
-        {/* 캐릭터 특성 */}
-        <section className="character-traits">
-          <h3>주요 특성</h3>
-          <div className="traits-list">
-            {characterInfo[topCharacter.name].traits.map((trait, index) => (
-              <span key={index} className="trait-tag">{trait}</span>
-            ))}
-          </div>
-        </section>
-
-        {/* 추천 장르 */}
-        <section className="recommendations">
-          <h2>추천 장르</h2>
-          <div className="tag-list">
-            {characterInfo[topCharacter.name].recommendedGenres.map((genre, index) => (
-              <span key={index} className="tag">{genre}</span>
-            ))}
-          </div>
-        </section>
-
-        {/* 추천 작품 */}
-        <section className="recommendations">
-          <h2>추천 작품</h2>
-          <div className="cards">
-            {characterInfo[topCharacter.name].recommendedPlays.map((play, index) => (
-              <div key={index} className="card">{play}</div>
-            ))}
-          </div>
-        </section>
-
-        {/* 전체 6가지 캐릭터 점수 */}
-        <section className="all-characters">
-          <h2>전체 캐릭터 점수</h2>
-          <div className="character-scores">
-            {scores.map((char, index) => (
-              <div key={index} className={`character-score-item ${char.name === topCharacter.name ? 'top-character' : ''}`}>
-                <span className="character-emoji-small">{characterInfo[char.name].emoji}</span>
-                <span className="character-label">{char.label}</span>
-                <span className="score-value">{char.score}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <div className="action-buttons">
-          <button className="retake-btn" onClick={handleRetakeTest}>Retake Test</button>
+        <div className="hero-avatar">
+          <img
+            src={resultMeta.imageSrc || '/images/1. 로미오.png'}
+            alt={resultMeta.title}
+            onError={(e) => (e.currentTarget.src = '/images/1. 로미오.png')}
+          />
         </div>
       </div>
+
+      {/* 설명 카드 */}
+      <div className="results-card">
+        <ul className="bullet-list">
+          <li><strong>왜 이 결과?</strong> {resultMeta.why}</li>
+          <li><strong>추천 무드</strong> : {resultMeta.mood.join(' · ')}</li>
+          {tips && (
+            <li>
+              <strong>관람 팁</strong> : 좌석 {tips.seat} · {tips.subtitle}
+            </li>
+          )}
+          <li><strong>캐릭터 특징</strong> : {resultMeta.title}은(는) 연극을 통해 새로운 경험과 감정을 찾는 타입이에요. 당신도 무대 위의 이야기에 깊이 몰입할 수 있는 관객이 될 거예요!</li>
+        </ul>
+      </div>
+
+      {/* 액션 버튼 */}
+      <div className="results-actions">
+        <button className="primary" onClick={() => navigate('/test/my-test')}>
+          다시 하기
+        </button>
+        <button className="secondary" onClick={() => navigate('/test/database')}>
+          내 기록 보기
+        </button>
+      </div>
+
+      {/* (선택) 점수 디버그: 개발 단계에서만 보이도록 */}
+      {/* <details className="debug">
+        <summary>점수 보기 (개발용)</summary>
+        <pre>{JSON.stringify(ranked, null, 2)}</pre>
+      </details> */}
     </div>
   );
 };
