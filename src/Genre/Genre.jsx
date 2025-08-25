@@ -555,7 +555,7 @@ const Genre = () => {
               onClick={() => navigate('/genre/recommended', { state: { selectedPoster: p } })}
               style={{ cursor: 'pointer' }}
             >
-              <img src={p.image} alt={p.title} className="poster-img-mine" />
+              <img referrerPolicy="no-referrer" src={p.image} alt={p.title} className="poster-img-mine" />
               <div className="poster-title">{p.title}</div>
               <div className="poster-info">
                 {p.category} {p.location && `| ${p.location}`}
