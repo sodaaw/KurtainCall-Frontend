@@ -8,7 +8,7 @@ export default function SearchModal({ onClose }) {
   const navigate = useNavigate();
 
   const trendingKeywords = useMemo(
-    () => ["대학로", "로맨스", "코미디", "연극", "혜화역"], []
+    () => ["대학로", "Romance", "Comedy", "뱀프 X 헌터", "종로구"], []
   );
 
   const goSearch = (kw) => {
@@ -41,7 +41,7 @@ export default function SearchModal({ onClose }) {
 
         {/* 실시간 키워드 */}
         <div className="top-search-box">
-          <div className="top-search-header">실시간 검색어</div>
+          <div className="top-search-header">예시 검색어</div>
           <ul className="top-search-list">
             {trendingKeywords.map((keyword, idx) => (
               <li key={idx}>

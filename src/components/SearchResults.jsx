@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { searchAPI } from "../services/search";
+import './SearchResults.css';
 
 const API_BASE = 'http://localhost:4000';
 
