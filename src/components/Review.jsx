@@ -84,7 +84,7 @@ const Review = () => {
         <main className="review-content">
           <div className="review-photo-section">
             {currentReview.photos?.length ? (
-              <img 
+              <img referrerPolicy="no-referrer"
                 src={currentReview.photos[0]} 
                 alt="Review" 
                 className="review-photo"

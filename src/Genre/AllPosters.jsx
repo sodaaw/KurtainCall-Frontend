@@ -1,134 +1,241 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './Genre.css';
+// src/MainPage/Main.jsx
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import Topnav from "../components/Topnav";
+import SearchModal from "../components/SearchModal";
+import EventCalendar from "./EventCalendar.jsx"; // ✅ 분리한 캘린더
+import EventPanel from "./EventPanel.jsx";       // ✅ 분리한 우측 패널
+import { playAPI } from "../services/api";
+import "./Main.css";
 
-/** 객체/숫자/문자 무엇이 와도 안전하게 문자열로 변환 */
-const asText = (v, fallback = '') => {
-  if (v == null) return fallback;
-  if (typeof v === 'string' || typeof v === 'number') return String(v);
+// 카테고리 버튼 데이터 (API에서 받아올 예정)
+const DEFAULT_CATS = [
+  { 
+    label: "Comedy", 
+    slug: "comedy", 
+    icon: "😄",
+    description: "웃음과 유머"
+  },
+  { 
+    label: "Romance", 
+    slug: "romance", 
+    icon: "💕",
+    description: "사랑과 로맨스"
+  },
+  { 
+    label: "Horror", 
+    slug: "horror", 
+    icon: "👻",
+    description: "공포와 스릴"
+  },
+  { 
+    label: "Tragedy", 
+    slug: "tragedy", 
+    icon: "😢",
+    description: "비극과 슬픔"
+  },
+  { 
+    label: "Thriller", 
+    slug: "thriller", 
+    icon: "💥",
+    description: "긴장과 액션"
+  },
+  { 
+    label: "Musical", 
+    slug: "musical", 
+    icon: "🎵",
+    description: "음악과 노래"
+  },
+];
 
-  if (typeof v === 'object') {
-    if (v.address) {
-      const a = v.address;
-      if (typeof a === 'string') return a;
-      if (typeof a === 'object') {
-        return (
-          a.road ||
-          a.address_name ||
-          a.value ||
-          [a.city, a.district, a.street, a.detail].filter(Boolean).join(' ') ||
-          fallback
-        );
-      }
-    }
-    return (
-      v.name ||
-      v.title ||
-      v.label ||
-      Object.values(v).find((x) => typeof x === 'string') ||
-      fallback
-    );
-  }
-  return fallback;
-};
+/* 유틸 */
+const fmt = (d) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const inRange = (day, start, end) => day >= start && day <= end;
 
-const AllPosters = () => {
-  const [posters, setPosters] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+/* ---------------- 상단 메인이벤트(Hero) ---------------- */
+function Hero({ plays, isLoading, error }) {
+  const [idx, setIdx] = useState(0);
+  const total = plays?.length || 0;
 
   useEffect(() => {
-    const fetchPosters = async () => {
-      try {
-        const response = await axios.get('https://re-local.onrender.com/api/play');
+    if (total <= 1) return;
+    const timer = setInterval(() => setIdx((prev) => (prev + 1) % total), 5000);
+    return () => clearInterval(timer);
+  }, [total]);
 
-        if (response.data && response.data.items) {
-          const playsData = response.data.items;
-
-          // API -> 포스터 포맷
-          const formattedPosters = playsData.map((item) => ({
-            id: item.id || item.movie_id || Math.random(),
-            title: asText(item.title) || asText(item.name) || '제목 없음',
-            category: asText(item.category) || asText(item.genre) || '카테고리 없음',
-            location:
-              asText(item.area) || asText(item.location) || asText(item.venue) || '장소 없음',
-            image: item.posterUrl || item.image || '/images/event1.jpg',
-            price: Number(item.price) || 0,
-            rating: Number(item.stars ?? item.rating) || 0,
-          }));
-
-          setPosters(formattedPosters);
-          setLoading(false);
-        } else {
-          setPosters([]);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error('포스터 데이터 로드 실패:', error);
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-
-    fetchPosters();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className="genre-container">
-        <h2>All Posters</h2>
-        <div style={{ textAlign: 'center', padding: '100px 20px' }}>
-          <h3>Loading...</h3>
-          <p>포스터 정보를 불러오는 중입니다...</p>
-        </div>
-      </div>
+      <header className="hero">
+        <h1>Recommendation For U</h1>
+        <p>Live Local. Explore Korea.</p>
+        <div className="loading-spinner">Loading...</div>
+      </header>
     );
   }
 
   if (error) {
     return (
-      <div className="genre-container">
-        <h2>All Posters</h2>
-        <div style={{ textAlign: 'center', padding: '100px 20px', color: '#ff6b6b' }}>
-          <h3>Error</h3>
-          <p>데이터를 불러오는 중 오류가 발생했습니다: {error}</p>
+      <header className="hero">
+        <h1>Recommendation For U</h1>
+        <p>Live Local. Explore Korea.</p>
+        <div className="error-message">
+          <p>⚠️ {error}</p>
+          <p>백엔드 서버가 실행 중인지 확인해주세요.</p>
         </div>
-      </div>
+      </header>
     );
   }
 
-  if (posters.length === 0) {
+  if (!plays || plays.length === 0) {
     return (
-      <div className="genre-container">
-        <h2>All Posters</h2>
-        <div style={{ textAlign: 'center', padding: '100px 20px', opacity: 0.7 }}>
-          <h3>No Posters Found</h3>
-          <p>표시할 포스터가 없습니다.</p>
-        </div>
-      </div>
+      <header className="hero">
+        <h1>Recommendation For U</h1>
+        <p>Live Local. Explore Korea.</p>
+        <div className="no-data">데이터를 불러올 수 없습니다.</div>
+      </header>
+    );
+  }
+
+  const current = plays[idx % total];
+  console.log('포스터:', current.title, current.posterUrl); 
+
+  // current가 유효한지 한번 더 확인
+  if (!current) {
+    return (
+      <header className="hero">
+        <h1>Recommendation For U</h1>
+        <p>Live Local. Explore Korea.</p>
+        <div className="no-data">데이터를 불러올 수 없습니다.</div>
+      </header>
     );
   }
 
   return (
-    <div className="genre-container">
-      <h2>All Posters</h2>
-      <section className="poster-section grid-all">
-        {posters.map((p) => (
-          <div key={p.id} className="poster-card">
-            <img src={p.image} alt={asText(p.title, '제목')} className="poster-img" />
-            <h4>{asText(p.title, '제목 없음')}</h4>
-            <p>
-              {asText(p.category)} | {asText(p.location)}
-            </p>
-            {p.price > 0 && (
-              <p className="poster-price">₩{Number(p.price).toLocaleString()}</p>
-            )}
-            {p.rating > 0 && <p className="poster-rating">★ {p.rating}</p>}
-          </div>
+    <header className="hero">
+      <h1>Recommendation For U</h1>
+      <p>Live Local. Explore Korea.</p>
+
+      {/* 한 장만 표시 */}
+      <div className="poster-carousel" style={{ justifyContent: "center" }}>
+        <div className="poster-card" style={{ maxWidth: "85vw", width: "100%", minHeight: "auto" }}>
+          <a 
+            href={current.detailUrl || "https://www.interpark.com"} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="poster-link"
+          >
+            <img referrerPolicy="no-referrer" src={current.posterUrl}
+ alt={current.title} className="poster-img" />
+          </a>
+          <div className="poster-title">{current.title}</div>
+          {current.location?.address && (
+            <div className="poster-location">{current.location.address}</div>
+          )}
+        </div>
+      </div>
+
+      {/* 좌우 버튼 + 인디케이터 유지 */}
+      <div className="slide-indicator">
+        <button type="button" aria-label="Previous" onClick={() => setIdx((i) => (i - 1 + total) % total)}>‹</button>
+        <span>{(idx % total) + 1}/{total}</span>
+        <button type="button" aria-label="Next" onClick={() => setIdx((i) => (i + 1) % total)}>›</button>
+      </div>
+    </header>
+  );
+}
+
+/* ---------------- 카테고리 그리드 ---------------- */
+function CategoryGrid({ onPick }) {
+  return (
+    <section className="section">
+      <div className="cat-grid">
+        {DEFAULT_CATS.map((c) => (
+          <button key={c.slug} className="cat" onClick={() => onPick(c.slug)}>
+            <div className="cat-box">
+              <div className="cat-icon">{c.icon}</div>
+            </div>
+            <div className="cat-label">{c.label}</div>
+            <div className="cat-description">{c.description}</div>
+          </button>
         ))}
-      </section>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- 메인 컴포넌트 ---------------- */
+export default function Main() {
+  const navigate = useNavigate();
+  const goGenre = (slug) => navigate(`/genre?category=${slug}`);
+
+  // 검색 모달 제어
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // ✅ 날짜 선택 상태
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const selectedKey = fmt(selectedDate);
+
+  // API 데이터 상태
+  const [plays, setPlays] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // 데이터 로딩
+  useEffect(() => {
+    const fetchPlays = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const playsData = await playAPI.getPlays();
+        setPlays(playsData);
+      } catch (err) {
+        console.error('Failed to fetch plays:', err);
+        setError(err.message || '연극 데이터를 불러오는데 실패했습니다.');
+        setPlays([]); // 빈 배열로 설정
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPlays();
+  }, []);
+
+  // ✅ 선택 날짜에 속하는 이벤트만 필터 (현재는 plays 데이터에 날짜 정보가 없으므로 빈 배열)
+  const eventsOfDay = useMemo(() => [], [selectedKey]);
+
+  // ✅ 달력에 표시할 마커 (현재는 plays 데이터에 날짜 정보가 없으므로 빈 Set)
+  const markers = useMemo(() => new Set(), []);
+
+  return (
+    <div className="main-page">
+      {/* 커튼 배경 요소들 */}
+      <div className="top-curtain"></div>
+      <div className="curtain-decoration"></div>
+      
+      <Topnav onSearchClick={() => setIsSearchOpen(true)} />
+      {isSearchOpen && <SearchModal onClose={() => setIsSearchOpen(false)} />}
+
+      <div className="spacer" />
+      <main className="main-container">
+        <Hero plays={plays} isLoading={isLoading} error={error} />
+        <CategoryGrid onPick={goGenre} />
+
+        {/* ✅ 좌: 캘린더 / 우: 이벤트 패널 */}
+        <section className="schedule">
+          <EventCalendar
+            selected={selectedDate}
+            onSelect={setSelectedDate}
+            markers={markers}
+          />
+          <EventPanel
+            date={selectedDate}
+            events={eventsOfDay}
+          />
+        </section>
+      </main>
     </div>
   );
-};
+}
 
-export default AllPosters;

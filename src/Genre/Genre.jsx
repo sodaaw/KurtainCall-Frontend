@@ -138,7 +138,8 @@ function ReviewCard({ review, onLikeClick, onCommentClick }) {
       <div className="review-body">
         <div className="review-photo">
           {review.photos?.length ? (
-            <img src={review.photos[0]} alt="review" />
+            <img referrerPolicy="no-referrer" src={review.photos[0]} alt="review" />
+            
           ) : (
             <div className="photo-placeholder">🖼 사진 영역</div>
           )}
