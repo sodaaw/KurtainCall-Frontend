@@ -241,8 +241,8 @@ const Genre = () => {
             title: item.title || item.name || '제목 없음',
             category: item.category || item.genre || '카테고리 없음',
             location: item.area || item.location || item.venue || '장소 없음',
-            image: item.image || '/images/event1.jpg',
-            price: item.price || 0,
+            image: item.image || '/images/fallback.jpg',
+            price: item.price || 5000,
             rating: item.stars || item.rating || 0,
             views: item.views || 0,
             deadline: item.end_date || '마감일 없음'
