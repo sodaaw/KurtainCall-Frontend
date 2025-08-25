@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topnav from '../components/Topnav';
+import { playAPI } from '../services/api';
 import './Map.css';
 
 // @ts-ignore
@@ -10,244 +11,475 @@ const Map = () => {
   const navigate = useNavigate();
   const mapRef = useRef(null);
 
+  // 연극 데이터 상태
+  const [plays, setPlays] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Kakao Maps 관련 refs
+  const kakaoRef = useRef(null);
+  const mapObjRef = useRef(null);
+  const geocoderRef = useRef(null);
+  const markersRef = useRef([]);
+  const regionPolygonsRef = useRef([]);
+  const dongPolygonsRef = useRef([]);
+  const [isMapReady, setIsMapReady] = useState(false);
+
   // 사용자 UI용 데이터
   const popularAreas = ['Gangnam', 'Hongdae', 'Myeongdong', 'Insadong'];
-  const foundExperiences = [
-    { id: 1, name: 'FI Formular', location: 'Seoul / Itaewon', rating: 4.8 },
-    { id: 2, name: 'Art Market', location: 'Seong‑su', rating: 4.5 },
-    { id: 3, name: 'Jazz Night', location: 'Itaewon', rating: 4.6 },
-    { id: 4, name: 'Modern Art Tour', location: 'Seoul City Museum', rating: 4.7 },
-  ];
 
+  // 연극 데이터 가져오기
   useEffect(() => {
-    const loadScript = () =>
-      new Promise((resolve, reject) => {
-        // 이미 로드된 스크립트가 있는지 확인
-        if (window.kakao && window.kakao.maps) {
-          return resolve();
-        }
-        
-        const existing = document.querySelector('script[src^="https://dapi.kakao.com"]');
-        if (existing) {
-          // 기존 스크립트가 있지만 아직 로드되지 않은 경우
-          const checkKakao = () => {
-            if (window.kakao && window.kakao.maps) {
-              resolve();
-            } else {
-              setTimeout(checkKakao, 100);
-            }
-          };
-          checkKakao();
-          return;
-        }
-        
-        const script = document.createElement('script');
-        script.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=039270177862ec2c7c46e905b6d3352f&autoload=false';
-        script.async = true;
-        script.onload = () => {
-          // 스크립트 로드 후 kakao 객체가 준비될 때까지 대기
-          const checkKakao = () => {
-            if (window.kakao && window.kakao.maps) {
-              resolve();
-            } else {
-              setTimeout(checkKakao, 100);
-            }
-          };
-          checkKakao();
-        };
-        script.onerror = () => reject(new Error('Failed to load Kakao Maps SDK'));
-        document.head.appendChild(script);
-      });
-
-    let goBackButton = null;
-
-    const initializeMap = async () => {
+    const fetchPlays = async () => {
       try {
-        await loadScript();
-        
-        // Kakao Maps SDK가 로드되었는지 확인
-        if (typeof window.kakao === 'undefined' || !window.kakao.maps) {
-          throw new Error('Kakao Maps SDK failed to load properly.');
-        }
-
-        // Load Kakao Maps with timeout
-        try {
-          await Promise.race([
-            window.kakao.maps.load(),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('Kakao Maps load timeout')), 10000)
-            )
-          ]);
-        } catch (loadError) {
-          throw new Error(`Failed to initialize Kakao Maps: ${loadError.message}`);
-        }
-        
-        if (!mapRef.current) return;
-
-        const map = new window.kakao.maps.Map(mapRef.current, {
-          center: new window.kakao.maps.LatLng(37.5665, 126.978),
-          level: 9,
-        });
-
-        // 지도 데이터 로딩
-        const [seoulMap, dongDataRaw] = await Promise.all([
-          fetch('/seoul.geojson').then(res => res.json()),
-          fetch('/seoul_districts_topo.json').then(res => res.json())
-        ]);
-
-        const dongData = feature(dongDataRaw, dongDataRaw.objects.admdong_seoul_codeEdit_1);
-
-        const customOverlay = new window.kakao.maps.CustomOverlay({});
-        const infowindow = new window.kakao.maps.InfoWindow({ removable: true });
-
-        const centers = [
-          { name: 'Gangnam', lat: 37.4979, lng: 127.0276 },
-          { name: 'Hongdae', lat: 37.5572, lng: 126.9244 },
-          { name: 'Myeongdong', lat: 37.5636, lng: 126.982 },
-          { name: 'Insadong', lat: 37.5740, lng: 126.9850 },
-        ];
-
-        let regionPolygons = [];
-        let dongPolygons = [];
-
-        const displayDongAreas = (dongGeo) => {
-          dongGeo.forEach((dong) => {
-            const geometry = dong.geometry;
-            const drawPolygon = (coords) => {
-              const path = coords.map(([lng, lat]) => new window.kakao.maps.LatLng(lat, lng));
-              const polygon = new window.kakao.maps.Polygon({
-                map,
-                path,
-                strokeWeight: 2,
-                strokeColor: '#5C5B5C',
-                strokeOpacity: 0.8,
-                fillColor: '#CACACB',
-                fillOpacity: 0.7,
-              });
-              dongPolygons.push(polygon);
-              addDongEvents(polygon, dong);
-            };
-
-            if (geometry.type === 'Polygon') drawPolygon(geometry.coordinates[0]);
-            else if (geometry.type === 'MultiPolygon')
-              geometry.coordinates.forEach((multi) => drawPolygon(multi[0]));
-          });
-        };
-
-        const addDongEvents = (polygon, dong) => {
-          window.kakao.maps.event.addListener(polygon, 'mouseover', (e) => {
-            polygon.setOptions({ fillColor: '#b29ddb' });
-            customOverlay.setPosition(e.latLng);
-            customOverlay.setMap(map);
-          });
-          window.kakao.maps.event.addListener(polygon, 'mouseout', () => {
-            polygon.setOptions({ fillColor: '#CACACB' });
-            customOverlay.setMap(null);
-          });
-          window.kakao.maps.event.addListener(polygon, 'click', (e) => {
-            const content = document.createElement('div');
-            content.innerHTML = `
-              <div style="padding:8px; font-size:13px;">
-                <strong>${dong.properties.DONG_KOR_NM}</strong><br/>
-                이 지역 맛집을 보시겠어요?<br/><br/>
-                <button id="btn-goto" style="background:#B36B00;color:white;padding:4px 8px;border-radius:5px;">맛집 보기</button>
-              </div>`;
-            infowindow.setContent(content);
-            infowindow.setPosition(e.latLng);
-            infowindow.setMap(map);
-            content.querySelector('#btn-goto')?.addEventListener('click', () => {
-              navigate('/restaurant');
-            });
-            addGoBackButton();
-          });
-        };
-
-        const displayArea = (coords, name) => {
-          const path = coords.map(([lng, lat]) => new window.kakao.maps.LatLng(lat, lng));
-          const polygon = new window.kakao.maps.Polygon({
-            map,
-            path,
-            strokeWeight: 2,
-            strokeColor: '#004c80',
-            strokeOpacity: 0.8,
-            fillColor: '#ffffff',
-            fillOpacity: 0.6,
-          });
-          regionPolygons.push(polygon);
-
-          window.kakao.maps.event.addListener(polygon, 'mouseover', (e) => {
-            polygon.setOptions({ fillColor: '#d2c7ef' });
-            customOverlay.setPosition(e.latLng);
-            customOverlay.setMap(map);
-          });
-          window.kakao.maps.event.addListener(polygon, 'mouseout', () => {
-            polygon.setOptions({ fillColor: '#ffffff' });
-            customOverlay.setMap(null);
-          });
-          window.kakao.maps.event.addListener(polygon, 'click', () => {
-            regionPolygons.forEach((p) => p.setMap(null));
-            regionPolygons = [];
-            const center = centers.find((c) => c.name === name);
-            if (center)
-              map.setCenter(new window.kakao.maps.LatLng(center.lat, center.lng));
-            map.setLevel(7);
-            const dongs = dongData.features.filter(
-              (f) => f.properties.SIG_KOR_NM === name,
-            );
-            displayDongAreas(dongs);
-            addGoBackButton();
-          });
-        };
-
-        const addGoBackButton = () => {
-          if (goBackButton) return;
-          goBackButton = document.createElement('button');
-          goBackButton.innerText = '구 다시 선택하기';
-          goBackButton.style.cssText =
-            'position:absolute;top:20px;right:40px;background:#B36B00;color:white;padding:10px 16px;border-radius:8px;z-index:100;';
-          goBackButton.onclick = () => resetRegions();
-          document.body.appendChild(goBackButton);
-        };
-
-        const resetRegions = () => {
-          dongPolygons.forEach((p) => p.setMap(null));
-          dongPolygons = [];
-          infowindow.close();
-          map.setLevel(9);
-          map.setCenter(new window.kakao.maps.LatLng(37.5665, 126.9780));
-          if (goBackButton) {
-            goBackButton.remove();
-            goBackButton = null;
-          }
-          seoulMap.features.forEach((f) => {
-            displayArea(f.geometry.coordinates[0], f.properties.SIG_KOR_NM);
-          });
-        };
-
-        seoulMap.features.forEach((f) => {
-          displayArea(f.geometry.coordinates[0], f.properties.SIG_KOR_NM);
-        });
-        
+        console.log('[Map] Fetching plays data...');
+        setIsLoading(true);
+        setError(null);
+                 const playsData = await playAPI.getPlays();
+         console.log('[Map] Plays data received:', playsData);
+         console.log('[Map] Plays data type:', typeof playsData);
+         console.log('[Map] Plays data length:', playsData?.length);
+         if (playsData && playsData.length > 0) {
+           console.log('[Map] First play sample:', playsData[0]);
+           console.log('[Map] First play location:', playsData[0]?.location);
+           console.log('[Map] First play address:', playsData[0]?.location?.address);
+           console.log('[Map] First play coordinates:', playsData[0]?.location?.lat, playsData[0]?.location?.lng);
+         }
+        setPlays(playsData);
       } catch (err) {
-        console.error('Map initialization error:', err);
-        // 에러가 발생해도 지도는 표시되도록 함
+        console.error('Failed to fetch plays:', err);
+        setError(err.message || '연극 데이터를 불러오는데 실패했습니다.');
+        setPlays([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    initializeMap();
+    fetchPlays();
+  }, []);
 
-    return () => {
-      if (goBackButton) goBackButton.remove();
-    };
-  }, [navigate]);
+  // Kakao SDK 로딩 함수
+  const loadKakao = () =>
+    new Promise((resolve, reject) => {
+      if (window.kakao && window.kakao.maps) return resolve(window.kakao);
+
+      const exist = document.querySelector('script[data-kakao="true"]');
+      if (!exist) {
+        const s = document.createElement('script');
+        s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=039270177862ec2c7c46e905b6d3352f&autoload=false&libraries=services';
+        s.async = true;
+        s.dataset.kakao = 'true';
+        s.onerror = () => reject(new Error('Failed to load Kakao Maps SDK'));
+        document.head.appendChild(s);
+      }
+
+      const onReady = () => window.kakao.maps.load(() => resolve(window.kakao));
+      // 이미 붙어있으면 onload만 걸고, 없으면 위에서 붙인 스크립트가 load되면 호출
+      (exist || document.querySelector('script[data-kakao="true"]')).addEventListener('load', onReady, { once: true });
+    });
+
+  // 지도 초기화: 최초 1회
+  useEffect(() => {
+    let mounted = true;
+    
+    (async () => {
+      try {
+        console.log('[Map] Starting map initialization...');
+        const kakao = await loadKakao();
+        if (!mounted || !mapRef.current) return;
+
+        console.log('[Map] Kakao SDK loaded, creating map...');
+        kakaoRef.current = kakao;
+        mapObjRef.current = new kakao.maps.Map(mapRef.current, {
+          center: new kakao.maps.LatLng(37.5665, 126.978),
+          level: 9,
+        });
+        geocoderRef.current = new kakao.maps.services.Geocoder();
+
+        console.log('[Map] Map initialized successfully');
+        console.log('[Map] Map object:', mapObjRef.current);
+        console.log('[Map] Geocoder object:', geocoderRef.current);
+
+        // 지도가 완전히 로드될 때까지 대기 (더 안정적인 방법)
+        await new Promise(resolve => {
+          const checkMapReady = () => {
+            if (mapObjRef.current && mapObjRef.current.getCenter && mapObjRef.current.getLevel) {
+              console.log('[Map] Map is fully ready, setting isMapReady to true');
+              setIsMapReady(true);
+              resolve();
+            } else {
+              console.log('[Map] Map not ready yet, retrying...');
+              setTimeout(checkMapReady, 100);
+            }
+          };
+          checkMapReady();
+        });
+        
+        // 서울 지도 데이터 로딩 및 구/동 폴리곤 그리기
+        console.log('[Map] Starting Seoul map initialization...');
+        try {
+          await initializeSeoulMap(kakao);
+          console.log('[Map] Seoul map initialization completed');
+        } catch (seoulErr) {
+          console.error('[Map] Seoul map initialization failed:', seoulErr);
+          console.log('[Map] Continuing with basic map display...');
+          // 서울 지도 초기화 실패 시에도 기본 지도는 계속 표시
+        }
+      } catch (err) {
+        console.error('Map init error:', err);
+      }
+    })().catch(err => console.error('Map init error:', err));
+
+    return () => { mounted = false; };
+  }, []);
+
+  // 서울 지도 초기화 함수
+  const initializeSeoulMap = async (kakao) => {
+    try {
+      console.log('[Map] Loading Seoul map data...');
+      
+      // 지도 데이터 로딩
+      const [seoulMap, dongDataRaw] = await Promise.all([
+        fetch('/seoul.geojson').then(res => {
+          if (!res.ok) throw new Error(`Failed to load seoul.geojson: ${res.status}`);
+          return res.json();
+        }),
+        fetch('/seoul_districts_topo.json').then(res => {
+          if (!res.ok) throw new Error(`Failed to load seoul_districts_topo.json: ${res.status}`);
+          return res.json();
+        })
+      ]);
+
+      console.log('[Map] Seoul map data loaded successfully');
+      console.log('[Map] Seoul map features:', seoulMap?.features?.length);
+      console.log('[Map] Dong data features:', dongDataRaw?.objects?.admdong_seoul_codeEdit_1?.geometries?.length);
+
+      const dongData = feature(dongDataRaw, dongDataRaw.objects.admdong_seoul_codeEdit_1);
+      const map = mapObjRef.current;
+
+      // 데이터 유효성 검증
+      if (!seoulMap?.features || !dongData?.features) {
+        console.error('[Map] Invalid map data structure');
+        throw new Error('Invalid map data structure');
+      }
+
+      console.log('[Map] Creating map overlays...');
+      const customOverlay = new kakao.maps.CustomOverlay({});
+      const infowindow = new kakao.maps.InfoWindow({ removable: true });
+
+      const centers = [
+        { name: 'Gangnam', lat: 37.4979, lng: 127.0276 },
+        { name: 'Hongdae', lat: 37.5572, lng: 126.9244 },
+        { name: 'Myeongdong', lat: 37.5636, lng: 126.982 },
+        { name: 'Insadong', lat: 37.5740, lng: 126.9850 },
+      ];
+
+      // 동 지역 표시 함수
+      const displayDongAreas = (dongGeo) => {
+        dongGeo.forEach((dong) => {
+          const geometry = dong.geometry;
+          const drawPolygon = (coords) => {
+            const path = coords.map(([lng, lat]) => new kakao.maps.LatLng(lat, lng));
+                         const polygon = new kakao.maps.Polygon({
+               map,
+               path,
+               strokeWeight: 2,
+               strokeColor: '#5C5B5C',
+               strokeOpacity: 0.8,
+               fillColor: '#B36B00',
+               fillOpacity: 0.06,
+             });
+            dongPolygonsRef.current.push(polygon);
+            addDongEvents(polygon, dong, kakao, map, infowindow, customOverlay);
+          };
+
+          if (geometry.type === 'Polygon') drawPolygon(geometry.coordinates[0]);
+          else if (geometry.type === 'MultiPolygon')
+            geometry.coordinates.forEach((multi) => drawPolygon(multi[0]));
+        });
+      };
+
+      // 동 지역 이벤트 추가
+      const addDongEvents = (polygon, dong, kakao, map, infowindow, customOverlay) => {
+        kakao.maps.event.addListener(polygon, 'mouseover', (e) => {
+          polygon.setOptions({ fillColor: '#b29ddb' });
+          polygon.setOptions({fillOpacity: 0.18});
+          customOverlay.setPosition(e.latLng);
+          customOverlay.setMap(map);
+        });
+        kakao.maps.event.addListener(polygon, 'mouseout', () => {
+          polygon.setOptions({ fillColor: '#CACACB' });
+          polygon.setOptions({fillOpacity: 0.06});
+          customOverlay.setMap(null);
+        });
+        kakao.maps.event.addListener(polygon, 'click', (e) => {
+          const content = document.createElement('div');
+          content.innerHTML = `
+            <div style="padding:8px; font-size:13px;">
+              <strong>${dong.properties.DONG_KOR_NM}</strong><br/>
+              이 지역 맛집을 보시겠어요?<br/><br/>
+              <button id="btn-goto" style="background:#B36B00;color:white;padding:4px 8px;border-radius:5px;">맛집 보기</button>
+            </div>`;
+          infowindow.setContent(content);
+          infowindow.setPosition(e.latLng);
+          infowindow.setMap(map);
+          content.querySelector('#btn-goto')?.addEventListener('click', () => {
+            navigate('/restaurant');
+          });
+          addGoBackButton(kakao, map, dongData, seoulMap, centers);
+        });
+      };
+
+      // 구 지역 표시 함수
+      const displayArea = (coords, name) => {
+        const path = coords.map(([lng, lat]) => new kakao.maps.LatLng(lat, lng));
+        const polygon = new kakao.maps.Polygon({
+          map,
+          path,
+          strokeWeight: 2,
+          strokeColor: '#004c80',
+          strokeOpacity: 0.8,
+          fillColor: '#ffffff',
+          fillOpacity: 0.6,
+        });
+        regionPolygonsRef.current.push(polygon);
+
+        kakao.maps.event.addListener(polygon, 'mouseover', (e) => {
+          polygon.setOptions({ fillColor: '#d2c7ef' });
+          customOverlay.setPosition(e.latLng);
+          customOverlay.setMap(map);
+        });
+        kakao.maps.event.addListener(polygon, 'mouseout', () => {
+          polygon.setOptions({ fillColor: '#ffffff' });
+          customOverlay.setMap(null);
+        });
+        kakao.maps.event.addListener(polygon, 'click', () => {
+          regionPolygonsRef.current.forEach((p) => p.setMap(null));
+          regionPolygonsRef.current = [];
+          const center = centers.find((c) => c.name === name);
+          if (center)
+            map.setCenter(new kakao.maps.LatLng(center.lat, center.lng));
+          map.setLevel(7);
+          const dongs = dongData.features.filter(
+            (f) => f.properties.SIG_KOR_NM === name,
+          );
+          displayDongAreas(dongs);
+          addGoBackButton(kakao, map, dongData, seoulMap, centers);
+        });
+      };
+
+      // 뒤로가기 버튼 추가
+      const addGoBackButton = (kakao, map, dongData, seoulMap, centers) => {
+        let goBackButton = document.querySelector('#go-back-btn');
+        if (goBackButton) return;
+        
+        goBackButton = document.createElement('button');
+        goBackButton.id = 'go-back-btn';
+        goBackButton.innerText = '구 다시 선택하기';
+        goBackButton.style.cssText =
+          'position:absolute;top:20px;right:40px;background:#B36B00;color:white;padding:10px 16px;border-radius:8px;z-index:100;';
+        goBackButton.onclick = () => resetRegions(kakao, map, dongData, seoulMap);
+        document.body.appendChild(goBackButton);
+      };
+
+      // 지역 초기화 함수
+      const resetRegions = (kakao, map, dongData, seoulMap) => {
+        dongPolygonsRef.current.forEach((p) => p.setMap(null));
+        dongPolygonsRef.current = [];
+        infowindow.close();
+        map.setLevel(9);
+        map.setCenter(new kakao.maps.LatLng(37.5665, 126.9780));
+        
+        const goBackButton = document.querySelector('#go-back-btn');
+        if (goBackButton) {
+          goBackButton.remove();
+        }
+        
+        seoulMap.features.forEach((f) => {
+          displayArea(f.geometry.coordinates[0], f.properties.SIG_KOR_NM);
+        });
+      };
+
+      // 초기 구 지역 표시
+      seoulMap.features.forEach((f) => {
+        displayArea(f.geometry.coordinates[0], f.properties.SIG_KOR_NM);
+      });
+
+    } catch (err) {
+      console.error('Seoul map initialization error:', err);
+    }
+  };
+
+  // 마커 갱신: plays가 바뀔 때마다
+  useEffect(() => {
+    console.log('[Map] Marker update effect triggered');
+    console.log('[Map] plays data:', plays);
+    console.log('[Map] plays length:', plays?.length);
+    console.log('[Map] isMapReady:', isMapReady);
+    
+    const kakao = kakaoRef.current;
+    const map = mapObjRef.current;
+    const geocoder = geocoderRef.current;
+    
+    console.log('[Map] kakao ref:', !!kakao);
+    console.log('[Map] map ref:', !!map);
+    console.log('[Map] geocoder ref:', !!geocoder);
+    console.log('[Map] map object details:', map);
+    
+         // 지도가 완전히 준비되었는지 확인
+     if (!kakao || !map || !geocoder || !Array.isArray(plays) || !isMapReady) {
+       console.log('[Map] Early return - missing dependencies or map not ready');
+       console.log('[Map] Missing: kakao=', !kakao, 'map=', !map, 'geocoder=', !geocoder, 'plays=', !Array.isArray(plays), 'isMapReady=', !isMapReady);
+       return;
+     }
+     
+     console.log('[Map] All dependencies ready, proceeding with marker creation');
+
+    // 기존 마커 제거
+    markersRef.current.forEach(m => m.setMap(null));
+    markersRef.current = [];
+
+    const toLatLng = (lat, lng) => new kakao.maps.LatLng(Number(lat), Number(lng));
+    
+         const addMarker = (play, position) => {
+       // 마커 생성
+       const marker = new kakao.maps.Marker({ 
+         position, 
+         map,
+         // 마커 스타일 개선
+         zIndex: 1000
+       });
+       
+       // 인포윈도우 내용
+       const html = `
+         <div style="padding:12px; min-width:250px; background:white; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+           <h4 style="margin:0 0 8px 0; color:#333; font-size:16px;">${play.title || 'Untitled'}</h4>
+           <div style="font-size:13px;color:#666; margin-bottom:6px;">📍 ${play.location?.address || ''}</div>
+           ${play.category ? `<div style="font-size:12px;color:#888; margin-bottom:8px;">🎭 ${play.category}</div>` : ''}
+           <a href="${play.detailUrl || '#'}" target="_blank" style="display:inline-block;background:#B36B00;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;">상세보기</a>
+         </div>`;
+       
+       const infowindow = new kakao.maps.InfoWindow({ 
+         content: html, 
+         removable: true,
+         zIndex: 1001
+       });
+       
+       // 마커 클릭 이벤트
+       kakao.maps.event.addListener(marker, 'click', () => {
+         infowindow.open(map, marker);
+       });
+       
+       markersRef.current.push(marker);
+       console.log('[Map] Marker created for:', play.title, 'at position:', position);
+     };
+
+    const bounds = new kakao.maps.LatLngBounds();
+
+    (async () => {
+      console.log('[Map] Starting marker creation for', plays.length, 'plays');
+      console.log('[Map] Map object at marker creation:', map);
+      console.log('[Map] Geocoder object at marker creation:', geocoder);
+      
+             try {
+         console.log('[Map] Total plays to process:', plays.length);
+         for (const p of plays) {
+           console.log('[Map] Processing play:', p.title);
+           const loc = p.location || {};
+           console.log('[Map] Location data:', loc);
+           console.log('[Map] Location type check:', {
+             hasLat: loc.lat != null,
+             hasLng: loc.lng != null,
+             latValue: loc.lat,
+             lngValue: loc.lng,
+             hasAddress: !!loc.address,
+             addressValue: loc.address
+           });
+          
+                     // 좌표가 유효한 경우 (0이 아닌 값)
+           if (loc.lat && loc.lng && loc.lat !== 0 && loc.lng !== 0) {
+             console.log('[Map] Using lat/lng:', loc.lat, loc.lng);
+             try {
+               const pos = toLatLng(loc.lat, loc.lng);
+               addMarker(p, pos);
+               bounds.extend(pos);
+               console.log('[Map] Marker added with coordinates');
+             } catch (markerErr) {
+               console.error('[Map] Failed to create marker for coordinates:', loc.lat, loc.lng, markerErr);
+             }
+           } 
+           // 주소가 있는 경우 지오코딩
+           else if (loc.address && loc.address.trim()) {
+             console.log('[Map] Geocoding address:', loc.address);
+             try {
+               const pos = await new Promise(resolve => {
+                 geocoder.addressSearch(loc.address, (result, status) => {
+                   console.log('[Map] Geocoding result:', status, result);
+                   if (status === kakao.maps.services.Status.OK && result[0]) {
+                     resolve(toLatLng(result[0].y, result[0].x)); // y=lat, x=lng
+                   } else {
+                     console.log('[Map] Geocoding failed, status:', status);
+                     resolve(null);
+                   }
+                 });
+               });
+               if (pos) {
+                 addMarker(p, pos);
+                 bounds.extend(pos);
+                 console.log('[Map] Marker added with geocoded position');
+               } else {
+                 console.log('[Map] Geocoding failed for:', loc.address);
+               }
+             } catch (geocodeErr) {
+               console.error('[Map] Geocoding error for address:', loc.address, geocodeErr);
+             }
+           } 
+           // 위치 정보가 없는 경우
+           else {
+             console.log('[Map] No valid location data for:', p.title, 'location:', loc);
+           }
+        }
+        
+                 console.log('[Map] Total markers created:', markersRef.current.length);
+         
+         // 디버깅용: 테스트 마커 추가 (서울 시청)
+         if (markersRef.current.length === 0) {
+           console.log('[Map] No markers created, adding test marker at Seoul City Hall');
+           const testPosition = new kakao.maps.LatLng(37.5665, 126.978);
+           const testMarker = new kakao.maps.Marker({ 
+             position: testPosition, 
+             map,
+             zIndex: 1000
+           });
+           markersRef.current.push(testMarker);
+           bounds.extend(testPosition);
+           console.log('[Map] Test marker added');
+         }
+         
+         if (!bounds.isEmpty()) {
+           map.setBounds(bounds);
+           console.log('[Map] Map bounds updated');
+         }
+      } catch (err) {
+        console.error('[Map] Error during marker creation:', err);
+      }
+    })();
+     }, [plays, isMapReady]);
+
+  // 디버깅용 렌더링 확인
+  console.log('[Map] Component rendering, plays:', plays?.length, 'isMapReady:', isMapReady);
 
   return (
     <div className="map-page">
       <Topnav />
 
       <div className="map-header-text">
-        <h2>Map 실험</h2>
+        <h2>Theatre Map</h2>
         <p>Select the desired district in Seoul.</p>
+        {/* 디버깅용 상태 표시 */}
+        <div style={{fontSize: '12px', color: '#666', marginTop: '10px'}}>
+          Debug: Plays: {plays?.length || 0}, Map Ready: {isMapReady ? 'Yes' : 'No'}
+        </div>
       </div>
 
       <div className="map-content">
@@ -279,23 +511,43 @@ const Map = () => {
 
         <div className="map-container-wrapper">
           <div ref={mapRef} className="map-container" />
+          {!isMapReady && (
+            <div className="map-loading-overlay">
+              <div className="map-loading-spinner">지도를 불러오는 중...</div>
+            </div>
+          )}
         </div>
       </div>
 
       <section className="found-experiences">
-        <h4>Found Experiences</h4>
-        <div className="experience-list">
-          {foundExperiences.map((e) => (
-            <div key={e.id} className="exp-card">
-              <div className="exp-info">
-                <h5>{e.name}</h5>
-                <p>{e.location}</p>
+        <h4>연극 정보</h4>
+        {isLoading ? (
+          <div className="loading">연극 데이터를 불러오는 중...</div>
+        ) : error ? (
+          <div className="error">⚠️ {error}</div>
+        ) : plays && plays.length > 0 ? (
+          <div className="experience-list">
+            {plays.slice(0, 6).map((play, index) => (
+              <div key={play._id || index} className="exp-card">
+                <div className="exp-info">
+                  <h5>{play.title}</h5>
+                  <p>{play.location?.address || '주소 정보 없음'}</p>
+                  {play.category && <p className="category">🎭 {play.category}</p>}
+                </div>
+                <a 
+                  href={play.detailUrl || '#'} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="view-btn"
+                >
+                  상세보기
+                </a>
               </div>
-              <span className="exp-rating">★ {e.rating}</span>
-              <button className="view-btn">View Details</button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="no-data">표시할 연극 데이터가 없습니다.</div>
+        )}
       </section>
     </div>
   );
