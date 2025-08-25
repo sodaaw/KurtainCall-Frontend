@@ -273,7 +273,7 @@ const Recommended = () => {
         {/* 포스터 이미지와 기본 정보 */}
         <div className="poster-main-section">
           <div className="poster-image-container">
-            <img 
+            <img referrerPolicy="no-referrer"
               src={selectedPoster.image} 
               alt={selectedPoster.title} 
               className="poster-detail-image"

@@ -8,7 +8,7 @@ const AllPosters = () => (
     <section className="poster-section grid-all">
       {posters.map(p => (
         <div key={p.id} className="poster-card">
-          <img src={p.image} alt={p.title} className="poster-img" />
+          <img referrerPolicy="no-referrer" src={p.image} alt={p.title} className="poster-img" />
           <h4>{p.title}</h4>
           <p>{p.category} | {p.location}</p>
         </div>
