@@ -4,38 +4,7 @@ import './Genre.css';
 import Topnav from '../components/Topnav';
 import axios from 'axios';
 
-/** 객체/숫자/문자 무엇이 와도 안전하게 문자열로 변환 */
-const asText = (v, fallback = '') => {
-  if (v == null) return fallback;
-  if (typeof v === 'string' || typeof v === 'number') return String(v);
-
-  if (typeof v === 'object') {
-    // 주소/장소 형태 대응
-    if (v.address) {
-      const a = v.address;
-      if (typeof a === 'string') return a;
-      if (typeof a === 'object') {
-        return (
-          a.road ||
-          a.address_name ||
-          a.value ||
-          [a.city, a.district, a.street, a.detail].filter(Boolean).join(' ') ||
-          fallback
-        );
-      }
-    }
-    return (
-      v.name ||
-      v.title ||
-      v.label ||
-      Object.values(v).find((x) => typeof x === 'string') ||
-      fallback
-    );
-  }
-  return fallback;
-};
-
-// === 샘플 리뷰 =========================================
+// === 샘플 리뷰 (기존과 동일) =========================================
 const SAMPLE_REVIEWS = [
   {
     id: 'r1',
@@ -91,24 +60,28 @@ function ReviewCard({ review, onLikeClick, onCommentClick }) {
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
   const [isCommented, setIsCommented] = useState(false);
-
+  
   const goDetail = () => navigate('/review', { state: { review } });
   const stars = '★★★★★'.slice(0, review.rating) + '☆☆☆☆☆'.slice(review.rating);
-
+  
   const handleLikeClick = (e) => {
     e.stopPropagation();
     onLikeClick(review.id);
     setIsLiked(true);
+    
+    // 애니메이션 후 상태 리셋
     setTimeout(() => setIsLiked(false), 600);
   };
-
+  
   const handleCommentClick = (e) => {
     e.stopPropagation();
     onCommentClick(review.id);
     setIsCommented(true);
+    
+    // 애니메이션 후 상태 리셋
     setTimeout(() => setIsCommented(false), 600);
   };
-
+  
   return (
     <article
       className="review-card"
@@ -117,7 +90,7 @@ function ReviewCard({ review, onLikeClick, onCommentClick }) {
       onClick={goDetail}
       onKeyDown={(e) => e.key === 'Enter' && goDetail()}
       aria-label={`Open review detail for ${review.userName}`}
-    >
+      >
       <header className="review-header">
         <div className="review-user">
           <div className="review-avatar" aria-hidden />
@@ -154,17 +127,17 @@ function ReviewCard({ review, onLikeClick, onCommentClick }) {
           ))}
         </div>
         <div className="review-actions" role="group" aria-label="review actions">
-          <button
+          <button 
             className={`icon-btn ${isLiked ? 'liked' : ''}`}
-            title="like"
+            title="like" 
             onClick={handleLikeClick}
             aria-label={`Like this review (${review.likes} likes)`}
           >
             ♥ {review.likes}
           </button>
-          <button
-            className="icon-btn"
-            title="comment"
+          <button 
+            className="icon-btn" 
+            title="comment" 
             onClick={handleCommentClick}
             aria-label={`Comment on this review (${review.comments} comments)`}
           >
@@ -176,14 +149,14 @@ function ReviewCard({ review, onLikeClick, onCommentClick }) {
     </article>
   );
 }
+// ====================================================================
 
-// === 옵션 (현재 미사용) =================================
 const COUNTRY_OPTIONS = [
   { value: 'all', label: '전체' },
   { value: 'uk', label: '영국' },
   { value: 'us', label: '미국' },
   { value: 'cn', label: '중국' },
-  { value: 'jp', label: '일본' },
+  { value: 'us', label: '일본' },
   { value: 'es', label: '스페인' },
   { value: 'de', label: '독일' },
   { value: 'kr', label: '한국' },
@@ -206,22 +179,12 @@ const Genre = () => {
   // API 데이터 상태
   const [plays, setPlays] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // 카테고리별 포스터 데이터
-  const [categoryPlays, setCategoryPlays] = useState({
-    comedy: [],
-    romance: [],
-    horror: [],
-    thriller: [],
-    musical: [],
-    drama: [],
-  });
-
+  
   // 기존 상태들
   const [current, setCurrent] = useState(0);
   const [reviews, setReviews] = useState(SAMPLE_REVIEWS);
 
-  // === 필터 상태 =========================
+  // === 필터 상태 (요청대로 4종) =========================
   const [filters, setFilters] = useState({
     ratingSort: 'none', // 'high' | 'low'
     viewsSort: 'none',  // 'desc'
@@ -233,71 +196,200 @@ const Genre = () => {
   // See all / Filtering 토글
   const [viewMode, setViewMode] = useState('all'); // 'all' | 'filtered'
 
-  // 백엔드 API 호출
+  // API 호출 - 여러 엔드포인트 시도
   useEffect(() => {
     const fetchPlays = async () => {
       try {
-        const response = await axios.get('https://re-local.onrender.com/api/play');
-
-        if (response.data && response.data.items) {
-          const playsData = response.data.items;
-
-          // API -> 내부 포맷
-          const formattedPlays = playsData.map((item) => ({
-            id: item.id || item.movie_id || Math.random(),
-            title: asText(item.title) || asText(item.name) || '제목 없음',
-            category: asText(item.category) || asText(item.genre) || '카테고리 없음',
-            location:
-              asText(item.area) || asText(item.location) || asText(item.venue) || '장소 없음',
-            image: item.posterUrl || item.image || '/images/event1.jpg',
-            price: Number(item.price) || 0,
-            rating: Number(item.stars ?? item.rating) || 0,
-            views: Number(item.views) || 0,
-            deadline: asText(item.end_date) || '마감일 없음',
-          }));
-
-          // 카테고리별 분류
-          const categorized = {
-            comedy: [],
-            romance: [],
-            horror: [],
-            thriller: [],
-            musical: [],
-            drama: [],
-          };
-
-          formattedPlays.forEach((play) => {
-            const playCategory = String(play.category || '').toLowerCase();
-            if (categorized[playCategory]) {
-              categorized[playCategory].push(play);
-            } else if (playCategory.includes('comedy') || playCategory.includes('코미디')) {
-              categorized.comedy.push(play);
-            } else if (playCategory.includes('romance') || playCategory.includes('로맨스')) {
-              categorized.romance.push(play);
-            } else if (playCategory.includes('horror') || playCategory.includes('공포')) {
-              categorized.horror.push(play);
-            } else if (playCategory.includes('thriller') || playCategory.includes('스릴러')) {
-              categorized.thriller.push(play);
-            } else if (playCategory.includes('musical') || playCategory.includes('뮤지컬')) {
-              categorized.musical.push(play);
-            } else {
-              categorized.drama.push(play);
+        // 여러 가능한 API 엔드포인트 시도
+        const possibleEndpoints = [
+          '/api/play',
+          '/api/plays', 
+          '/api/theater',
+          '/api/shows',
+          '/api/movies' // 기존에 작동했던 엔드포인트
+        ];
+        
+        let playsData = null;
+        
+        for (const endpoint of possibleEndpoints) {
+          try {
+            console.log(`API 엔드포인트 시도: ${endpoint}`);
+            const response = await axios.get(`https://re-local.onrender.com${endpoint}`);
+            
+            if (response.data && response.data.items) {
+              playsData = response.data.items;
+              console.log(`성공: ${endpoint}에서 데이터 로드됨`);
+              break;
+            } else if (response.data && Array.isArray(response.data)) {
+              playsData = response.data;
+              console.log(`성공: ${endpoint}에서 배열 데이터 로드됨`);
+              break;
             }
-          });
-
-          setCategoryPlays(categorized);
+          } catch (endpointError) {
+            console.log(`${endpoint} 실패:`, endpointError.message);
+            continue;
+          }
+        }
+        
+        if (playsData) {
+          // API 데이터를 올바른 형식으로 변환
+          const formattedPlays = playsData.map(item => ({
+            id: item.id || item.movie_id || Math.random(),
+            title: item.title || item.name || '제목 없음',
+            category: item.category || item.genre || '카테고리 없음',
+            location: item.area || item.location || item.venue || '장소 없음',
+            image: item.image || '/images/event1.jpg',
+            price: item.price || 0,
+            rating: item.stars || item.rating || 0,
+            views: item.views || 0,
+            deadline: item.end_date || '마감일 없음'
+          }));
+          
           setPlays(formattedPlays);
           setLoading(false);
         } else {
-          setCategoryPlays({
-            comedy: [],
-            romance: [],
-            horror: [],
-            thriller: [],
-            musical: [],
-            drama: [],
-          });
-          setPlays([]);
+          // 모든 API 시도 실패 시 확장된 더미 데이터 사용
+          console.log('모든 API 엔드포인트 실패, 확장된 더미 데이터 사용');
+          const allDummyPlays = [
+            {
+              id: 1,
+              title: '웃음의 학교',
+              category: 'comedy',
+              location: '서울 종로구 대학로10길 11',
+              image: '/images/event1.jpg',
+              price: 20000,
+              rating: 4.8,
+              views: 150,
+              deadline: '2025-08-25'
+            },
+            {
+              id: 2,
+              title: '개그맨의 밤',
+              category: 'comedy',
+              location: '서울 마포구 홍대로 123',
+              image: '/images/event2.jpg',
+              price: 25000,
+              rating: 4.5,
+              views: 120,
+              deadline: '2025-08-30'
+            },
+            {
+              id: 3,
+              title: '즉흥 연기',
+              category: 'comedy',
+              location: '서울 강남구 강남대로 456',
+              image: '/images/event3.jpg',
+              price: 30000,
+              rating: 4.7,
+              views: 180,
+              deadline: '2025-09-05'
+            },
+            {
+              id: 4,
+              title: '코미디 클럽',
+              category: 'comedy',
+              location: '서울 서초구 서초대로 789',
+              image: '/images/event4.jpg',
+              price: 18000,
+              rating: 4.3,
+              views: 90,
+              deadline: '2025-09-10'
+            },
+            {
+              id: 5,
+              title: '로미오와 줄리엣',
+              category: 'romance',
+              location: '서울 중구 세종대로 123',
+              image: '/images/event5.jpg',
+              price: 35000,
+              rating: 4.9,
+              views: 200,
+              deadline: '2025-08-27'
+            },
+            {
+              id: 6,
+              title: '사랑의 시',
+              category: 'romance',
+              location: '서울 종로구 대학로 456',
+              image: '/images/event1.jpg',
+              price: 28000,
+              rating: 4.6,
+              views: 160,
+              deadline: '2025-09-02'
+            },
+            {
+              id: 7,
+              title: '로맨틱 발레',
+              category: 'romance',
+              location: '서울 강남구 테헤란로 789',
+              image: '/images/event2.jpg',
+              price: 40000,
+              rating: 4.8,
+              views: 180,
+              deadline: '2025-09-07'
+            },
+            {
+              id: 8,
+              title: '사랑 이야기',
+              category: 'romance',
+              location: '서울 마포구 와우산로 321',
+              image: '/images/event3.jpg',
+              price: 32000,
+              rating: 4.4,
+              views: 140,
+              deadline: '2025-09-12'
+            },
+            {
+              id: 9,
+              title: '공포의 밤',
+              category: 'horror',
+              location: '서울 강남구 논현로 123',
+              image: '/images/event4.jpg',
+              price: 22000,
+              rating: 4.2,
+              views: 110,
+              deadline: '2025-08-28'
+            },
+            {
+              id: 10,
+              title: '스릴러 극장',
+              category: 'thriller',
+              location: '서울 서초구 강남대로 456',
+              image: '/images/event5.jpg',
+              price: 28000,
+              rating: 4.5,
+              views: 130,
+              deadline: '2025-09-01'
+            },
+            {
+              id: 11,
+              title: '뮤지컬 나이트',
+              category: 'musical',
+              location: '서울 중구 을지로 789',
+              image: '/images/event1.jpg',
+              price: 45000,
+              rating: 4.9,
+              views: 220,
+              deadline: '2025-09-15'
+            },
+            {
+              id: 12,
+              title: '오페라 하우스',
+              category: 'musical',
+              location: '서울 종로구 인사동길 123',
+              image: '/images/event2.jpg',
+              price: 50000,
+              rating: 4.7,
+              views: 190,
+              deadline: '2025-09-20'
+            }
+          ];
+          
+          // 랜덤으로 6개 선택
+          const shuffled = allDummyPlays.sort(() => 0.5 - Math.random());
+          const dummyPlays = shuffled.slice(0, 6);
+          
+          setPlays(dummyPlays);
           setLoading(false);
         }
       } catch (error) {
@@ -305,7 +397,7 @@ const Genre = () => {
         setLoading(false);
       }
     };
-
+    
     fetchPlays();
   }, []);
 
@@ -336,22 +428,16 @@ const Genre = () => {
       arr.sort((a, b) => (a?.rating ?? 0) - (b?.rating ?? 0));
     }
 
-    // 정렬: 조회수
+    // 정렬: 조회수 (선택 시 우선 적용)
     if (filters.viewsSort === 'desc') {
       arr.sort((a, b) => (b?.views ?? 0) - (a?.views ?? 0));
     }
 
-    // 정렬: 마감임박순 (간단 키워드)
+    // 정렬: 마감임박순
     if (filters.deadlineSort === 'urgent') {
       arr.sort((a, b) => {
-        const aUrgent =
-          a.deadline?.includes('마감') ||
-          a.deadline?.includes('오늘') ||
-          a.deadline?.includes('이번 주');
-        const bUrgent =
-          b.deadline?.includes('마감') ||
-          b.deadline?.includes('오늘') ||
-          b.deadline?.includes('이번 주');
+        const aUrgent = a.deadline?.includes('마감') || a.deadline?.includes('오늘') || a.deadline?.includes('이번 주');
+        const bUrgent = b.deadline?.includes('마감') || b.deadline?.includes('오늘') || b.deadline?.includes('이번 주');
         if (aUrgent && !bUrgent) return -1;
         if (!aUrgent && bUrgent) return 1;
         return 0;
@@ -373,9 +459,7 @@ const Genre = () => {
   const len = list.length;
 
   // 캐러셀 인덱스 리셋
-  useEffect(() => {
-    setCurrent(0);
-  }, [category, len, viewMode]);
+  useEffect(() => { setCurrent(0); }, [category, len, viewMode]);
 
   // 캐러셀 타이머
   useEffect(() => {
@@ -392,6 +476,7 @@ const Genre = () => {
   const onChange = (key) => (e) => {
     const value = e.target.value;
     setFilters((prev) => {
+      // 조회수 정렬을 선택하면 평점 정렬 초기화(우선순위 충돌 방지)
       if (key === 'viewsSort' && value === 'desc') {
         return { ...prev, [key]: value, ratingSort: 'none' };
       }
@@ -402,35 +487,41 @@ const Genre = () => {
 
   const resetToAll = () => {
     setViewMode('all');
-    setFilters({
-      ratingSort: 'none',
-      viewsSort: 'none',
+    setFilters({ 
+      ratingSort: 'none', 
+      viewsSort: 'none', 
       deadlineSort: 'none',
       priceSort: 'none',
-      q: '',
+      q: '' 
     });
   };
 
-  // 리뷰 필터(간단)
+  // 리뷰는 언어 필터만 가볍게 연동 (그 외는 기존 그대로)
   const filteredReviews = reviews;
-
-  // 하트/댓글 핸들러
+  
+  // 하트 클릭 핸들러
   const handleLikeClick = (reviewId) => {
-    setReviews((prevReviews) =>
-      prevReviews.map((review) =>
-        review.id === reviewId ? { ...review, likes: review.likes + 1 } : review
+    setReviews(prevReviews => 
+      prevReviews.map(review => 
+        review.id === reviewId 
+          ? { ...review, likes: review.likes + 1 }
+          : review
       )
     );
   };
+  
+  // 댓글 클릭 핸들러
   const handleCommentClick = (reviewId) => {
-    setReviews((prevReviews) =>
-      prevReviews.map((review) =>
-        review.id === reviewId ? { ...review, comments: review.comments + 1 } : review
+    setReviews(prevReviews => 
+      prevReviews.map(review => 
+        review.id === reviewId 
+          ? { ...review, comments: review.comments + 1 }
+          : review
       )
     );
   };
 
-  // 로딩 상태
+  // 로딩 상태 처리
   if (loading) {
     return (
       <div className="genre-container">
@@ -447,160 +538,27 @@ const Genre = () => {
     <div className="genre-container">
       <Topnav />
 
-      <h2 className="genre-title">{category ? `${category} Events` : 'All Events'}</h2>
+      <h2 className="genre-title">
+        {category ? `${category} Events` : 'All Events'}
+      </h2>
       {category && <span className="category-chip">{category}</span>}
 
-      {/* ===== 현재 카테고리 포스터 섹션 ===== */}
-      {category ? (
-        <section className="category-posters-section">
-          <h3 className="section-title">{category} Posters</h3>
-
-          <div className="category-group">
-            <h4 className="category-title">{category}</h4>
-            <div className="poster-grid">
-              {categoryPlays[category.toLowerCase()]?.slice(0, 12).map((play) => (
-                <div
-                  key={play.id}
-                  className="category-poster-card"
-                  onClick={() =>
-                    navigate('/genre/recommended', { state: { selectedPoster: play } })
-                  }
-                >
-                  <img src={play.image} alt={asText(play.title, '제목')} className="category-poster-img" />
-                  <div className="category-poster-info">
-                    <h5 className="category-poster-title">{asText(play.title, '제목 없음')}</h5>
-                    <p className="category-poster-location">
-                      {asText(play.location, '장소 없음')}
-                    </p>
-                    <p className="category-poster-price">
-                      ₩{Number(play.price || 0).toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-              )) || (
-                <div
-                  style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', opacity: 0.7 }}
-                >
-                  <p>이 카테고리에 해당하는 포스터가 없습니다.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-      ) : (
-        <section className="category-posters-section">
-          <h3 className="section-title">All Category Posters</h3>
-
-          {/* 코미디 */}
-          <div className="category-group">
-            <h4 className="category-title">Comedy</h4>
-            <div className="poster-grid">
-              {categoryPlays.comedy.slice(0, 6).map((play) => (
-                <div
-                  key={play.id}
-                  className="category-poster-card"
-                  onClick={() =>
-                    navigate('/genre/recommended', { state: { selectedPoster: play } })
-                  }
-                >
-                  <img src={play.image} alt={asText(play.title, '제목')} className="category-poster-img" />
-                  <div className="category-poster-info">
-                    <h5 className="category-poster-title">{asText(play.title, '제목 없음')}</h5>
-                    <p className="category-poster-location">{asText(play.location, '장소 없음')}</p>
-                    <p className="category-poster-price">₩{Number(play.price || 0).toLocaleString()}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 로맨스 */}
-          <div className="category-group">
-            <h4 className="category-title">Romance</h4>
-            <div className="poster-grid">
-              {categoryPlays.romance.slice(0, 6).map((play) => (
-                <div
-                  key={play.id}
-                  className="category-poster-card"
-                  onClick={() =>
-                    navigate('/genre/recommended', { state: { selectedPoster: play } })
-                  }
-                >
-                  <img src={play.image} alt={asText(play.title, '제목')} className="category-poster-img" />
-                  <div className="category-poster-info">
-                    <h5 className="category-poster-title">{asText(play.title, '제목 없음')}</h5>
-                    <p className="category-poster-location">{asText(play.location, '장소 없음')}</p>
-                    <p className="category-poster-price">₩{Number(play.price || 0).toLocaleString()}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 뮤지컬 */}
-          <div className="category-group">
-            <h4 className="category-title">Musical</h4>
-            <div className="poster-grid">
-              {categoryPlays.musical.slice(0, 6).map((play) => (
-                <div
-                  key={play.id}
-                  className="category-poster-card"
-                  onClick={() =>
-                    navigate('/genre/recommended', { state: { selectedPoster: play } })
-                  }
-                >
-                  <img src={play.image} alt={asText(play.title, '제목')} className="category-poster-img" />
-                  <div className="category-poster-info">
-                    <h5 className="category-poster-title">{asText(play.title, '제목 없음')}</h5>
-                    <p className="category-poster-location">{asText(play.location, '장소 없음')}</p>
-                    <p className="category-poster-price">₩{Number(play.price || 0).toLocaleString()}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 드라마 */}
-          <div className="category-group">
-            <h4 className="category-title">Drama</h4>
-            <div className="poster-grid">
-              {categoryPlays.drama.slice(0, 6).map((play) => (
-                <div
-                  key={play.id}
-                  className="category-poster-card"
-                  onClick={() =>
-                    navigate('/genre/recommended', { state: { selectedPoster: play } })
-                  }
-                >
-                  <img src={play.image} alt={asText(play.title, '제목')} className="category-poster-img" />
-                  <div className="category-poster-info">
-                    <h5 className="category-poster-title">{asText(play.title, '제목 없음')}</h5>
-                    <p className="category-poster-location">{asText(play.location, '장소 없음')}</p>
-                    <p className="category-poster-price">₩{Number(play.price || 0).toLocaleString()}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ===== 기존 포스터 캐러셀 ===== */}
+      {/* ===== 포스터 섹션 (위) ===== */}
       {len === 0 ? (
         <div style={{ opacity: 0.7, padding: '24px 0' }}>조건에 맞는 결과가 없습니다.</div>
       ) : (
         <section className="poster-section carousel">
           {visiblePosters.map((p) => (
-            <div
-              key={p.id}
+            <div 
+              key={p.id} 
               className="poster-card-mine"
               onClick={() => navigate('/genre/recommended', { state: { selectedPoster: p } })}
               style={{ cursor: 'pointer' }}
             >
-              <img src={p.image} alt={asText(p.title, '제목')} className="poster-img-mine" />
-              <div className="poster-title">{asText(p.title, '제목 없음')}</div>
-              <div className="category-poster-info">
-                {asText(p.category)} {p.location && `| ${asText(p.location)}`}
+              <img referrerPolicy="no-referrer" src={p.image} alt={p.title} className="poster-img-mine" />
+              <div className="poster-title">{p.title}</div>
+              <div className="poster-info">
+                {p.category} {p.location && `| ${p.location}`}
               </div>
             </div>
           ))}
@@ -653,7 +611,7 @@ const Genre = () => {
             </select>
           </div>
 
-          {/* 가격 */}
+          {/* 낮은가격순 */}
           <div className="filter-item">
             <label>Price</label>
             <select
@@ -668,7 +626,7 @@ const Genre = () => {
           </div>
         </div>
 
-        {/* 검색 */}
+        {/* 검색창은 유지 */}
         <div className="filter-search-row">
           <input
             type="text"
@@ -683,9 +641,12 @@ const Genre = () => {
         </div>
       </section>
 
-      {/* ===== 보기 모드 토글 ===== */}
+      {/* ===== 보기 모드 토글 (필터 아래 / 리뷰 위) ===== */}
       <div className="mode-toggle">
-        <button className={`mode-btn ${viewMode === 'all' ? 'active' : ''}`} onClick={resetToAll}>
+        <button
+          className={`mode-btn ${viewMode === 'all' ? 'active' : ''}`}
+          onClick={resetToAll}
+        >
           See all
         </button>
         <button
@@ -695,30 +656,28 @@ const Genre = () => {
           Filtering
         </button>
         <span className="mode-info">
-          {viewMode === 'all'
-            ? `Total ${baseList.length} items`
-            : `Filtered ${filteredSortedList.length} items`}
+          {viewMode === 'all' ? `Total ${baseList.length} items` : `Filtered ${filteredSortedList.length} items`}
         </span>
       </div>
 
-      {/* ===== 리뷰 섹션 ===== */}
-      <section className="review-wrap">
-        <div className="review-title-row">
-          <h3>Results</h3>
-          <span className="review-count">{filteredReviews.length} items</span>
-        </div>
+{/* ===== 리뷰 섹션 ===== */}
+<section className="review-wrap">
+  <div className="review-title-row">
+    <h3>Results</h3> {/* ← 여기 변경 */}
+    <span className="review-count">{filteredReviews.length} items</span>
+  </div>
 
-        <div className="review-list">
-          {filteredReviews.map((r) => (
-            <ReviewCard
-              key={r.id}
-              review={r}
-              onLikeClick={handleLikeClick}
-              onCommentClick={handleCommentClick}
-            />
-          ))}
-        </div>
-      </section>
+  <div className="review-list">
+    {filteredReviews.map((r) => (
+      <ReviewCard 
+        key={r.id} 
+        review={r} 
+        onLikeClick={handleLikeClick}
+        onCommentClick={handleCommentClick}
+      />
+    ))}
+  </div>
+</section>
     </div>
   );
 };
