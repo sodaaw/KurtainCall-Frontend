@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Vite(.env: VITE_API_BASE) 또는 CRA(.env: REACT_APP_API_BASE) 지원
-const baseURL = 'http://localhost:4000';
+const baseURL = 'https://re-local.onrender.com';
 
 export const http = axios.create({
   baseURL,
