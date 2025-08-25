@@ -1,85 +1,41 @@
-# Getting Started with Create React App
+# Frontend Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## API 연동 설정
 
-## 환경 변수 설정
-
-프로젝트 루트 디렉토리에 `.env` 파일을 생성하고 다음 내용을 추가하세요:
+### 1. 환경 변수 설정
+프로젝트 루트에 `.env` 파일을 생성하고 다음 내용을 추가하세요:
 
 ```bash
-# 백엔드 API URL 설정
-# 개발 환경에서는 로컬 백엔드 사용
-REACT_APP_API_URL=http://localhost:3001
+# API 기본 URL 설정
+REACT_APP_API_BASE_URL=http://localhost:8080/api
 
-# 프로덕션 환경에서는 실제 서버 URL 사용
-# REACT_APP_API_URL=https://your-production-server.com
+# 개발 환경 설정
+NODE_ENV=development
 ```
 
-**주의**: 환경 변수는 `REACT_APP_` 접두사로 시작해야 합니다.
+### 2. 백엔드 서버 실행
+백엔드 서버가 `http://localhost:8080`에서 실행되고 있는지 확인하세요.
 
-## Available Scripts
+### 3. API 엔드포인트
+- **연극 목록**: `GET /api/play`
+- **카테고리별 연극**: `GET /api/play` (프론트엔드에서 필터링)
 
-In the project directory, you can run:
+## 개발 서버 실행
 
-### `npm start`
+```bash
+npm start
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 빌드
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm run build
+```
 
-### `npm test`
+## 주요 기능
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 메인페이지에서 API를 통한 연극 데이터 로딩
+- 포스터 캐러셀 (5초마다 자동 전환)
+- 카테고리별 필터링
+- 이벤트 캘린더
+- 반응형 디자인
