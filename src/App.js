@@ -19,6 +19,7 @@ import TestDatabase from './components/TestDatabase';
 import AITranslation from './components/AITranslation';
 import Review from './components/Review';
 import EventDetail from './components/EventDetail';
+import SearchResults from './components/SearchResults';
 
 
 
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/search",
+    element : <SearchResults />
   },
   {
     path: "/content/:id", element: <ContentDetail />
