@@ -111,7 +111,10 @@ function ReviewCard({ review, onLikeClick, onCommentClick }) {
       <div className="review-body">
         <div className="review-photo">
           {review.photos?.length ? (
-            <img referrerPolicy="no-referrer" src={review.photos[0]} alt="review" />
+            <img referrerPolicy="no-referrer" src={review.photos[0]} alt="review" onError={(e) => { 
+              e.currentTarget.onerror = null; // 무한 루프 방지
+              e.currentTarget.src = '/images/fallback.jpg'; 
+            }}/>
             
           ) : (
             <div className="photo-placeholder">🖼 사진 영역</div>
@@ -555,7 +558,10 @@ const Genre = () => {
               onClick={() => navigate('/genre/recommended', { state: { selectedPoster: p } })}
               style={{ cursor: 'pointer' }}
             >
-              <img referrerPolicy="no-referrer" src={p.image} alt={p.title} className="poster-img-mine" />
+              <img referrerPolicy="no-referrer" src={p.image} alt={p.title} className="poster-img-mine" onError={(e) => { 
+    e.currentTarget.onerror = null; // 무한 루프 방지
+    e.currentTarget.src = '/images/fallback.jpg'; 
+  }}/>
               <div className="poster-title">{p.title}</div>
               <div className="poster-info">
                 {p.category} {p.location && `| ${p.location}`}
