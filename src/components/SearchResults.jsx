@@ -4,7 +4,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { searchAPI } from "../services/search";
 import './SearchResults.css';
 
-const API_BASE = 'http://localhost:4000';
+const API_BASE = 'https://re-local.onrender.com';
 
 export default function SearchResults() {
   const [params] = useSearchParams();
