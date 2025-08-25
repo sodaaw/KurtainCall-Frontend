@@ -10,6 +10,7 @@ import PaymentPage from './Community/PaymentPage';
 import Recommended from './Genre/Recommended';
 import AllPosters from './Genre/AllPosters';
 import Main from './MainPage/Main';
+import UserPage from './UserPage/userPage';
 import Login from './Login/Login'; 
 import Signup from './Signup/Signup';
 import ContentDetail from "./ContentDetail/ContentDetail";
@@ -26,6 +27,10 @@ import SearchResults from './components/SearchResults';
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <UserPage />,
+  },
+  {
+    path: "/mainpage",
     element: <Main />,
   },
   {
