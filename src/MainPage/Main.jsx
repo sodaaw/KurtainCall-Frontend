@@ -2,14 +2,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Topnav from "../components/Topnav";
-import posters from "./postersData.js";
 import SearchModal from "../components/SearchModal";
 import EventCalendar from "./EventCalendar.jsx"; // ✅ 분리한 캘린더
 import EventPanel from "./EventPanel.jsx";       // ✅ 분리한 우측 패널
+import { playAPI } from "../services/api";
 import "./Main.css";
 
-// 카테고리 버튼 데이터
-const CATS = [
+// 카테고리 버튼 데이터 (API에서 받아올 예정)
+const DEFAULT_CATS = [
   { 
     label: "Comedy", 
     slug: "comedy", 
@@ -48,24 +48,15 @@ const CATS = [
   },
 ];
 
-/* ===== 임시 이벤트 데이터(추후 API로 교체 가능) ===== */
-const EVENTS = [
-  { id: 1, title: "Pixel Space 2025", start: "2025-07-28", end: "2025-09-06" },
-  { id: 2, title: "One Step at a Time : Heehwan Seo", start: "2025-07-11", end: "2025-10-12" },
-  { id: 3, title: "Looking at the Calm Light and the Blue Sky", start: "2025-08-06", end: "2025-08-28" },
-  { id: 4, title: "BAZAAR Exhibition : IN-BETWEEN", start: "2025-08-08", end: "2025-08-23" },
-  { id: 5, title: "YMCA Seoul : A Civic History Shaped by Youth", start: "2025-07-18", end: "2026-02-08" },
-];
-
 /* 유틸 */
 const fmt = (d) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const inRange = (day, start, end) => day >= start && day <= end;
 
 /* ---------------- 상단 메인이벤트(Hero) ---------------- */
-function Hero() {
+function Hero({ plays, isLoading, error }) {
   const [idx, setIdx] = useState(0);
-  const total = posters.length || 1;
+  const total = plays?.length || 0;
 
   useEffect(() => {
     if (total <= 1) return;
@@ -73,29 +64,74 @@ function Hero() {
     return () => clearInterval(timer);
   }, [total]);
 
-  const current = posters[idx % total];
-  if (!current) return null;
+  if (isLoading) {
+    return (
+      <header className="hero">
+        <h1>Recommendation For U</h1>
+        <p>Live Local. Explore Korea.</p>
+        <div className="loading-spinner">Loading...</div>
+      </header>
+    );
+  }
+
+  if (error) {
+    return (
+      <header className="hero">
+        <h1>Recommendation For U</h1>
+        <p>Live Local. Explore Korea.</p>
+        <div className="error-message">
+          <p>⚠️ {error}</p>
+          <p>백엔드 서버가 실행 중인지 확인해주세요.</p>
+        </div>
+      </header>
+    );
+  }
+
+  if (!plays || plays.length === 0) {
+    return (
+      <header className="hero">
+        <h1>Recommendation For U</h1>
+        <p>Live Local. Explore Korea.</p>
+        <div className="no-data">데이터를 불러올 수 없습니다.</div>
+      </header>
+    );
+  }
+
+  const current = plays[idx % total];
+
+  // current가 유효한지 한번 더 확인
+  if (!current) {
+    return (
+      <header className="hero">
+        <h1>Recommendation For U</h1>
+        <p>Live Local. Explore Korea.</p>
+        <div className="no-data">데이터를 불러올 수 없습니다.</div>
+      </header>
+    );
+  }
 
   return (
     <header className="hero">
       <h1>Recommendation For U</h1>
       <p>Live Local. Explore Korea.</p>
 
-             {/* 한 장만 표시 */}
-               <div className="poster-carousel" style={{ justifyContent: "center" }}>
-          <div className="poster-card" style={{ maxWidth: "85vw", width: "100%", minHeight: "auto" }}>
-           <a 
-             href="https://www.interpark.com" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="poster-link"
-           >
-             <img src={current.image} alt={current.title} className="poster-img" />
-           </a>
-           <div className="poster-title">{current.title}</div>
-           <div className="poster-info">{current.category}</div>
-         </div>
-       </div>
+      {/* 한 장만 표시 */}
+      <div className="poster-carousel" style={{ justifyContent: "center" }}>
+        <div className="poster-card" style={{ maxWidth: "85vw", width: "100%", minHeight: "auto" }}>
+          <a 
+            href={current.detailUrl || "https://www.interpark.com"} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="poster-link"
+          >
+            <img src={current.posterUrl} alt={current.title} className="poster-img" />
+          </a>
+          <div className="poster-title">{current.title}</div>
+          {current.location?.address && (
+            <div className="poster-location">{current.location.address}</div>
+          )}
+        </div>
+      </div>
 
       {/* 좌우 버튼 + 인디케이터 유지 */}
       <div className="slide-indicator">
@@ -112,7 +148,7 @@ function CategoryGrid({ onPick }) {
   return (
     <section className="section">
       <div className="cat-grid">
-        {CATS.map((c) => (
+        {DEFAULT_CATS.map((c) => (
           <button key={c.slug} className="cat" onClick={() => onPick(c.slug)}>
             <div className="cat-box">
               <div className="cat-icon">{c.icon}</div>
@@ -138,24 +174,37 @@ export default function Main() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const selectedKey = fmt(selectedDate);
 
-  // ✅ 선택 날짜에 속하는 이벤트만 필터
-  const eventsOfDay = useMemo(
-    () => EVENTS.filter((e) => inRange(selectedKey, e.start, e.end)),
-    [selectedKey]
-  );
+  // API 데이터 상태
+  const [plays, setPlays] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // ✅ 달력에 표시할 마커(이벤트 있는 모든 날짜)
-  const markers = useMemo(() => {
-    const s = new Set();
-    EVENTS.forEach((e) => {
-      const start = new Date(e.start);
-      const end = new Date(e.end);
-      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-        s.add(fmt(d));
+  // 데이터 로딩
+  useEffect(() => {
+    const fetchPlays = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const playsData = await playAPI.getPlays();
+        setPlays(playsData);
+      } catch (err) {
+        console.error('Failed to fetch plays:', err);
+        setError(err.message || '연극 데이터를 불러오는데 실패했습니다.');
+        setPlays([]); // 빈 배열로 설정
+      } finally {
+        setIsLoading(false);
       }
-    });
-    return s;
+    };
+
+    fetchPlays();
   }, []);
+
+  // ✅ 선택 날짜에 속하는 이벤트만 필터 (현재는 plays 데이터에 날짜 정보가 없으므로 빈 배열)
+  const eventsOfDay = useMemo(() => [], [selectedKey]);
+
+  // ✅ 달력에 표시할 마커 (현재는 plays 데이터에 날짜 정보가 없으므로 빈 Set)
+  const markers = useMemo(() => new Set(), []);
 
   return (
     <div className="main-page">
@@ -168,7 +217,7 @@ export default function Main() {
 
       <div className="spacer" />
       <main className="main-container">
-        <Hero />
+        <Hero plays={plays} isLoading={isLoading} error={error} />
         <CategoryGrid onPick={goGenre} />
 
         {/* ✅ 좌: 캘린더 / 우: 이벤트 패널 */}
