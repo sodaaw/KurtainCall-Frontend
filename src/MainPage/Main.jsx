@@ -125,7 +125,7 @@ function Hero({ plays, isLoading, error }) {
             rel="noopener noreferrer"
             className="poster-link"
           >
-            <img src={`http://localhost:4000/image-proxy?url=${encodeURIComponent(current.posterUrl)}`}
+            <img src={`https://re-local.onrender.com/image-proxy?url=${encodeURIComponent(current.posterUrl)}`}
  alt={current.title} className="poster-img" />
           </a>
           <div className="poster-title">{current.title}</div>
