@@ -3,10 +3,10 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Topnav from "../components/Topnav";
 import SearchModal from "../components/SearchModal";
-import EventCalendar from "./EventCalendar.jsx"; // ✅ 분리한 캘린더
-import EventPanel from "./EventPanel.jsx";       // ✅ 분리한 우측 패널
+// import EventCalendar from "./EventCalendar.jsx"; // ✅ 분리한 캘린더
+// import EventPanel from "./EventPanel.jsx";       // ✅ 분리한 우측 패널
 import { playAPI } from "../services/api";
-import "./Main.css";
+// import "./Main.css";
 
 // 카테고리 버튼 데이터 (API에서 받아올 예정)
 const DEFAULT_CATS = [
@@ -223,7 +223,7 @@ export default function Main() {
         <CategoryGrid onPick={goGenre} />
 
         {/* ✅ 좌: 캘린더 / 우: 이벤트 패널 */}
-        <section className="schedule">
+        {/* <section className="schedule">
           <EventCalendar
             selected={selectedDate}
             onSelect={setSelectedDate}
@@ -233,7 +233,7 @@ export default function Main() {
             date={selectedDate}
             events={eventsOfDay}
           />
-        </section>
+        </section> */}
       </main>
     </div>
   );

@@ -27,11 +27,11 @@ import SearchResults from './components/SearchResults';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <UserPage />,
+    element: <Main />,
   },
   {
-    path: "/mainpage",
-    element: <Main />,
+    path: "/user-selection",
+    element: <UserPage />,
   },
   {
     path: "/map",
