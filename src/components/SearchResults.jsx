@@ -43,7 +43,7 @@ export default function SearchResults() {
   return (
     <main className="search-results-page">
       <header className="results-header">
-        <button onClick={onBack}>←</button>
+        <button onClick={onBack}>← 뒤로</button>
         <h1>“{q}” 검색 결과</h1>
       </header>
 

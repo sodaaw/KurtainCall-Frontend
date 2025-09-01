@@ -55,14 +55,14 @@ const Community = () => {
       <Topnav onSearchClick={() => setIsSearchOpen(true)} />
       {isSearchOpen && <SearchModal onClose={() => setIsSearchOpen(false)} />}
 
-      <h2 className="community-title">🎀 Welcome to our Community 🎀</h2>
+      <h2 className="community-title">🎀 우리 커뮤니티에 오신 것을 환영합니다 🎀</h2>
 
       {/* 필터 탭 */}
       <div className="community-filters">
         <select className="filter-select">
-          <option>Today</option>
-          <option>This Week</option>
-          <option>This Month</option>
+          <option>오늘</option>
+          <option>이번 주</option>
+          <option>이번 달</option>
         </select>
         <button className="tab active">Top Post</button>
         <button className="tab">⭐ Views</button>
@@ -82,7 +82,7 @@ const Community = () => {
         <div className="upload-options">
           <button>📷 Add Photo</button>
           <button>📍 Add Location</button>
-          <button className="submit-btn" onClick={handleShare}>Share 💖</button>
+          <button className="submit-btn" onClick={handleShare}>공유하기 💖</button>
         </div>
       </section>
 
@@ -131,7 +131,7 @@ const Community = () => {
                     <span key={idx} className="chip">{tag}</span>
                   ))}
                 </div>
-                <div className="review-actions" role="group" aria-label="review actions">
+                <div className="review-actions" role="group" aria-label="리뷰 액션">
                   <button className="icon-btn" title="like">
                     ♥ {post.likes}
                   </button>
@@ -154,7 +154,7 @@ const Community = () => {
               <li>🎬 영화 B - 8/12</li>
               <li>🎤 콘서트 C - 8/14</li>
             </ul>
-            <button className="view-all">View All</button>
+            <button className="view-all">전체 보기</button>
           </div>
 
           <div className="community-lists">

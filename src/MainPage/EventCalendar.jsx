@@ -28,13 +28,13 @@ export default function EventCalendar({ selected, onSelect, markers = new Set() 
   return (
     <section className="cal cal-compact">
       <div className="cal-head">
-        <button type="button" onClick={() => goto(-1)} aria-label="Previous month">
+        <button type="button" onClick={() => goto(-1)} aria-label="이전 달">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
           </svg>
         </button>
         <h3>{y}.{String(m + 1).padStart(2, "0")}</h3>
-        <button type="button" onClick={() => goto(1)} aria-label="Next month">
+        <button type="button" onClick={() => goto(1)} aria-label="다음 달">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
           </svg>

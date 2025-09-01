@@ -49,7 +49,7 @@ export default function Topnav() {
             onClick={toggleSideMenu}
             role="button"
             tabIndex={0}
-            aria-label="Toggle menu"
+            aria-label="메뉴 열기/닫기"
             onKeyDown={(e) => e.key === 'Enter' && toggleSideMenu()}
           >
             <span className="hamburger-line"></span>
@@ -61,7 +61,7 @@ export default function Topnav() {
             className="search-icon"
             role="button"
             tabIndex={0}
-            aria-label="search"
+            aria-label="검색"
             onClick={openSearchModal}
             onKeyDown={(e) => e.key === 'Enter' && openSearchModal()}
           >
@@ -78,7 +78,7 @@ export default function Topnav() {
           onClick={goHome}
           role="button"
           tabIndex={0}
-          aria-label="Go to home page"
+          aria-label="홈으로 이동"
           onKeyDown={(e) => e.key === 'Enter' && goHome()}
           style={{ cursor: 'pointer' }}
         >
@@ -103,7 +103,7 @@ export default function Topnav() {
           <button 
             className="login-btn" 
             onClick={() => navigate('/login')}
-            aria-label="Login"
+            aria-label="로그인"
           >
             로그인
           </button>
@@ -114,7 +114,7 @@ export default function Topnav() {
       <div className={`side-menu-overlay ${isSideMenuOpen ? 'active' : ''}`} onClick={closeSideMenu}></div>
       <div className={`side-menu ${isSideMenuOpen ? 'open' : ''}`}>
         <div className="side-menu-header">
-          <h2>Menu</h2>
+          <h2>메뉴</h2>
           <button className="close-menu-btn" onClick={closeSideMenu}>
             <span className="close-icon">✕</span>
           </button>
@@ -122,14 +122,14 @@ export default function Topnav() {
         
         <nav className="side-menu-nav">
           <ul>
-            <li><a href="/" onClick={closeSideMenu}>Home</a></li>
-            <li><a href="/genre" onClick={closeSideMenu}>Genre</a></li>
-            <li><a href="/community" onClick={closeSideMenu}>Community</a></li>
-            <li><a href="/map" onClick={closeSideMenu}>Map</a></li>
-            <li><a href="/test/my-test" onClick={closeSideMenu}>Test</a></li>
-            <li><a href="/ai-translation" onClick={closeSideMenu}>AI Translation</a></li>
-            <li><a href="/login" onClick={closeSideMenu}>Login</a></li>
-            <li><a href="/signup" onClick={closeSideMenu}>Sign Up</a></li>
+            <li><a href="/" onClick={closeSideMenu}>홈</a></li>
+            <li><a href="/genre" onClick={closeSideMenu}>장르</a></li>
+            <li><a href="/community" onClick={closeSideMenu}>커뮤니티</a></li>
+            <li><a href="/map" onClick={closeSideMenu}>지도</a></li>
+            <li><a href="/test/my-test" onClick={closeSideMenu}>취향테스트</a></li>
+            <li><a href="/ai-translation" onClick={closeSideMenu}>AI 번역</a></li>
+            <li><a href="/login" onClick={closeSideMenu}>로그인</a></li>
+            <li><a href="/signup" onClick={closeSideMenu}>회원가입</a></li>
           </ul>
         </nav>
 

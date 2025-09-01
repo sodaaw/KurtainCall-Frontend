@@ -129,7 +129,7 @@ function ReviewCard({ review, onLikeClick, onCommentClick }) {
             <span key={t} className="chip">{t}</span>
           ))}
         </div>
-        <div className="review-actions" role="group" aria-label="review actions">
+        <div className="review-actions" role="group" aria-label="리뷰 액션">
           <button 
             className={`icon-btn ${isLiked ? 'liked' : ''}`}
             title="like" 
@@ -542,7 +542,7 @@ const Genre = () => {
       <Topnav />
 
       <h2 className="genre-title">
-        {category ? `${category} Events` : 'All Events'}
+        {category ? `${category} 이벤트` : '전체 이벤트'}
       </h2>
       {category && <span className="category-chip">{category}</span>}
 
@@ -573,7 +573,7 @@ const Genre = () => {
 
       {/* ===== 필터 박스 ===== */}
       <section className="filter-wrap">
-        <div className="filter-title">Filter</div>
+        <div className="filter-title">필터</div>
 
         <div className="filter-grid">
           {/* 평점순 */}
@@ -584,8 +584,8 @@ const Genre = () => {
               value={filters.ratingSort}
               onChange={onChange('ratingSort')}
             >
-              <option value="none">Sort None</option>
-              <option value="high">High Rating</option>
+              <option value="none">정렬 없음</option>
+              <option value="high">높은 평점</option>
               <option value="low">Low Rating</option>
             </select>
           </div>
@@ -598,8 +598,8 @@ const Genre = () => {
               value={filters.viewsSort}
               onChange={onChange('viewsSort')}
             >
-              <option value="none">Sort None</option>
-              <option value="desc">High Views</option>
+              <option value="none">정렬 없음</option>
+              <option value="desc">높은 조회수</option>
             </select>
           </div>
 
@@ -611,8 +611,8 @@ const Genre = () => {
               value={filters.deadlineSort}
               onChange={onChange('deadlineSort')}
             >
-              <option value="none">Sort None</option>
-              <option value="urgent">Urgent</option>
+              <option value="none">정렬 없음</option>
+              <option value="urgent">마감임박</option>
               <option value="normal">Normal</option>
             </select>
           </div>
@@ -625,8 +625,8 @@ const Genre = () => {
               value={filters.priceSort}
               onChange={onChange('priceSort')}
             >
-              <option value="none">Sort None</option>
-              <option value="low">Low Price</option>
+              <option value="none">정렬 없음</option>
+              <option value="low">낮은 가격</option>
               <option value="high">High Price</option>
             </select>
           </div>
@@ -636,13 +636,13 @@ const Genre = () => {
         <div className="filter-search-row">
           <input
             type="text"
-            placeholder="Title·Location Search"
+            placeholder="제목·지역 검색"
             value={filters.q}
             onChange={onChange('q')}
             onKeyDown={(e) => e.key === 'Enter' && onSearch()}
           />
           <button className="btn-primary" onClick={onSearch}>
-            Search
+            검색
           </button>
         </div>
       </section>
@@ -659,10 +659,10 @@ const Genre = () => {
           className={`mode-btn ${viewMode === 'filtered' ? 'active' : ''}`}
           onClick={() => setViewMode('filtered')}
         >
-          Filtering
+          필터링
         </button>
         <span className="mode-info">
-          {viewMode === 'all' ? `Total ${baseList.length} items` : `Filtered ${filteredSortedList.length} items`}
+          {viewMode === 'all' ? `전체 ${baseList.length}개` : `필터링 ${filteredSortedList.length}개`}
         </span>
       </div>
 
