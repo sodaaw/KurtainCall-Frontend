@@ -162,7 +162,7 @@ header.topnav::after {
 
 .topnav .logo:hover {
   color: var(--gold-light);
-  transform: scale(1.05);
+  /* transform: scale(1.05); 제거 - 과도한 확장 방지 */
 }
 
 .topnav .logo::after {
@@ -174,6 +174,7 @@ header.topnav::after {
   margin: 6px auto 0;
   border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: width 0.25s ease;
 }
 
 /* 왼쪽 영역 */
@@ -197,22 +198,28 @@ header.topnav::after {
   transform: translateX(-50%);
   z-index: 2;
   cursor: pointer;
-  transition: all 0.3s ease;
   padding: 8px 12px;
   border-radius: 10px;
   border: 1px solid transparent;
 }
 
 .logo-wrapper:hover {
-  background: rgba(139, 0, 0, 0.2);
-  border-color: var(--gold);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+  /* 박스 레벨 효과 제거 */
 }
 
-.logo-wrapper:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(139, 0, 0, 0.3);
+.logo-wrapper:hover .logo {
+  color: var(--gold-light);
+  transform: translateY(-1px);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.logo-wrapper:hover .logo::after {
+  width: 110px;
+}
+
+.logo-wrapper:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
 }
 
 .logo-wrapper .logo {
@@ -220,7 +227,7 @@ header.topnav::after {
 }
 
 .logo-wrapper:hover .logo {
-  color: var(--gold);
+  color: var(--gold-light);
 }
 
 .tagline {
@@ -596,5 +603,17 @@ header.topnav::after {
   
   .side-menu-header h2 {
     font-size: 1.3rem;
+  }
+}
+
+/* 접근성: prefers-reduced-motion 지원 */
+@media (prefers-reduced-motion: reduce) {
+  .logo-wrapper .logo,
+  .logo-wrapper:hover .logo,
+  .topnav .logo,
+  .topnav .logo::after,
+  .tagline {
+    transition: none;
+    transform: none;
   }
 }
