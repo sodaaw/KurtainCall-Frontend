@@ -191,7 +191,7 @@ const Community = () => {
       <Topnav onSearchClick={() => setIsSearchOpen(true)} />
       {isSearchOpen && <SearchModal onClose={() => setIsSearchOpen(false)} />}
 
-      <h2 className="community-title">🎀 우리 커뮤니티에 오신 것을 환영합니다 🎀</h2>
+      <h2 className="community-title">커뮤니티에 오신 것을 환영합니다</h2>
 
       {/* 필터 탭 */}
       <div className="community-filters">
