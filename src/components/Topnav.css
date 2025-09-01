@@ -176,13 +176,25 @@ header.topnav::after {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* 로고 래퍼 & 태그라인 */
+/* 왼쪽 영역 */
+.topnav .topnav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+}
+
+/* 로고 래퍼 & 태그라인 (중앙 배치) */
 .logo-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   line-height: 1.2;
-  position: relative;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 2;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -231,6 +243,11 @@ header.topnav::after {
   gap: 12px;
   position: relative;
   z-index: 2;
+  justify-content: flex-end;
+}
+
+.topnav .topnav-right > * {
+  flex-shrink: 0; /* 버튼들이 늘어나지 않도록 설정 */
 }
 
 /* 검색 아이콘 */
