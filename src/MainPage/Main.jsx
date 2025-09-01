@@ -54,7 +54,7 @@ const fmt = (d) =>
 const inRange = (day, start, end) => day >= start && day <= end;
 
 /* ---------------- 상단 메인이벤트(Hero) ---------------- */
-function Hero({ plays, isLoading, error }) {
+function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   const [idx, setIdx] = useState(0);
   const total = plays?.length || 0;
 
@@ -113,8 +113,23 @@ function Hero({ plays, isLoading, error }) {
 
   return (
     <header className="hero">
-      <h1>Recommendation For U</h1>
-      <p>Live Local. Explore Korea.</p>
+      {/* 위 작대기 추가 */}
+      <div className="hero-line top" aria-hidden="true" />
+      
+      {/* 게스트 칩 */}
+      {!isLoggedIn && (
+        <div className="hero-sub" style={{ marginTop: '15px', marginBottom: '10px' }}>
+          <span className="status-chip" aria-label="게스트 모드">
+            게스트 모드 · 랜덤 추천
+          </span>
+        </div>
+      )}
+
+      {/* 제목 */}
+      <h1>Recommendation For You</h1>
+
+      {/* 태그라인 */}
+      <p className="tagline">Live Local. Explore Korea.</p>
 
       {/* 한 장만 표시 */}
       <div className="poster-carousel" style={{ justifyContent: "center" }}>
@@ -219,7 +234,7 @@ export default function Main() {
 
       <div className="spacer" />
       <main className="main-container">
-        <Hero plays={plays} isLoading={isLoading} error={error} />
+        <Hero plays={plays} isLoading={isLoading} error={error} isLoggedIn={false} />
         <CategoryGrid onPick={goGenre} />
 
         {/* ✅ 좌: 캘린더 / 우: 이벤트 패널 */}

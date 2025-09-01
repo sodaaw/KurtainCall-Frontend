@@ -295,6 +295,7 @@
 
 .hero h1 {
   font-size: 2.5rem;
+  margin-top: 15px;
   margin-bottom: 12px;
   color: #d4af37; /* 골드 */
   font-weight: 700;
@@ -331,7 +332,7 @@
   width: 100%;
 }
 
-.hero h1::before {
+/* .hero h1::before {
   content: '';
   position: absolute;
   top: -10px;
@@ -341,6 +342,27 @@
   height: 3px;
   background: linear-gradient(90deg, #8B0000, #d4af37, #8B0000);
   border-radius: 2px;
+} */
+
+/* .hero h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #8B0000, #d4af37, #8B0000);
+  border-radius: 2px;
+} */
+
+/* 새 위 작대기 (h1 위, 게스트 칩보다 위) */
+.hero-line.top {
+  width: 60px;
+  height: 3px;
+  margin: 6px auto 10px auto; /* 위-오-아-왼: h1과의 간격은 여기로 조절 */
+  background: linear-gradient(90deg, #8B0000, #d4af37, #8B0000);
+  border-radius: 2px;
 }
 
 .hero p {
@@ -348,6 +370,93 @@
   margin-bottom: 20px;
   font-size: 1.2rem;
   font-weight: 500;
+}
+
+/* 히어로 보조 영역 */
+.hero .hero-sub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+/* 게스트 상태 칩 */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: .2px;
+  background: rgba(139, 0, 0, 0.18);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: #d4c48a;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25) inset;
+}
+
+/* 보조 카피 */
+.subcopy {
+  font-size: 0.86rem;
+  color: #9ca3af;
+  opacity: .9;
+}
+
+/* 인라인 CTA */
+.inline-cta {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid #d4af37;
+  background: linear-gradient(145deg, #302010, #4a3520);
+  color: #f5f5f5;
+  text-decoration: none;
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+  line-height: 1.2;
+}
+
+.inline-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(212, 175, 55, .25);
+  background: linear-gradient(145deg, #4a3520, #604528);
+}
+
+.cta-subtext {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #d4c48a;
+  margin-top: 2px;
+  opacity: 0.9;
+}
+
+/* 기존 hero 문구 정리 */
+.hero .tagline { 
+  color: #c5a572; 
+  margin: 6px 0 18px 0; 
+  font-size: 1.1rem; 
+  font-weight: 500; 
+}
+
+/* 모바일에서 줄바꿈/간격 안정화 */
+@media (max-width: 480px) {
+  .hero .hero-sub { 
+    gap: 12px;
+  }
+  .status-chip { font-size: 0.76rem; padding: 5px 9px; }
+  .inline-cta { 
+    font-size: 0.82rem; 
+    padding: 6px 12px; 
+  }
+  .cta-subtext {
+    font-size: 0.65rem;
+  }
 }
 
 /* 포스터 */

@@ -94,6 +94,13 @@ export default function Topnav() {
               <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" strokeWidth="2" fill="none"/>
             </svg>
           </button>
+          <button 
+            className="login-btn" 
+            onClick={() => navigate('/login')}
+            aria-label="Login"
+          >
+            로그인
+          </button>
         </div>
       </header>
 

@@ -316,15 +316,51 @@ header.topnav::after {
   transform: scale(1.1);
 }
 
+/* 로그인 버튼 */
+.topnav .login-btn {
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  color: var(--gold);
+  background: rgba(139, 0, 0, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  min-height: 44px;
+  letter-spacing: 0.5px;
+}
+
+.topnav .login-btn:hover {
+  background: rgba(139, 0, 0, 0.25);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(139, 0, 0, 0.3);
+  color: var(--gold-light);
+}
+
+.topnav .login-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(139, 0, 0, 0.3);
+}
+
 /* 아이콘 공통 스타일 */
 .topnav .search-icon,
-.topnav .lang-btn {
+.topnav .lang-btn,
+.topnav .login-btn {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
 .topnav .search-icon::before,
-.topnav .lang-btn::before {
+.topnav .lang-btn::before,
+.topnav .login-btn::before {
   content: '';
   position: absolute;
   top: 0;
@@ -339,7 +375,8 @@ header.topnav::after {
 }
 
 .topnav .search-icon:hover::before,
-.topnav .lang-btn:hover::before {
+.topnav .lang-btn:hover::before,
+.topnav .login-btn:hover::before {
   opacity: 1;
 }
 
