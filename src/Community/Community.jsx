@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Topnav from '../components/Topnav';
 import SearchModal from '../components/SearchModal';
+import CommentModal from './CommentModal';
 import './Community.css';
 
 const Community = () => {
@@ -20,14 +21,22 @@ const Community = () => {
       date: "2025-08-10",
       photos: [],
       content: "Visited a small local market near Jagalchi. Super friendly vendors and amazing street food! If you want the 'real local' vibe, don't miss this place.",
-      likes: 0,
-      comments: 0
+      likes: 12,
+      comments: 3,
+      likedBy: [],
+      commentsList: [
+        { id: 1, userName: "Traveler123", content: "정말 좋은 정보네요! 다음에 가보겠습니다.", date: "2025-08-10" },
+        { id: 2, userName: "FoodLover", content: "사진도 더 올려주세요!", date: "2025-08-10" },
+        { id: 3, userName: "LocalGuide", content: "추천해주신 곳 정말 맛있어요!", date: "2025-08-10" }
+      ]
     }
   ]);
 
   const [newPost, setNewPost] = useState("");
   const [selectedPhotos, setSelectedPhotos] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [commentModal, setCommentModal] = useState({ isOpen: false, postId: null, postTitle: "" });
+  const [activeFilter, setActiveFilter] = useState("top");
 
   const handlePhotoUpload = (event) => {
     const files = Array.from(event.target.files);
@@ -73,12 +82,78 @@ const Community = () => {
       photos: selectedPhotos.map(photo => photo.preview),
       content: newPost.trim(),
       likes: 0,
-      comments: 0
+      comments: 0,
+      likedBy: [],
+      commentsList: []
     };
 
     setPosts([newPostData, ...posts]);
     setNewPost(""); // 입력창 초기화
     setSelectedPhotos([]); // 사진 초기화
+  };
+
+  const handleLike = (postId, event) => {
+    event.stopPropagation(); // 게시물 클릭 방지
+    
+    setPosts(posts.map(post => {
+      if (post.id === postId) {
+        const isLiked = post.likedBy.includes("currentUser");
+        return {
+          ...post,
+          likes: isLiked ? post.likes - 1 : post.likes + 1,
+          likedBy: isLiked 
+            ? post.likedBy.filter(user => user !== "currentUser")
+            : [...post.likedBy, "currentUser"]
+        };
+      }
+      return post;
+    }));
+  };
+
+  const handleComment = (postId, event) => {
+    event.stopPropagation(); // 게시물 클릭 방지
+    const post = posts.find(p => p.id === postId);
+    setCommentModal({
+      isOpen: true,
+      postId: postId,
+      postTitle: post.content.substring(0, 30) + (post.content.length > 30 ? "..." : "")
+    });
+  };
+
+  const handleCommentSubmit = (postId, commentText) => {
+    const newComment = {
+      id: Date.now(),
+      userName: "You",
+      content: commentText,
+      date: new Date().toISOString().split('T')[0]
+    };
+
+    setPosts(posts.map(post => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          comments: post.comments + 1,
+          commentsList: [...post.commentsList, newComment]
+        };
+      }
+      return post;
+    }));
+  };
+
+  const handleSharePost = (postId, event) => {
+    event.stopPropagation(); // 게시물 클릭 방지
+    alert('게시물이 공유되었습니다! (개발 중)');
+  };
+
+  const getFilteredPosts = () => {
+    switch (activeFilter) {
+      case "views":
+        return [...posts].sort((a, b) => b.likes - a.likes);
+      case "photos":
+        return posts.filter(post => post.photos && post.photos.length > 0);
+      default:
+        return posts;
+    }
   };
 
   return (
@@ -95,9 +170,24 @@ const Community = () => {
           <option>이번 주</option>
           <option>이번 달</option>
         </select>
-        <button className="tab active">Top Post</button>
-        <button className="tab">⭐ Views</button>
-        <button className="tab">📷 Photos</button>
+        <button 
+          className={`tab ${activeFilter === "top" ? "active" : ""}`}
+          onClick={() => setActiveFilter("top")}
+        >
+          Top Post
+        </button>
+        <button 
+          className={`tab ${activeFilter === "views" ? "active" : ""}`}
+          onClick={() => setActiveFilter("views")}
+        >
+          ⭐ Views
+        </button>
+        <button 
+          className={`tab ${activeFilter === "photos" ? "active" : ""}`}
+          onClick={() => setActiveFilter("photos")}
+        >
+          📷 Photos
+        </button>
       </div>
 
       {/* 공유 업로드 박스 */}
@@ -162,7 +252,7 @@ const Community = () => {
       <main className="community-main">
         {/* 왼쪽 피드 */}
         <section className="feed-left">
-          {posts.map(post => (
+          {getFilteredPosts().map(post => (
             <article 
               className="review-card" 
               key={post.id}
@@ -217,13 +307,27 @@ const Community = () => {
                   ))}
                 </div>
                 <div className="review-actions" role="group" aria-label="리뷰 액션">
-                  <button className="icon-btn" title="like">
-                    ♥ {post.likes}
+                  <button 
+                    className={`icon-btn ${post.likedBy.includes("currentUser") ? "liked" : ""}`} 
+                    title="like"
+                    onClick={(e) => handleLike(post.id, e)}
+                  >
+                    {post.likedBy.includes("currentUser") ? "❤️" : "♥"} {post.likes}
                   </button>
-                  <button className="icon-btn" title="comment">
+                  <button 
+                    className="icon-btn" 
+                    title="comment"
+                    onClick={(e) => handleComment(post.id, e)}
+                  >
                     💬 {post.comments}
                   </button>
-                  <button className="icon-btn" title="share">🔗 공유</button>
+                  <button 
+                    className="icon-btn" 
+                    title="share"
+                    onClick={(e) => handleSharePost(post.id, e)}
+                  >
+                    🔗 공유
+                  </button>
                 </div>
               </footer>
             </article>
@@ -261,6 +365,15 @@ const Community = () => {
           </div>
         </aside>
       </main>
+
+      {/* 댓글 모달 */}
+      <CommentModal
+        isOpen={commentModal.isOpen}
+        onClose={() => setCommentModal({ isOpen: false, postId: null, postTitle: "" })}
+        onSubmit={handleCommentSubmit}
+        postId={commentModal.postId}
+        postTitle={commentModal.postTitle}
+      />
     </div>
   );
 };

@@ -385,6 +385,143 @@ body {
   box-shadow: 0 4px 15px rgba(139, 0, 0, 0.4);
 }
 
+/* 댓글 모달 스타일 */
+.comment-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.comment-modal {
+  background: linear-gradient(135deg, var(--dark-light), var(--dark));
+  border: 2px solid var(--burgundy);
+  border-radius: 20px;
+  padding: 25px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-dark);
+  position: relative;
+}
+
+.comment-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--burgundy);
+}
+
+.comment-modal-header h3 {
+  color: var(--gold);
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-grey);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(139, 0, 0, 0.2);
+  color: var(--gold);
+}
+
+.post-title {
+  color: var(--text-light);
+  font-style: italic;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: rgba(139, 0, 0, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid var(--gold);
+}
+
+.comment-input {
+  width: 100%;
+  background: var(--dark);
+  border: 2px solid var(--burgundy);
+  color: var(--text-light);
+  padding: 15px;
+  border-radius: 15px;
+  resize: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.comment-input::placeholder {
+  color: var(--text-grey);
+}
+
+.comment-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancel-btn {
+  background: var(--dark);
+  border: 2px solid var(--text-grey);
+  color: var(--text-grey);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  border-color: var(--text-light);
+  color: var(--text-light);
+}
+
+.submit-comment-btn {
+  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+  border: 2px solid var(--burgundy);
+  color: var(--gold);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.submit-comment-btn:hover {
+  background: linear-gradient(135deg, var(--burgundy-light), var(--burgundy));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(139, 0, 0, 0.4);
+}
+
 .upload-options button:hover::before {
   left: 100%;
 }
@@ -653,6 +790,20 @@ body {
 .icon-btn:hover { 
   background: rgba(139, 0, 0, 0.2);
   border-color: #d4af37;
+}
+
+/* 좋아요 버튼 특별 스타일 */
+.icon-btn.liked {
+  background: rgba(139, 0, 0, 0.4);
+  border-color: #d4af37;
+  color: #d4af37;
+  animation: heartBeat 0.3s ease-in-out;
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 /* 하트 버튼 특별 스타일 */
