@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Topnav from '../components/Topnav';
 import SearchModal from '../components/SearchModal';
 import CommentModal from './CommentModal';
+import LocationModal from './LocationModal';
 import './Community.css';
 
 const Community = () => {
@@ -28,14 +29,22 @@ const Community = () => {
         { id: 1, userName: "Traveler123", content: "정말 좋은 정보네요! 다음에 가보겠습니다.", date: "2025-08-10" },
         { id: 2, userName: "FoodLover", content: "사진도 더 올려주세요!", date: "2025-08-10" },
         { id: 3, userName: "LocalGuide", content: "추천해주신 곳 정말 맛있어요!", date: "2025-08-10" }
-      ]
+      ],
+      location: {
+        name: "Jagalchi Market",
+        address: "부산 중구 자갈치로 52",
+        lat: 35.0984,
+        lng: 129.0256
+      }
     }
   ]);
 
   const [newPost, setNewPost] = useState("");
   const [selectedPhotos, setSelectedPhotos] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [commentModal, setCommentModal] = useState({ isOpen: false, postId: null, postTitle: "" });
+  const [locationModal, setLocationModal] = useState({ isOpen: false });
   const [activeFilter, setActiveFilter] = useState("top");
 
   const handlePhotoUpload = (event) => {
@@ -66,6 +75,15 @@ const Community = () => {
     setSelectedPhotos(selectedPhotos.filter(photo => photo.id !== photoId));
   };
 
+  const handleLocationSelect = (location) => {
+    setSelectedLocation(location);
+    setLocationModal({ isOpen: false });
+  };
+
+  const removeLocation = () => {
+    setSelectedLocation(null);
+  };
+
   const handleShare = () => {
     if (!newPost.trim() && selectedPhotos.length === 0) return;
 
@@ -73,9 +91,9 @@ const Community = () => {
       id: posts.length + 1,
       userName: "You",
       userBadge: "KR",
-      area: "Seoul",
+      area: selectedLocation ? selectedLocation.name.split(' ')[0] : "Seoul",
       activities: ["Culture", "Food"],
-      tags: ["Location", "Culture"],
+      tags: selectedLocation ? ["Location", "Local", "Recommend"] : ["Location", "Culture"],
       rating: 4,
       lang: "ko",
       date: new Date().toISOString().split('T')[0],
@@ -84,12 +102,14 @@ const Community = () => {
       likes: 0,
       comments: 0,
       likedBy: [],
-      commentsList: []
+      commentsList: [],
+      location: selectedLocation
     };
 
     setPosts([newPostData, ...posts]);
     setNewPost(""); // 입력창 초기화
     setSelectedPhotos([]); // 사진 초기화
+    setSelectedLocation(null); // 위치 초기화
   };
 
   const handleLike = (postId, event) => {
@@ -225,6 +245,28 @@ const Community = () => {
           </div>
         )}
 
+        {/* 위치 미리보기 영역 */}
+        {selectedLocation && (
+          <div className="location-preview-container">
+            <div className="location-preview">
+              <div className="location-info">
+                <span className="location-icon">📍</span>
+                <div className="location-details">
+                  <div className="location-name">{selectedLocation.name}</div>
+                  <div className="location-address">{selectedLocation.address}</div>
+                </div>
+              </div>
+              <button 
+                className="remove-location-btn"
+                onClick={removeLocation}
+                type="button"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="upload-options">
           <input
             type="file"
@@ -237,7 +279,9 @@ const Community = () => {
           <button onClick={() => fileInputRef.current?.click()}>
             📷 Add Photo ({selectedPhotos.length}/5)
           </button>
-          <button>📍 Add Location</button>
+          <button onClick={() => setLocationModal({ isOpen: true })}>
+            📍 Add Location
+          </button>
           <button 
             className="submit-btn" 
             onClick={handleShare}
@@ -298,6 +342,17 @@ const Community = () => {
                   )}
                 </div>
                 <p className="review-text">{post.content}</p>
+                
+                {/* 위치 정보 표시 */}
+                {post.location && (
+                  <div className="post-location">
+                    <span className="location-icon">📍</span>
+                    <div className="location-info">
+                      <div className="location-name">{post.location.name}</div>
+                      <div className="location-address">{post.location.address}</div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <footer className="review-footer">
@@ -373,6 +428,13 @@ const Community = () => {
         onSubmit={handleCommentSubmit}
         postId={commentModal.postId}
         postTitle={commentModal.postTitle}
+      />
+
+      {/* 위치 선택 모달 */}
+      <LocationModal
+        isOpen={locationModal.isOpen}
+        onClose={() => setLocationModal({ isOpen: false })}
+        onSelect={handleLocationSelect}
       />
     </div>
   );
