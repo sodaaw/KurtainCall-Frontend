@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Topnav.css';
 import SearchModal from './SearchModal';
-import LanguageModal from './LanguageModal';
+// import LanguageModal from './LanguageModal'; // 언어 기능 임시 비활성화
 
 export default function Topnav() {
   const navigate = useNavigate();
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
-  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
+  // const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false); // 언어 기능 임시 비활성화
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState('ko'); // 언어 상태를 Topnav에서 관리
+  // const [currentLanguage, setCurrentLanguage] = useState('ko'); // 언어 기능 임시 비활성화
   const toggleSideMenu = () => {
     setIsSideMenuOpen(!isSideMenuOpen);
   };
@@ -18,10 +18,10 @@ export default function Topnav() {
     setIsSideMenuOpen(false);
   };
 
-  const handleLanguageChange = (languageCode) => {
-    setCurrentLanguage(languageCode); // 언어 변경 시 Topnav의 상태 업데이트
-    setIsLanguageModalOpen(false); // 모달 닫기
-  };
+  // const handleLanguageChange = (languageCode) => {
+  //   setCurrentLanguage(languageCode); // 언어 변경 시 Topnav의 상태 업데이트
+  //   setIsLanguageModalOpen(false); // 모달 닫기
+  // };
 
   const openSearchModal = () => {
     setIsSearchModalOpen(true);
@@ -83,6 +83,7 @@ export default function Topnav() {
               <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </span>
+          {/*
           <button 
             className="lang-btn" 
             onClick={() => setIsLanguageModalOpen(true)}
@@ -94,6 +95,7 @@ export default function Topnav() {
               <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" strokeWidth="2" fill="none"/>
             </svg>
           </button>
+          */}
           <button 
             className="login-btn" 
             onClick={() => navigate('/login')}
@@ -138,7 +140,7 @@ export default function Topnav() {
         <SearchModal onClose={closeSearchModal} />
       )}
 
-      {/* 언어 변경 모달 */}
+      {/* 언어 변경 모달 비활성화
       {isLanguageModalOpen && (
         <LanguageModal 
           onClose={() => setIsLanguageModalOpen(false)}
@@ -146,6 +148,7 @@ export default function Topnav() {
           onLanguageChange={handleLanguageChange}
         />
       )}
+      */}
     </>
   );
 }
