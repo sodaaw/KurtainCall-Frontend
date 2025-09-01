@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Topnav from '../components/Topnav';
 import SearchModal from '../components/SearchModal';
@@ -6,6 +6,7 @@ import './Community.css';
 
 const Community = () => {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -25,10 +26,39 @@ const Community = () => {
   ]);
 
   const [newPost, setNewPost] = useState("");
+  const [selectedPhotos, setSelectedPhotos] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  const handlePhotoUpload = (event) => {
+    const files = Array.from(event.target.files);
+    const validFiles = files.filter(file => 
+      file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024 // 5MB 제한
+    );
+
+    if (validFiles.length + selectedPhotos.length > 5) {
+      alert('최대 5장까지 업로드 가능합니다.');
+      return;
+    }
+
+    const newPhotos = validFiles.map(file => ({
+      id: Date.now() + Math.random(),
+      file: file,
+      preview: URL.createObjectURL(file)
+    }));
+
+    setSelectedPhotos([...selectedPhotos, ...newPhotos]);
+  };
+
+  const removePhoto = (photoId) => {
+    const photoToRemove = selectedPhotos.find(photo => photo.id === photoId);
+    if (photoToRemove) {
+      URL.revokeObjectURL(photoToRemove.preview);
+    }
+    setSelectedPhotos(selectedPhotos.filter(photo => photo.id !== photoId));
+  };
+
   const handleShare = () => {
-    if (!newPost.trim()) return;
+    if (!newPost.trim() && selectedPhotos.length === 0) return;
 
     const newPostData = {
       id: posts.length + 1,
@@ -40,7 +70,7 @@ const Community = () => {
       rating: 4,
       lang: "ko",
       date: new Date().toISOString().split('T')[0],
-      photos: [],
+      photos: selectedPhotos.map(photo => photo.preview),
       content: newPost.trim(),
       likes: 0,
       comments: 0
@@ -48,6 +78,7 @@ const Community = () => {
 
     setPosts([newPostData, ...posts]);
     setNewPost(""); // 입력창 초기화
+    setSelectedPhotos([]); // 사진 초기화
   };
 
   return (
@@ -79,10 +110,51 @@ const Community = () => {
             onChange={(e) => setNewPost(e.target.value)}
           />
         </div>
+        
+        {/* 사진 미리보기 영역 */}
+        {selectedPhotos.length > 0 && (
+          <div className="photo-preview-container">
+            <div className="photo-preview-grid">
+              {selectedPhotos.map((photo) => (
+                <div key={photo.id} className="photo-preview-item">
+                  <img 
+                    src={photo.preview} 
+                    alt="Preview" 
+                    className="photo-preview"
+                  />
+                  <button 
+                    className="remove-photo-btn"
+                    onClick={() => removePhoto(photo.id)}
+                    type="button"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="upload-options">
-          <button>📷 Add Photo</button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            multiple
+            accept="image/*"
+            onChange={handlePhotoUpload}
+            style={{ display: 'none' }}
+          />
+          <button onClick={() => fileInputRef.current?.click()}>
+            📷 Add Photo ({selectedPhotos.length}/5)
+          </button>
           <button>📍 Add Location</button>
-          <button className="submit-btn" onClick={handleShare}>공유하기 💖</button>
+          <button 
+            className="submit-btn" 
+            onClick={handleShare}
+            disabled={!newPost.trim() && selectedPhotos.length === 0}
+          >
+            공유하기 💖
+          </button>
         </div>
       </section>
 
@@ -117,7 +189,20 @@ const Community = () => {
               <div className="review-body">
                 <div className="review-photo">
                   {post.photos?.length ? (
-                    <img src={post.photos[0]} alt="review" />
+                    <div className="post-photos">
+                      {post.photos.length === 1 ? (
+                        <img src={post.photos[0]} alt="review" />
+                      ) : (
+                        <div className="multiple-photos">
+                          <img src={post.photos[0]} alt="review" className="main-photo" />
+                          {post.photos.length > 1 && (
+                            <div className="photo-overlay">
+                              <span>+{post.photos.length - 1}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   ) : (
                     <div className="photo-placeholder">🖼 사진 영역</div>
                   )}
