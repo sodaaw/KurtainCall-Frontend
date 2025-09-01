@@ -4,6 +4,7 @@ import Topnav from '../components/Topnav';
 import SearchModal from '../components/SearchModal';
 import CommentModal from './CommentModal';
 import LocationModal from './LocationModal';
+import CommentsModal from './CommentsModal';
 import './Community.css';
 
 const Community = () => {
@@ -44,6 +45,7 @@ const Community = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [commentModal, setCommentModal] = useState({ isOpen: false, postId: null, postTitle: "" });
+  const [commentsModal, setCommentsModal] = useState({ isOpen: false, post: null });
   const [locationModal, setLocationModal] = useState({ isOpen: false });
   const [activeFilter, setActiveFilter] = useState("top");
 
@@ -137,6 +139,14 @@ const Community = () => {
       isOpen: true,
       postId: postId,
       postTitle: post.content.substring(0, 30) + (post.content.length > 30 ? "..." : "")
+    });
+  };
+
+  const handleViewComments = (post, event) => {
+    event.stopPropagation(); // 게시물 클릭 방지
+    setCommentsModal({
+      isOpen: true,
+      post: post
     });
   };
 
@@ -377,6 +387,13 @@ const Community = () => {
                     💬 {post.comments}
                   </button>
                   <button 
+                    className="icon-btn view-comments-btn" 
+                    title="view comments"
+                    onClick={(e) => handleViewComments(post, e)}
+                  >
+                    👁️ 댓글보기
+                  </button>
+                  <button 
                     className="icon-btn" 
                     title="share"
                     onClick={(e) => handleSharePost(post.id, e)}
@@ -428,6 +445,14 @@ const Community = () => {
         onSubmit={handleCommentSubmit}
         postId={commentModal.postId}
         postTitle={commentModal.postTitle}
+      />
+
+      {/* 댓글 목록 모달 */}
+      <CommentsModal
+        isOpen={commentsModal.isOpen}
+        onClose={() => setCommentsModal({ isOpen: false, post: null })}
+        post={commentsModal.post}
+        onSubmit={handleCommentSubmit}
       />
 
       {/* 위치 선택 모달 */}
