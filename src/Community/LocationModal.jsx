@@ -243,3 +243,4 @@ const LocationModal = ({ isOpen, onClose, onSelect }) => {
 };
 
 export default LocationModal;
+

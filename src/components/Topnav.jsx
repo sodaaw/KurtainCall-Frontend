@@ -4,12 +4,15 @@ import './Topnav.css';
 import SearchModal from './SearchModal';
 // import LanguageModal from './LanguageModal'; // 언어 기능 임시 비활성화
 
-export default function Topnav() {
+export default function Topnav({ variant = "default "}) {
   const navigate = useNavigate();
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   // const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false); // 언어 기능 임시 비활성화
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   // const [currentLanguage, setCurrentLanguage] = useState('ko'); // 언어 기능 임시 비활성화
+
+  // 홈화면에서만 다른 디자인 적용
+  const isHome = variant === "home";
   const toggleSideMenu = () => {
     setIsSideMenuOpen(!isSideMenuOpen);
   };
@@ -37,7 +40,7 @@ export default function Topnav() {
 
   return (
     <>
-      <header className="topnav">
+      <header className={`topnav ${isHome ? 'is-home' : ''}`}>
         {/* 커튼 배경 요소들 */}
         <div className="left-curtain"></div>
         <div className="right-curtain"></div>
@@ -57,34 +60,38 @@ export default function Topnav() {
             <span className="hamburger-line"></span>
           </div>
           
-          <span
-            className="search-icon"
-            role="button"
-            tabIndex={0}
-            aria-label="검색"
-            onClick={openSearchModal}
-            onKeyDown={(e) => e.key === 'Enter' && openSearchModal()}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" fill="none"/>
-              <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-          </span>
+          {!isHome && (
+            <span
+              className="search-icon"
+              role="button"
+              tabIndex={0}
+              aria-label="검색"
+              onClick={openSearchModal}
+              onKeyDown={(e) => e.key === 'Enter' && openSearchModal()}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" fill="none"/>
+                <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </span>
+          )}
         </div>
 
-        {/* 로고 + 태그라인 (중앙) */}
-        <div 
-          className="logo-wrapper"
-          onClick={goHome}
-          role="button"
-          tabIndex={0}
-          aria-label="홈으로 이동"
-          onKeyDown={(e) => e.key === 'Enter' && goHome()}
-          style={{ cursor: 'pointer' }}
-        >
-          <h1 className="logo">KurtainCall</h1>
-          <p className="tagline">Your Gateway to Korea's Hidden Stages</p>
-        </div>
+        {/* 로고 + 태그라인 (중앙) -> 홈에서 숨김 */}
+        {!isHome && (
+          <div 
+            className="logo-wrapper"
+            onClick={goHome}
+            role="button"
+            tabIndex={0}
+            aria-label="홈으로 이동"
+            onKeyDown={(e) => e.key === 'Enter' && goHome()}
+            style={{ cursor: 'pointer' }}
+          >
+            <h1 className="logo">KurtainCall</h1>
+            <p className="tagline">Your Gateway to Korea's Hidden Stages</p>
+          </div>
+        )}
 
         <div className="topnav-right">
           {/*

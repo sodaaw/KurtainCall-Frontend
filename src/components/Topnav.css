@@ -27,7 +27,7 @@ header.topnav {
   overflow: hidden;
 }
 
-/* 상단 골드 라인 */
+/* /* 상단 골드 라인 */
 header.topnav::before {
   content: '';
   position: absolute;
@@ -204,9 +204,6 @@ header.topnav::after {
   border: 1px solid transparent;
 }
 
-.logo-wrapper:hover {
-  /* 박스 레벨 효과 제거 */
-}
 
 .logo-wrapper:hover .logo {
   color: var(--gold-light);
@@ -622,4 +619,23 @@ header.topnav::after {
     transition: none;
     transform: none;
   }
+}
+
+/* 홈 변형일 때 여백 조금 타이트하게 */
+.topnav.is-home {
+  justify-content: space-between; 
+  border-bottom: none;
+  background: none;
+  box-shadow: none;
+}
+
+.topnav.is-home .topnav-left { gap: 8px; }
+.topnav.is-home .topnav-right { gap: 8px; }
+
+/* 로고가 없으므로 중앙 absolute 공간이 안 잡히도록 */
+.topnav.is-home .logo-wrapper { display: none; }
+
+.topnav.is-home + .side-menu,
+.topnav.is-home + .side-menu-overlay {
+  border-right: none !important;
 }
