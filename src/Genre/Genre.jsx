@@ -233,6 +233,10 @@ const Genre = () => {
             continue;
           }
         }
+
+        // 디버깅용 콘솔에 데이터 찍어보기
+        //console.log("API 원본 데이터:", playsData);
+
         
         if (playsData) {
           // API 데이터를 올바른 형식으로 변환
@@ -564,7 +568,7 @@ const Genre = () => {
   }}/>
               <div className="poster-title">{p.title}</div>
               <div className="poster-info">
-                {p.category} {p.location && `| ${p.location}`}
+                {p.category} {p.location?.address && `| ${p.location.address}`}
               </div>
             </div>
           ))}
