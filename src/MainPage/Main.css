@@ -24,26 +24,79 @@
 ======================== */
 .loading-spinner {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 200px;
-  font-size: 18px;
-  color: #f5f5f5;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 244, 183, 0.2);
+  border-radius: 15px;
   margin: 20px 0;
+  padding: 30px;
+  backdrop-filter: blur(10px);
+}
+
+.loading-spinner .spinner-animation {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 244, 183, 0.3);
+  border-top: 3px solid #FFF4B7;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.loading-spinner p {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(14px, 1.6vw, 18px);
+  color: #c5a572;
+  font-weight: 500;
+  margin: 0;
+  text-align: center;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .no-data {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 200px;
-  font-size: 18px;
-  color: #f5f5f5;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 244, 183, 0.2);
+  border-radius: 15px;
   margin: 20px 0;
+  padding: 30px;
+  backdrop-filter: blur(10px);
+}
+
+.no-data .no-data-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.no-data .no-data-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: #FFF4B7;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.no-data .no-data-detail {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(14px, 1.6vw, 18px);
+  color: #c5a572;
+  font-weight: 400;
+  margin: 0;
+  text-align: center;
 }
 
 .error-message {
@@ -52,23 +105,37 @@
   justify-content: center;
   align-items: center;
   height: 200px;
-  background: rgba(0, 49, 97, 0.1);
-  border: 1px solid rgba(0, 49, 97, 0.3);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 244, 183, 0.2);
+  border-radius: 15px;
   margin: 20px 0;
-  padding: 20px;
+  padding: 30px;
+  backdrop-filter: blur(10px);
+}
+
+.error-message .error-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.error-message .error-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: #FFF4B7;
+  font-weight: 600;
+  margin: 0 0 10px 0;
   text-align: center;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-.error-message p {
-  margin: 5px 0;
-  color: #003161;
-  font-size: 16px;
-}
-
-.error-message p:first-child {
-  font-weight: bold;
-  font-size: 18px;
+.error-message .error-detail {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(14px, 1.6vw, 18px);
+  color: #c5a572;
+  font-weight: 400;
+  margin: 0;
+  text-align: center;
 }
 
 /* ========================
@@ -149,37 +216,11 @@
 }
 
 .main-page .curtain-decoration::before {
-  content: '';
-  position: absolute;
-  top: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 300px;
-  height: 4px;
-  background: linear-gradient(90deg, 
-    transparent 0%,
-    rgba(255, 244, 183, 0.8) 20%,
-    rgba(255, 244, 183, 1) 50%,
-    rgba(255, 244, 183, 0.8) 80%,
-    transparent 100%);
-  animation: curtainLine 6s ease-in-out infinite;
+  display: none;
 }
 
 .main-page .curtain-decoration::after {
-  content: '';
-  position: absolute;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 200px;
-  height: 2px;
-  background: linear-gradient(90deg, 
-    transparent 0%,
-    rgba(0, 11, 88, 0.6) 30%,
-    rgba(0, 11, 88, 0.8) 50%,
-    rgba(0, 11, 88, 0.6) 70%,
-    transparent 100%);
-  animation: curtainLine 6s ease-in-out infinite 1s;
+  display: none;
 }
 
 @keyframes curtainLine {
@@ -188,12 +229,13 @@
 }
 
 .main-container {
-  max-width: 1100px;
   margin: 0 auto;
-  margin-top: -40px;
-  padding: 20px;
+  /* margin-top: -40px; */
+  padding: 20px 20px 40px 20px;
   position: relative;
   z-index: 2;
+  max-width: 1400px;
+  width: 100%;
 }
 
 .spacer {
@@ -205,7 +247,7 @@
 ======================== */
 .hero {
   text-align: center;
-  margin-top: -30px;
+  /* margin-top: -30px; */
   margin-bottom: 0px;
   padding: 5px 0;
   position: relative;
@@ -228,7 +270,7 @@
   border-radius: 50%;
 }
 
-.hero h1 {
+/* .hero h1 {
   font-family: 'Swanley';
   font-size: 5rem;
   margin-top: 15px;
@@ -237,6 +279,26 @@
   font-weight: 500;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   position: relative;
+} */
+
+/* 한 번만 선언 – 어디서든 동일하게 동작 */
+.hero h1 {
+  font-family: 'Swanley';
+  font-size: clamp(60px, 6.2vw, 84px); /* 최소 42px, 보통 6.2vw, 최대 84px */
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  margin: 0;                  /* 음수 마진 제거 */
+  color: #FFF4B7;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero .tagline {
+  font-size: clamp(14px, 1.6vw, 18px);
+  line-height: 1.45;
+  margin: 6px 0 18px;
+  color: #c5a572;
+  text-wrap: balance;                  /* 줄바꿈 밸런스(지원 브라우저에서) */
 }
 
 .hero-line.top {
@@ -290,7 +352,7 @@
 ======================== */
 .recommended-section {
   margin-top: -60px;
-  margin-bottom: --10px;
+  margin-bottom: 60px;
   padding: 20px 0;
 }
 
@@ -336,12 +398,12 @@
 
 .shows-container {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
   transform: translateX(0);
   width: fit-content;
-  max-width: calc(100% - 40px);
+  max-width: calc(100% - 32px);
 }
 
 .shows-container.transitioning {
@@ -350,7 +412,7 @@
 
 /* show-card: 배경/테두리 제거, 포스터만 보이게 */
 .show-card {
-  flex: 0 0 calc(33.333% - 14px);
+  flex: 0 0 calc(20% - 16px);
   padding: 0;                        /* 내부 패딩 제거 */
   background: none;                  /* 배경 제거 */
   border: none;                      /* 테두리 제거 */
@@ -360,7 +422,8 @@
   transition: transform .3s ease;
   position: relative;
   overflow: visible;                 /* 포스터 그림자 보이게 */
-  min-width: 280px;
+  min-width: 200px;
+  max-width: 250px;
 }
 
 /* 상단 라인도 제거 */
@@ -399,8 +462,10 @@
   aspect-ratio: 3 / 4;               /* 공연 포스터 표준 비율 */
   border-radius: 12px;
   overflow: hidden;                   /* 모서리 둥글게 적용 */
-  box-shadow: 0 12px 28px rgba(0,0,0,.45);  /* 바닥 그림자 */
+  box-shadow: 0 8px 20px rgba(0,0,0,.45);  /* 바닥 그림자 */
   background: #0f0f0f;               /* 레터박스 배경 */
+  max-width: 250px;
+  margin: 0 auto;
 }
 
 /* 이미지: 비율 유지, 잘림 없음 */
@@ -451,16 +516,19 @@
   text-align: center;
 }
 
+/* 1) 제목 스타일 */
 .show-title {
-  font-weight: 600;.topnav.is-home + .side-menu,
-  .topnav.is-home + .side-menu-overlay {
-    border-right: none !important;
-  }
-  
+  font-weight: 600;
   color: #f5f5f5;
   font-size: 1rem;
   line-height: 1.3;
   margin: 0;
+}
+
+/* 2) 홈에서 사이드메뉴 외곽선 제거 (show-title 밖으로!) */
+.topnav.is-home + .side-menu,
+.topnav.is-home + .side-menu-overlay {
+  border-right: none !important;
 }
 
 .show-location {
@@ -530,17 +598,19 @@
    검색 및 장르 필터
 ======================== */
 .search-genre-section {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   padding: 20px 0;
 }
 
 .search-bar {
-  margin-bottom: 20px;
+  margin-bottom: 13px;
+  display: flex;
+  justify-content: center;
 }
 
 .search-input-wrapper {
   position: relative;
-  max-width: 500px;
+  width: min(98%, 1400px);
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -548,9 +618,11 @@
   /* border: 2px solid #003161; */
   border: 1px solid #FFF4B7;
   border-radius: 25px;
-  padding: 12px 20px;
+  padding: clamp(10px, 1.5vw, 18px) clamp(24px, 5vw, 24px);
   box-shadow: 0 4px 15px rgba(0,0,0,0.3);
   transition: all 0.3s ease;
+  min-width: 350px;
+  max-width: 1400px;
 }
 
 .search-input-wrapper:hover {
@@ -565,8 +637,10 @@
 
 .search-icon {
   color: #FFF4B7;
-  margin-right: 12px;
+  margin-right: clamp(16px, 3vw, 16px);
   flex-shrink: 0;
+  width: clamp(18px, 2.5vw, 20px);
+  height: clamp(18px, 2.5vw, 20px);
 }
 
 .search-input {
@@ -574,10 +648,15 @@
   background: none;
   border: none;
   color: #f5f5f5;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
   outline: none;
-  padding: 0;
+  padding: 0 8px;
   cursor: pointer;
+  min-height: 20px;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  min-width: 0;
 }
 
 .search-input::placeholder {
@@ -600,9 +679,9 @@
 .genre-filters {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 8px;
   flex-wrap: wrap;
-  max-width: 600px;
+  max-width: none;
   margin: 0 auto;
 }
 
@@ -610,9 +689,9 @@
   background:#1A1A1A;
   border: 1px solid #FFF4B7;
   color: #f5f5f5;
-  padding: 5px 15px;
+  padding: 4px 12px;
   border-radius: 25px;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   font-weight: 400;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -635,7 +714,7 @@
   color: #FFF4B7;
   padding: 10px 20px;
   border-radius: 25px;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   font-weight: 400;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -943,6 +1022,26 @@
 }
 
 /* ========================
+   Hero + Search/Genre 블록 (첫 화면에 맞추기)
+   여기를 조정!!!!!!!!!!
+======================== */
+.hero-block {
+  min-height: calc(30svh - var(--topnav-h, 70px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;   /* 수직 가운데 */
+  gap: clamp(8px, 2vh, 16px);
+  padding: clamp(8px, 2vh, 24px) 16px 0;
+}
+
+.hero .tagline {
+  font-size: clamp(14px, 1.2vw, 16px);
+  margin: clamp(4px, 1vh, 10px) 0;
+  margin-top: -5px;
+}
+
+/* ========================
    반응형 디자인
 ======================== */
 @media (max-width: 768px) {
@@ -951,9 +1050,10 @@
   }
   
   .show-card {
-    flex: 0 0 calc(50% - 8px);
-    min-height: 250px;
-    min-width: 200px;
+    flex: 0 0 calc(33.333% - 10px);
+    min-height: 200px;
+    min-width: 180px;
+    max-width: 220px;
   }
   
   .show-img {
@@ -975,7 +1075,12 @@
   }
   
   .search-input-wrapper {
-    margin: 0 20px;
+    max-width: 100%;
+    margin: 0 12px;
+    width: min(92%, 800px);
+    padding: clamp(10px, 2vw, 18px) clamp(16px, 3vw, 24px);
+    min-width: 300px;
+    max-width: 800px;
   }
   
   .schedule { 
@@ -985,11 +1090,43 @@
   
   .hero h1 {
     font-family: 'Swanley';
-    font-size: 4rem;
+    /* font-size: 4rem; */
   }
   
   .hero p {
     font-size: 1.1rem;
+  }
+
+  /* 로딩/에러 상태 반응형 */
+  .loading-spinner,
+  .no-data,
+  .error-message {
+    height: 150px;
+    padding: 20px;
+    margin: 15px 0;
+  }
+
+  .loading-spinner .spinner-animation {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 15px;
+  }
+
+  .loading-spinner p,
+  .no-data .no-data-title,
+  .error-message .error-title {
+    font-size: clamp(14px, 1.4vw, 16px);
+  }
+
+  .no-data .no-data-detail,
+  .error-message .error-detail {
+    font-size: clamp(12px, 1.2vw, 14px);
+  }
+
+  .no-data .no-data-icon,
+  .error-message .error-icon {
+    font-size: 36px;
+    margin-bottom: 15px;
   }
 }
 
@@ -999,9 +1136,10 @@
   }
   
   .show-card {
-    flex: 0 0 calc(100% - 5px);
-    min-height: 200px;
-    min-width: 150px;
+    flex: 0 0 calc(50% - 5px);
+    min-height: 180px;
+    min-width: 140px;
+    max-width: 200px;
   }
   
   .show-img {
@@ -1026,19 +1164,55 @@
   
   .search-input-wrapper {
     margin: 0 10px;
-    padding: 10px 15px;
+    width: min(88vw, 700px);   /* 화면에 맞추되 최대폭 유지 */
+    min-width: 280px;
+    max-width: 700px;
+    padding: clamp(8px, 2vw, 16px) clamp(12px, 2.5vw, 20px);
   }
   
   .search-input {
-    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 3vw, 1rem);
+    padding: 0 4px;
   }
   
   .hero h1 {
     font-family: 'Swanley';
-    font-size: 3rem;
+    /* font-size: 3rem; */
   }
   
   .hero p {
     font-size: 1rem;
+  }
+
+  /* 로딩/에러 상태 반응형 */
+  .loading-spinner,
+  .no-data,
+  .error-message {
+    height: 120px;
+    padding: 15px;
+    margin: 10px 0;
+  }
+
+  .loading-spinner .spinner-animation {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 12px;
+  }
+
+  .loading-spinner p,
+  .no-data .no-data-title,
+  .error-message .error-title {
+    font-size: clamp(12px, 1vw, 14px);
+  }
+
+  .no-data .no-data-detail,
+  .error-message .error-detail {
+    font-size: clamp(10px, 0.9vw, 12px);
+  }
+
+  .no-data .no-data-icon,
+  .error-message .error-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
   }
 }

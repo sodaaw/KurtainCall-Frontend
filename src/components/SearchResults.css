@@ -5,9 +5,9 @@
     --panel-2: #1e2026;
     --text: #e9e9ee;
     --muted: #a8acb8;
-    --primary: #e11d48;          /* 포인트 레드 */
-    --primary-20: rgba(225,29,72,0.2);
-    --ring: rgba(225,29,72,0.35);
+    --primary: #1b178e;          /* 포인트 레드 */
+    --primary-20: rgba(0, 11, 88, 0.2);
+    --ring: rgba(0, 11, 88, 0.35);
     --card-radius: 14px;
     --gap: 16px;
   }

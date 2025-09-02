@@ -43,9 +43,12 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (isLoading) {
     return (
       <header className="hero">
-        <h1>당신을 위한 추천</h1>
-        <p>발견의 즐거움, 로컬 공연 큐레이션.</p>
-        <div className="loading-spinner">로딩 중...</div>
+        <h1>KurtainCall</h1>
+        <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
+        <div className="loading-spinner">
+          <div className="spinner-animation"></div>
+          <p>데이터를 불러오는 중...</p>
+        </div>
       </header>
     );
   }
@@ -53,11 +56,12 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (error) {
     return (
       <header className="hero">
-        <h1>당신을 위한 추천</h1>
-        <p>발견의 즐거움, 로컬 공연 큐레이션.</p>
+        <h1>KurtainCall</h1>
+        <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
         <div className="error-message">
-          <p>⚠️ {error}</p>
-          <p>백엔드 서버가 실행 중인지 확인해주세요.</p>
+          <div className="error-icon">⚠️</div>
+          <p className="error-title">데이터를 불러올 수 없습니다</p>
+          <p className="error-detail">백엔드 서버가 실행 중인지 확인해주세요.</p>
         </div>
       </header>
     );
@@ -66,9 +70,13 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (!plays || plays.length === 0) {
     return (
       <header className="hero">
-        <h1>당신을 위한 추천</h1>
-        <p>발견의 즐거움, 로컬 공연 큐레이션.</p>
-        <div className="no-data">데이터를 불러올 수 없습니다.</div>
+        <h1>KurtainCall</h1>
+        <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
+        <div className="no-data">
+          <div className="no-data-icon">📭</div>
+          <p className="no-data-title">표시할 데이터가 없습니다</p>
+          <p className="no-data-detail">현재 등록된 공연 정보가 없습니다.</p>
+        </div>
       </header>
     );
   }
@@ -80,9 +88,13 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (!current) {
     return (
       <header className="hero">
-        <h1>당신을 위한 추천</h1>
-        <p>발견의 즐거움, 로컬 공연 큐레이션.</p>
-        <div className="no-data">데이터를 불러올 수 없습니다.</div>
+        <h1>KurtainCall</h1>
+        <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
+        <div className="no-data">
+          <div className="no-data-icon">📭</div>
+          <p className="no-data-title">표시할 데이터가 없습니다</p>
+          <p className="no-data-detail">현재 등록된 공연 정보가 없습니다.</p>
+        </div>
       </header>
     );
   }
@@ -147,7 +159,10 @@ function RecommendedShows({ plays, isLoading, error }) {
   if (isLoading) {
     return (
       <section className="recommended-section">
-        <div className="loading-spinner">로딩 중...</div>
+        <div className="loading-spinner">
+          <div className="spinner-animation"></div>
+          <p>추천 공연을 불러오는 중...</p>
+        </div>
       </section>
     );
   }
@@ -155,7 +170,11 @@ function RecommendedShows({ plays, isLoading, error }) {
   if (error || !plays || plays.length === 0) {
     return (
       <section className="recommended-section">
-        <div className="no-data">데이터를 불러올 수 없습니다.</div>
+        <div className="no-data">
+          <div className="no-data-icon">🎭</div>
+          <p className="no-data-title">추천 공연을 불러올 수 없습니다</p>
+          <p className="no-data-detail">잠시 후 다시 시도해주세요.</p>
+        </div>
       </section>
     );
   }
@@ -220,7 +239,7 @@ function RecommendedShows({ plays, isLoading, error }) {
         </div>
         
         {/* 슬라이드 인디케이터 */}
-        <div className="slide-indicator">
+        {/* <div className="slide-indicator">
           <button 
             type="button" 
             aria-label="이전" 
@@ -240,7 +259,7 @@ function RecommendedShows({ plays, isLoading, error }) {
           >
             ›
           </button>
-        </div>
+        </div> */}
       </div>
     </section>
   );
@@ -345,15 +364,17 @@ export default function Main() {
       <Topnav variant="home" />
       {isSearchOpen && <SearchModal onClose={() => setIsSearchOpen(false)} />}
 
-      <div className="spacer" />
+      {/* <div className="spacer" /> */}
       <main className="main-container">
-        <Hero plays={plays} isLoading={isLoading} error={error} isLoggedIn={false} />
+        <section className="hero-block">
+          <Hero plays={plays} isLoading={isLoading} error={error} isLoggedIn={false} />
 
-        {/* 검색 및 장르 필터 */}
-        <SearchAndGenre 
-          onSearchClick={() => setIsSearchOpen(true)} 
-          onGenreClick={goGenre} 
-        />
+          {/* 검색 및 장르 필터 */}
+          <SearchAndGenre 
+            onSearchClick={() => setIsSearchOpen(true)} 
+            onGenreClick={goGenre} 
+          />
+        </section>
         
         {/* 추천 공연 슬라이드 */}
         <RecommendedShows plays={plays} isLoading={isLoading} error={error} />

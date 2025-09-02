@@ -639,3 +639,8 @@ header.topnav::after {
 .topnav.is-home + .side-menu-overlay {
   border-right: none !important;
 }
+
+/* 올바른 수정 코드 */
+.topnav.is-home::before { 
+  display: none !important;
+}
