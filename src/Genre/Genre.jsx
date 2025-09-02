@@ -182,6 +182,9 @@ const Genre = () => {
   // See all / Filtering 토글
   const [viewMode, setViewMode] = useState('all'); // 'all' | 'filtered'
 
+  // === 새로운 탭 상태 추가 =========================
+  const [activeTab, setActiveTab] = useState('posters'); // 'posters' | 'reviews'
+
   // API 호출 - 여러 엔드포인트 시도
   useEffect(() => {
     const fetchPlays = async () => {
@@ -586,53 +589,115 @@ const Genre = () => {
       </h2>
       {category && <span className="category-chip">{category}</span>}
 
-      {/* ===== 장르별 포스터 섹션 ===== */}
-      {len === 0 ? (
-        <div style={{ opacity: 0.7, padding: '24px 0' }}>조건에 맞는 결과가 없습니다.</div>
-      ) : (
-        <div className="category-posters-section">
-          
-          {Object.entries(groupedPlays).map(([genre, genrePlays]) => (
-            <div key={genre} className="category-group">
-              <h4 className="category-title">{genre}</h4>
-              <div className="poster-grid">
-                {genrePlays.map((play) => (
-                  <div 
-                    key={play.id} 
-                    className="category-poster-card"
-                    onClick={() => navigate('/genre/recommended', { state: { selectedPoster: play } })}
-                  >
-                    <img
-                      referrerPolicy="no-referrer"
-                      src={play.image}
-                      alt={play.title}
-                      className="category-poster-img"
-                      onError={(e) => { 
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = '/images/fallback.jpg'; 
-                      }}
-                    />
-                    <div className="category-poster-info">
-                      <div className="category-poster-title">{play.title}</div>
-                      <div className="category-poster-location">
-                        {typeof play.location === 'string' 
-                          ? play.location 
-                          : play.location?.address || '장소 정보 없음'
-                        }
+      {/* ===== 탭 네비게이션 추가 ===== */}
+      <div className="genre-tabs">
+        <button
+          className={`genre-tab ${activeTab === 'posters' ? 'active' : ''}`}
+          onClick={() => setActiveTab('posters')}
+        >
+          🎭 포스터 보기
+        </button>
+        <button
+          className={`genre-tab ${activeTab === 'reviews' ? 'active' : ''}`}
+          onClick={() => setActiveTab('reviews')}
+        >
+          💬 리뷰 보기
+        </button>
+      </div>
+
+      {/* ===== 탭별 컨텐츠 ===== */}
+      {activeTab === 'posters' && (
+        <>
+          {/* ===== 장르별 포스터 섹션 ===== */}
+          {len === 0 ? (
+            <div style={{ opacity: 0.7, padding: '24px 0' }}>조건에 맞는 결과가 없습니다.</div>
+          ) : (
+            <div className="category-posters-section">
+              {Object.entries(groupedPlays).map(([genre, genrePlays]) => (
+                <div key={genre} className="category-group">
+                  <h4 className="category-title">{genre}</h4>
+                  <div className="poster-grid">
+                    {genrePlays.map((play) => (
+                      <div 
+                        key={play.id} 
+                        className="category-poster-card"
+                        onClick={() => navigate('/genre/recommended', { state: { selectedPoster: play } })}
+                      >
+                        <img
+                          referrerPolicy="no-referrer"
+                          src={play.image}
+                          alt={play.title}
+                          className="category-poster-img"
+                          onError={(e) => { 
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = '/images/fallback.jpg'; 
+                          }}
+                        />
+                        <div className="category-poster-info">
+                          <div className="category-poster-title">{play.title}</div>
+                          <div className="category-poster-location">
+                            {typeof play.location === 'string' 
+                              ? play.location 
+                              : play.location?.address || '장소 정보 없음'
+                            }
+                          </div>
+                          <div className="category-poster-price">₩{play.price?.toLocaleString()}</div>
+                        </div>
                       </div>
-                      <div className="category-poster-price">₩{play.price?.toLocaleString()}</div>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+
+          {/* ===== 보기 모드 토글 ===== */}
+          <div className="mode-toggle">
+            <button
+              className={`mode-btn ${viewMode === 'all' ? 'active' : ''}`}
+              onClick={resetToAll}
+            >
+              See all
+            </button>
+            <button
+              className={`mode-btn ${viewMode === 'filtered' ? 'active' : ''}`}
+              onClick={() => setViewMode('filtered')}
+            >
+              필터링
+            </button>
+            <span className="mode-info">
+              {viewMode === 'all' ? `전체 ${baseList.length}개` : `필터링 ${filteredSortedList.length}개`}
+            </span>
+          </div>
+        </>
+      )}
+
+      {activeTab === 'reviews' && (
+        <div className="reviews-full-section">
+          {/* ===== 리뷰 섹션 전체 화면 ===== */}
+          <div className="review-title-row">
+            <h3>Community Reviews</h3> 
+            <span className="review-count">{filteredReviews.length} items</span>
+          </div>
+
+          <div className="review-list-full">
+            {filteredReviews.map((r) => (
+              <ReviewCard 
+                key={r.id} 
+                review={r} 
+                onLikeClick={handleLikeClick}
+                onCommentClick={handleCommentClick}
+              />
+            ))}
+          </div>
         </div>
       )}
 
-      {/* ===== 필터 박스 ===== */}
-      <div className="filter-review-layout">
-        <section className="filter-wrap">
+      {/* ===== 데스크탑 2컬럼 병렬 레이아웃 (항상 표시) ===== */}
+      <div className="desktop-parallel-layout">
+        <div className="parallel-left">
+          {/* ===== 필터 박스 ===== */}
+          <section className="filter-wrap">
             <div className="filter-title">필터</div>
 
             <div className="filter-grid">
@@ -690,59 +755,44 @@ const Genre = () => {
                   <option value="high">High Price</option>
                 </select>
               </div>
-          </div>
-
-          {/* 검색창은 유지 */}
-          <div className="filter-search-row">
-            <div className="search-input-wrapper">
-              <input
-                type="text"
-                placeholder="제목·지역 검색"
-                value={filters.q}
-                onChange={onChange('q')}
-                onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-              />
-              <span className="search-icon" onClick={onSearch}>🔍</span>
             </div>
-          </div>
-        </section>
-        {/* ===== 리뷰 섹션 ===== */}
-        <section className="review-wrap">
-          <div className="review-title-row">
-            <h3>Results</h3> 
-            <span className="review-count">{filteredReviews.length} items</span>
-          </div>
 
-          <div className="review-list">
-            {filteredReviews.map((r) => (
-              <ReviewCard 
-                key={r.id} 
-                review={r} 
-                onLikeClick={handleLikeClick}
-                onCommentClick={handleCommentClick}
-              />
-            ))}
-          </div>
-        </section>
-      </div>
+            {/* 검색창은 유지 */}
+            <div className="filter-search-row">
+              <div className="search-input-wrapper">
+                <input
+                  type="text"
+                  placeholder="제목·지역 검색"
+                  value={filters.q}
+                  onChange={onChange('q')}
+                  onKeyDown={(e) => e.key === 'Enter' && onSearch()}
+                />
+                <span className="search-icon" onClick={onSearch}>🔍</span>
+              </div>
+            </div>
+          </section>
+        </div>
 
-      {/* ===== 보기 모드 토글 (필터 아래 / 리뷰 위) ===== */}
-      <div className="mode-toggle">
-        <button
-          className={`mode-btn ${viewMode === 'all' ? 'active' : ''}`}
-          onClick={resetToAll}
-        >
-          See all
-        </button>
-        <button
-          className={`mode-btn ${viewMode === 'filtered' ? 'active' : ''}`}
-          onClick={() => setViewMode('filtered')}
-        >
-          필터링
-        </button>
-        <span className="mode-info">
-          {viewMode === 'all' ? `전체 ${baseList.length}개` : `필터링 ${filteredSortedList.length}개`}
-        </span>
+        <div className="parallel-right">
+          {/* ===== 미니 리뷰 섹션 (데스크탑 병렬용) ===== */}
+          <section className="review-wrap-mini">
+            <div className="review-title-row">
+              <h3>Quick Reviews</h3> 
+              <span className="review-count">{filteredReviews.length} items</span>
+            </div>
+
+            <div className="review-list-mini">
+              {filteredReviews.slice(0, 3).map((r) => (
+                <ReviewCard 
+                  key={r.id} 
+                  review={r} 
+                  onLikeClick={handleLikeClick}
+                  onCommentClick={handleCommentClick}
+                />
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
