@@ -245,7 +245,7 @@ const Genre = () => {
             title: item.title || item.name || '제목 없음',
             category: item.category || item.genre || '카테고리 없음',
             location: item.area || item.location || item.venue || '장소 없음',
-            image: item.image || '/images/fallback.jpg',
+            image: item.posterUrl || item.image || '/images/fallback.jpg',
             price: item.price || 5000,
             rating: item.stars || item.rating || 0,
             views: item.views || 0,
@@ -562,10 +562,15 @@ const Genre = () => {
               onClick={() => navigate('/genre/recommended', { state: { selectedPoster: p } })}
               style={{ cursor: 'pointer' }}
             >
-              <img referrerPolicy="no-referrer" src={p.image} alt={p.title} className="poster-img-mine" onError={(e) => { 
-    e.currentTarget.onerror = null; // 무한 루프 방지
-    e.currentTarget.src = '/images/fallback.jpg'; 
-  }}/>
+              <img
+                referrerPolicy="no-referrer"
+                src={p.image}
+                alt={p.title}
+                className="poster-img-mine"
+                onError={(e) => { 
+                e.currentTarget.onerror = null; // 무한 루프 방지
+                e.currentTarget.src = '/images/fallback.jpg'; 
+              }}/>
               <div className="poster-title">{p.title}</div>
               <div className="poster-info">
                 {p.category} {p.location?.address && `| ${p.location.address}`}
