@@ -581,80 +581,100 @@ const Genre = () => {
       )}
 
       {/* ===== 필터 박스 ===== */}
-      <section className="filter-wrap">
-        <div className="filter-title">필터</div>
+      <div className="filter-review-layout">
+        <section className="filter-wrap">
+            <div className="filter-title">필터</div>
 
-        <div className="filter-grid">
-          {/* 평점순 */}
-          <div className="filter-item">
-            <label>Rating</label>
-            <select
-              className="filter-select"
-              value={filters.ratingSort}
-              onChange={onChange('ratingSort')}
-            >
-              <option value="none">정렬 없음</option>
-              <option value="high">높은 평점</option>
-              <option value="low">Low Rating</option>
-            </select>
+            <div className="filter-grid">
+              {/* 평점순 */}
+              <div className="filter-item">
+                <label>Rating</label>
+                <select
+                  className="filter-select"
+                  value={filters.ratingSort}
+                  onChange={onChange('ratingSort')}
+                >
+                  <option value="none">정렬 없음</option>
+                  <option value="high">높은 평점</option>
+                  <option value="low">Low Rating</option>
+                </select>
+              </div>
+
+              {/* 조회수 */}
+              <div className="filter-item">
+                <label>Views</label>
+                <select
+                  className="filter-select"
+                  value={filters.viewsSort}
+                  onChange={onChange('viewsSort')}
+                >
+                  <option value="none">정렬 없음</option>
+                  <option value="desc">높은 조회수</option>
+                </select>
+              </div>
+
+              {/* 마감임박순 */}
+              <div className="filter-item">
+                <label>Deadline</label>
+                <select
+                  className="filter-select"
+                  value={filters.deadlineSort}
+                  onChange={onChange('deadlineSort')}
+                >
+                  <option value="none">정렬 없음</option>
+                  <option value="urgent">마감임박</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+
+              {/* 낮은가격순 */}
+              <div className="filter-item">
+                <label>Price</label>
+                <select
+                  className="filter-select"
+                  value={filters.priceSort}
+                  onChange={onChange('priceSort')}
+                >
+                  <option value="none">정렬 없음</option>
+                  <option value="low">낮은 가격</option>
+                  <option value="high">High Price</option>
+                </select>
+              </div>
           </div>
 
-          {/* 조회수 */}
-          <div className="filter-item">
-            <label>Views</label>
-            <select
-              className="filter-select"
-              value={filters.viewsSort}
-              onChange={onChange('viewsSort')}
-            >
-              <option value="none">정렬 없음</option>
-              <option value="desc">높은 조회수</option>
-            </select>
+          {/* 검색창은 유지 */}
+          <div className="filter-search-row">
+            <div className="search-input-wrapper">
+              <input
+                type="text"
+                placeholder="제목·지역 검색"
+                value={filters.q}
+                onChange={onChange('q')}
+                onKeyDown={(e) => e.key === 'Enter' && onSearch()}
+              />
+              <span className="search-icon" onClick={onSearch}>🔍</span>
+            </div>
+          </div>
+        </section>
+        {/* ===== 리뷰 섹션 ===== */}
+        <section className="review-wrap">
+          <div className="review-title-row">
+            <h3>Results</h3> 
+            <span className="review-count">{filteredReviews.length} items</span>
           </div>
 
-          {/* 마감임박순 */}
-          <div className="filter-item">
-            <label>Deadline</label>
-            <select
-              className="filter-select"
-              value={filters.deadlineSort}
-              onChange={onChange('deadlineSort')}
-            >
-              <option value="none">정렬 없음</option>
-              <option value="urgent">마감임박</option>
-              <option value="normal">Normal</option>
-            </select>
+          <div className="review-list">
+            {filteredReviews.map((r) => (
+              <ReviewCard 
+                key={r.id} 
+                review={r} 
+                onLikeClick={handleLikeClick}
+                onCommentClick={handleCommentClick}
+              />
+            ))}
           </div>
-
-          {/* 낮은가격순 */}
-          <div className="filter-item">
-            <label>Price</label>
-            <select
-              className="filter-select"
-              value={filters.priceSort}
-              onChange={onChange('priceSort')}
-            >
-              <option value="none">정렬 없음</option>
-              <option value="low">낮은 가격</option>
-              <option value="high">High Price</option>
-            </select>
-          </div>
-        </div>
-
-        {/* 검색창은 유지 */}
-        <div className="filter-search-row">
-          <input
-            type="text"
-            placeholder="제목·지역 검색"
-            value={filters.q}
-            onChange={onChange('q')}
-            onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-          />
-          <button className="btn-primary" onClick={onSearch}>
-            검색
-          </button>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* ===== 보기 모드 토글 (필터 아래 / 리뷰 위) ===== */}
       <div className="mode-toggle">
@@ -674,25 +694,6 @@ const Genre = () => {
           {viewMode === 'all' ? `전체 ${baseList.length}개` : `필터링 ${filteredSortedList.length}개`}
         </span>
       </div>
-
-{/* ===== 리뷰 섹션 ===== */}
-<section className="review-wrap">
-  <div className="review-title-row">
-    <h3>Results</h3> {/* ← 여기 변경 */}
-    <span className="review-count">{filteredReviews.length} items</span>
-  </div>
-
-  <div className="review-list">
-    {filteredReviews.map((r) => (
-      <ReviewCard 
-        key={r.id} 
-        review={r} 
-        onLikeClick={handleLikeClick}
-        onCommentClick={handleCommentClick}
-      />
-    ))}
-  </div>
-</section>
     </div>
   );
 };
