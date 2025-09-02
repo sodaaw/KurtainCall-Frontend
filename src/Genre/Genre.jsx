@@ -584,9 +584,9 @@ const Genre = () => {
     <div className="genre-container">
       <Topnav />
 
-      <h2 className="genre-title">
+      {/* <h2 className="genre-title">
         {category ? `${category} 이벤트` : '전체 카테고리'}
-      </h2>
+      </h2> */}
       {category && <span className="category-chip">{category}</span>}
 
       {/* ===== 탭 네비게이션 추가 ===== */}
@@ -693,10 +693,113 @@ const Genre = () => {
         </div>
       )}
 
-      {/* ===== 데스크탑 2컬럼 병렬 레이아웃 (항상 표시) ===== */}
-      <div className="desktop-parallel-layout">
-        <div className="parallel-left">
-          {/* ===== 필터 박스 ===== */}
+      {/* ===== 데스크탑 2컬럼 병렬 레이아웃 (리뷰 보기 탭에서만 표시) ===== */}
+      {activeTab === 'reviews' && (
+        <div className="desktop-parallel-layout">
+          <div className="parallel-left">
+            {/* ===== 필터 박스 ===== */}
+            <section className="filter-wrap">
+              <div className="filter-title">필터</div>
+
+              <div className="filter-grid">
+                {/* 평점순 */}
+                <div className="filter-item">
+                  <label>Rating</label>
+                  <select
+                    className="filter-select"
+                    value={filters.ratingSort}
+                    onChange={onChange('ratingSort')}
+                  >
+                    <option value="none">정렬 없음</option>
+                    <option value="high">높은 평점</option>
+                    <option value="low">Low Rating</option>
+                  </select>
+                </div>
+
+                {/* 조회수 */}
+                <div className="filter-item">
+                  <label>Views</label>
+                  <select
+                    className="filter-select"
+                    value={filters.viewsSort}
+                    onChange={onChange('viewsSort')}
+                  >
+                    <option value="none">정렬 없음</option>
+                    <option value="desc">높은 조회수</option>
+                  </select>
+                </div>
+
+                {/* 마감임박순 */}
+                <div className="filter-item">
+                  <label>Deadline</label>
+                  <select
+                    className="filter-select"
+                    value={filters.deadlineSort}
+                    onChange={onChange('deadlineSort')}
+                  >
+                    <option value="none">정렬 없음</option>
+                    <option value="urgent">마감임박</option>
+                    <option value="normal">Normal</option>
+                  </select>
+                </div>
+
+                {/* 낮은가격순 */}
+                <div className="filter-item">
+                  <label>Price</label>
+                  <select
+                    className="filter-select"
+                    value={filters.priceSort}
+                    onChange={onChange('priceSort')}
+                  >
+                    <option value="none">정렬 없음</option>
+                    <option value="low">낮은 가격</option>
+                    <option value="high">High Price</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* 검색창은 유지 */}
+              <div className="filter-search-row">
+                <div className="search-input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="제목·지역 검색"
+                    value={filters.q}
+                    onChange={onChange('q')}
+                    onKeyDown={(e) => e.key === 'Enter' && onSearch()}
+                  />
+                  <span className="search-icon" onClick={onSearch}>🔍</span>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div className="parallel-right">
+            {/* ===== 미니 리뷰 섹션 (데스크탑 병렬용) ===== */}
+            <section className="review-wrap-mini">
+              <div className="review-title-row">
+                <h3>Quick Reviews</h3> 
+                <span className="review-count">{filteredReviews.length} items</span>
+              </div>
+
+              <div className="review-list-mini">
+                {filteredReviews.slice(0, 3).map((r) => (
+                  <ReviewCard 
+                    key={r.id} 
+                    review={r} 
+                    onLikeClick={handleLikeClick}
+                    onCommentClick={handleCommentClick}
+                  />
+                ))}
+              </div>
+            </section>
+          </div>
+        </div>
+      )}
+
+      {/* ===== 모바일용 기존 레이아웃 (리뷰 보기 탭에서만 표시) ===== */}
+      {activeTab === 'reviews' && (
+        <div className="filter-review-layout">
           <section className="filter-wrap">
             <div className="filter-title">필터</div>
 
@@ -771,18 +874,16 @@ const Genre = () => {
               </div>
             </div>
           </section>
-        </div>
-
-        <div className="parallel-right">
-          {/* ===== 미니 리뷰 섹션 (데스크탑 병렬용) ===== */}
-          <section className="review-wrap-mini">
+          
+          {/* ===== 리뷰 섹션 ===== */}
+          <section className="review-wrap">
             <div className="review-title-row">
-              <h3>Quick Reviews</h3> 
+              <h3>Results</h3> 
               <span className="review-count">{filteredReviews.length} items</span>
             </div>
 
-            <div className="review-list-mini">
-              {filteredReviews.slice(0, 3).map((r) => (
+            <div className="review-list">
+              {filteredReviews.map((r) => (
                 <ReviewCard 
                   key={r.id} 
                   review={r} 
@@ -793,7 +894,7 @@ const Genre = () => {
             </div>
           </section>
         </div>
-      </div>
+      )}
     </div>
   );
 };
