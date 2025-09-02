@@ -803,23 +803,18 @@ const Genre = () => {
                 </div>
               </div>
 
-              {/* 깔끔한 검색창 */}
-              <div className="filter-search-clean">
-                <input
-                  type="text"
-                  placeholder="제목·지역 검색"
-                  value={filters.q}
-                  onChange={onChange('q')}
-                  onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-                  className="filter-search-input"
-                />
-                <button 
-                  className="filter-search-btn"
-                  onClick={onSearch}
-                  type="button"
-                >
-                  🔍
-                </button>
+              {/* 검색창은 유지 */}
+              <div className="filter-search-row">
+                <div className="search-input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="제목·지역 검색"
+                    value={filters.q}
+                    onChange={onChange('q')}
+                    onKeyDown={(e) => e.key === 'Enter' && onSearch()}
+                  />
+                  <span className="search-icon" onClick={onSearch}>🔍</span>
+                </div>
               </div>
             </section>
           </div>
@@ -910,23 +905,18 @@ const Genre = () => {
               </div>
             </div>
 
-            {/* 깔끔한 검색창 */}
-            <div className="filter-search-clean">
-              <input
-                type="text"
-                placeholder="제목·지역 검색"
-                value={filters.q}
-                onChange={onChange('q')}
-                onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-                className="filter-search-input"
-              />
-              <button 
-                className="filter-search-btn"
-                onClick={onSearch}
-                type="button"
-              >
-                🔍
-              </button>
+            {/* 검색창은 유지 */}
+            <div className="filter-search-row">
+              <div className="search-input-wrapper">
+                <input
+                  type="text"
+                  placeholder="제목·지역 검색"
+                  value={filters.q}
+                  onChange={onChange('q')}
+                  onKeyDown={(e) => e.key === 'Enter' && onSearch()}
+                />
+                <span className="search-icon" onClick={onSearch}>🔍</span>
+              </div>
             </div>
           </section>
           

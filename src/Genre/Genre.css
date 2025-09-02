@@ -332,6 +332,13 @@
   50% { opacity: 1; }
 }
 
+.genre-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;   /* 넘치면 다음 줄로 */
+  gap: 10px;         /* 버튼 간격 */
+  justify-content: center; /* 가운데 정렬 */
+}
+
 .filter-title {
   font-weight: 700;
   font-size: 1.3rem;
@@ -378,6 +385,61 @@
     height: 44px;
     font-size: 14px;
   }
+}
+
+/* ===== 깔끔한 검색창 스타일 ===== */
+.filter-search-clean {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.filter-search-input {
+  flex: 1;
+  height: 48px;
+  border: 2px solid #8B0000;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 15px;
+  background: #1a1a1a;
+  color: #f5f5f5;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.filter-search-input:focus {
+  outline: none;
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+  background: #2a2a2a;
+}
+
+.filter-search-input::placeholder {
+  color: #9ca3af;
+  opacity: 0.7;
+}
+
+.filter-search-btn {
+  width: 48px;
+  height: 48px;
+  border: 2px solid #8B0000;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8B0000, #a52a2a);
+  color: #f5f5f5;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.filter-search-btn:hover {
+  border-color: #d4af37;
+  background: linear-gradient(135deg, #a52a2a, #8B0000);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
 }
 
 .filter-item { 
@@ -471,61 +533,6 @@
   height: 50px;;
   padding: 0 20px;
   border-radius: 12px;
-}
-
-/* ===== 깔끔한 검색창 스타일 ===== */
-.filter-search-clean {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-  width: 100%;
-}
-
-.filter-search-input {
-  flex: 1;
-  height: 48px;
-  border: 2px solid #8B0000;
-  border-radius: 12px;
-  padding: 0 16px;
-  font-size: 15px;
-  background: #1a1a1a;
-  color: #f5f5f5;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-}
-
-.filter-search-input:focus {
-  outline: none;
-  border-color: #d4af37;
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
-  background: #2a2a2a;
-}
-
-.filter-search-input::placeholder {
-  color: #9ca3af;
-  opacity: 0.7;
-}
-
-.filter-search-btn {
-  width: 48px;
-  height: 48px;
-  border: 2px solid #8B0000;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #8B0000, #a52a2a);
-  color: #f5f5f5;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-}
-
-.filter-search-btn:hover {
-  border-color: #d4af37;
-  background: linear-gradient(135deg, #a52a2a, #8B0000);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
 }
 
 .search-input-wrapper {
@@ -844,22 +851,32 @@
   border-color: #d4af37;
 }
 
-.review-actions { display: flex; gap: 10px;}
+.review-actions { 
+  display: flex; 
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
 
 .icon-btn {
-  border: 2px solid #8B0000;
-  background: #1a1a1a;
-  padding: 6px 10px;
-  border-radius: 10px;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
-  color: #f5f5f5;
+  color: #9ca3af;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
 }
 
 .icon-btn:hover { 
-  background: rgba(139, 0, 0, 0.2);
-  border-color: #d4af37;
+  background: rgba(139, 0, 0, 0.15);
+  color: #f5f5f5;
+  transform: translateY(-1px);
 }
 
 /* 하트 버튼 특별 스타일 */
@@ -869,13 +886,13 @@
 }
 
 .icon-btn[title="like"]:hover {
-  background: rgba(139, 0, 0, 0.3);
-  border-color: #d4af37;
-  transform: scale(1.05);
+  background: rgba(139, 0, 0, 0.2);
+  color: #ff6b6b;
+  transform: translateY(-1px);
 }
 
 .icon-btn[title="like"]:active {
-  transform: scale(0.95);
+  transform: translateY(0);
 }
 
 /* 하트 클릭 애니메이션 */
@@ -893,13 +910,24 @@
 
 /* 댓글 버튼 특별 스타일 */
 .icon-btn[title="comment"]:hover {
-  background: rgba(139, 0, 0, 0.3);
-  border-color: #d4af37;
-  transform: scale(1.05);
+  background: rgba(139, 0, 0, 0.2);
+  color: #4ecdc4;
+  transform: translateY(-1px);
 }
 
 .icon-btn[title="comment"]:active {
-  transform: scale(0.95);
+  transform: translateY(0);
+}
+
+/* 공유 버튼 특별 스타일 */
+.icon-btn[title="share"]:hover {
+  background: rgba(139, 0, 0, 0.2);
+  color: #f39c12;
+  transform: translateY(-1px);
+}
+
+.icon-btn[title="share"]:active {
+  transform: translateY(0);
 }
 
 @media (max-width: 1024px) {
