@@ -160,7 +160,10 @@ const LANG_OPTIONS = [
 const Genre = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const category = searchParams.get('category'); // URL에서 장르
+  const urlCategory = searchParams.get('category'); // URL에서 장르
+
+  // 로컬 장르 상태 추가
+  const [selectedGenre, setSelectedGenre] = useState(urlCategory || null);
 
   // API 데이터 상태
   const [plays, setPlays] = useState([]);
@@ -179,11 +182,27 @@ const Genre = () => {
     q: '',
   });
 
-  // See all / Filtering 토글
-  const [viewMode, setViewMode] = useState('all'); // 'all' | 'filtered'
+  // See all / Filtering 토글 - 제거됨
+  // const [viewMode, setViewMode] = useState('all'); // 'all' | 'filtered'
 
   // === 새로운 탭 상태 추가 =========================
   const [activeTab, setActiveTab] = useState('posters'); // 'posters' | 'reviews'
+
+  // URL 카테고리 변경 시 로컬 상태 동기화
+  useEffect(() => {
+    setSelectedGenre(urlCategory);
+  }, [urlCategory]);
+
+  // 장르 변경 핸들러
+  const handleGenreChange = (genre) => {
+    if (genre === null) {
+      setSelectedGenre(null);
+      navigate('/genre');
+    } else {
+      setSelectedGenre(genre);
+      navigate(`/genre?category=${genre}`);
+    }
+  };
 
   // API 호출 - 여러 엔드포인트 시도
   useEffect(() => {
@@ -436,8 +455,11 @@ const Genre = () => {
 
   // (1) 카테고리 1차 필터
   const baseList = useMemo(() => {
-    return category ? plays.filter((p) => p.category === category) : plays;
-  }, [category, plays]);
+    return selectedGenre 
+      ? plays.filter((p) => (p.category || '').toLowerCase() === selectedGenre.toLowerCase())
+      : plays;
+  }, [selectedGenre, plays]);
+
 
   // (2) 상세 필터/정렬 (Filtering일 때만 적용)
   const filteredSortedList = useMemo(() => {
@@ -488,7 +510,7 @@ const Genre = () => {
   }, [baseList, filters]);
 
   // 최종 표시 목록
-  const list = viewMode === 'all' ? baseList : filteredSortedList;
+  const list = baseList; // viewMode === 'all' ? baseList : filteredSortedList;
   const len = list.length;
 
   // 장르별로 그룹화
@@ -505,7 +527,7 @@ const Genre = () => {
   }, [list]);
 
   // 캐러셀 인덱스 리셋
-  useEffect(() => { setCurrent(0); }, [category, len, viewMode]);
+  useEffect(() => { setCurrent(0); }, [selectedGenre, len]);
 
   // 캐러셀 타이머
   useEffect(() => {
@@ -532,7 +554,8 @@ const Genre = () => {
   const onSearch = () => setFilters((prev) => ({ ...prev, q: prev.q.trim() }));
 
   const resetToAll = () => {
-    setViewMode('all');
+    setSelectedGenre(null);
+    navigate('/genre');
     setFilters({ 
       ratingSort: 'none', 
       viewsSort: 'none', 
@@ -587,7 +610,7 @@ const Genre = () => {
       {/* <h2 className="genre-title">
         {category ? `${category} 이벤트` : '전체 카테고리'}
       </h2> */}
-      {category && <span className="category-chip">{category}</span>}
+      {selectedGenre && <span className="category-chip">{selectedGenre}</span>}
 
       {/* ===== 탭 네비게이션 추가 ===== */}
       <div className="genre-tabs">
@@ -608,6 +631,46 @@ const Genre = () => {
       {/* ===== 탭별 컨텐츠 ===== */}
       {activeTab === 'posters' && (
         <>
+          {/* ===== 장르별 필터링 버튼들 ===== */}
+          <div className="genre-filter-buttons">
+            <button
+              className={`genre-filter-btn ${selectedGenre === null ? 'active' : ''}`}
+              onClick={() => handleGenreChange(null)}
+            >
+              전체
+            </button>
+            <button
+              className={`genre-filter-btn ${selectedGenre === 'comedy' ? 'active' : ''}`}
+              onClick={() => handleGenreChange('comedy'.toLowerCase())}
+            >
+              코미디
+            </button>
+            <button
+              className={`genre-filter-btn ${selectedGenre === 'romance' ? 'active' : ''}`}
+              onClick={() => handleGenreChange('romance'.toLowerCase())}
+            >
+              로맨스
+            </button>
+            <button
+              className={`genre-filter-btn ${selectedGenre === 'horror' ? 'active' : ''}`}
+              onClick={() => handleGenreChange('horror')}
+            >
+              공포
+            </button>
+            <button
+              className={`genre-filter-btn ${selectedGenre === 'thriller' ? 'active' : ''}`}
+              onClick={() => handleGenreChange('thriller'.toLowerCase())}
+            >
+              스릴러
+            </button>
+            <button
+              className={`genre-filter-btn ${selectedGenre === 'musical' ? 'active' : ''}`}
+              onClick={() => handleGenreChange('musical'.toLowerCase())}
+            >
+              뮤지컬
+            </button>
+          </div>
+
           {/* ===== 장르별 포스터 섹션 ===== */}
           {len === 0 ? (
             <div style={{ opacity: 0.7, padding: '24px 0' }}>조건에 맞는 결과가 없습니다.</div>
@@ -650,25 +713,6 @@ const Genre = () => {
               ))}
             </div>
           )}
-
-          {/* ===== 보기 모드 토글 ===== */}
-          <div className="mode-toggle">
-            <button
-              className={`mode-btn ${viewMode === 'all' ? 'active' : ''}`}
-              onClick={resetToAll}
-            >
-              See all
-            </button>
-            <button
-              className={`mode-btn ${viewMode === 'filtered' ? 'active' : ''}`}
-              onClick={() => setViewMode('filtered')}
-            >
-              필터링
-            </button>
-            <span className="mode-info">
-              {viewMode === 'all' ? `전체 ${baseList.length}개` : `필터링 ${filteredSortedList.length}개`}
-            </span>
-          </div>
         </>
       )}
 
