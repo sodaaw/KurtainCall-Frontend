@@ -455,9 +455,17 @@ const Genre = () => {
 
   // (1) 카테고리 1차 필터
   const baseList = useMemo(() => {
-    return selectedGenre 
-      ? plays.filter((p) => (p.category || '').toLowerCase() === selectedGenre.toLowerCase())
-      : plays;
+    if (!selectedGenre) return plays;
+    
+    // 공포/스릴러 통합 처리
+    if (selectedGenre === 'horror') {
+      return plays.filter((p) => {
+        const category = (p.category || '').toLowerCase();
+        return category === 'horror' || category === 'thriller';
+      });
+    }
+    
+    return plays.filter((p) => (p.category || '').toLowerCase() === selectedGenre.toLowerCase());
   }, [selectedGenre, plays]);
 
 
@@ -610,7 +618,6 @@ const Genre = () => {
       {/* <h2 className="genre-title">
         {category ? `${category} 이벤트` : '전체 카테고리'}
       </h2> */}
-      {selectedGenre && <span className="category-chip">{selectedGenre}</span>}
 
       {/* ===== 탭 네비게이션 추가 ===== */}
       <div className="genre-tabs">
@@ -652,16 +659,10 @@ const Genre = () => {
               로맨스
             </button>
             <button
-              className={`genre-filter-btn ${selectedGenre === 'horror' ? 'active' : ''}`}
+              className={`genre-filter-btn ${selectedGenre === 'horror' || selectedGenre === 'thriller' ? 'active' : ''}`}
               onClick={() => handleGenreChange('horror')}
             >
-              공포
-            </button>
-            <button
-              className={`genre-filter-btn ${selectedGenre === 'thriller' ? 'active' : ''}`}
-              onClick={() => handleGenreChange('thriller'.toLowerCase())}
-            >
-              스릴러
+              공포/스릴러
             </button>
             <button
               className={`genre-filter-btn ${selectedGenre === 'musical' ? 'active' : ''}`}
