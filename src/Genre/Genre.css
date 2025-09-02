@@ -491,8 +491,8 @@
 
 .review-list {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
 /* Card */
@@ -501,8 +501,10 @@
   border: 2px solid #8B0000;
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
   transition: all 0.3s ease;
+  justify-content: space-between;
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -543,17 +545,23 @@
 .review-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+}
+
+.review-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .review-user { display: flex; align-items: center; gap: 12px; }
 
 .review-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   background: linear-gradient(135deg, #8B0000, #a52a2a);
   border: 2px solid #d4af37;
   flex-shrink: 0;
@@ -561,13 +569,12 @@
 
 .review-user-meta { display: flex; flex-direction: column; gap: 2px; }
 
-.review-name { font-weight: 700; color: #f5f5f5; }
+.review-name { font-weight: 700; color: #f5f5f5; font-size: 1rem;}
 
 .review-badge {
-  font-size: 0.8rem;
-  margin-left: 6px;
+  font-size: 0.75rem;
   padding: 2px 6px;
-  border-radius: 10px;
+  border-radius: 6px;
   background: rgba(139, 0, 0, 0.2);
   color: #d4af37;
   border: 1px solid #d4af37;
@@ -575,12 +582,12 @@
 
 .review-sub { font-size: 0.9rem; color: #9ca3af; }
 
-.review-rating { font-size: 1.1rem; letter-spacing: 1px; color: #d4af37; }
+.review-rating { font-size: 0.9rem; letter-spacing: 1px; color: #d4af37; margin-top:2px; align-self: flex-start;}
 
 /* Body */
 .review-body {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 240px 1fr;
   gap: 16px;
   align-items: start;
   margin-top: 6px;
@@ -594,7 +601,6 @@
   background: #1a1a1a;
   border: 2px dashed #8B0000;
   border-radius: 12px;
-  min-height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -602,7 +608,8 @@
 
 .review-photo img {
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 100px;
   object-fit: cover;
   border-radius: 12px;
 }
@@ -613,18 +620,20 @@
   font-size: 0.98rem;
   color: #d1d5db;
   line-height: 1.55rem;
+  margin: 12px 0;
+  flex-grow: 1;
 }
 
 /* Footer */
 .review-footer {
-  margin-top: 12px;
+  margin-top: 8px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
 }
 
-.review-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.review-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .chip {
   font-size: 0.85rem;
@@ -641,7 +650,7 @@
   border-color: #d4af37;
 }
 
-.review-actions { display: flex; gap: 10px; }
+.review-actions { display: flex; gap: 10px;}
 
 .icon-btn {
   border: 2px solid #8B0000;
@@ -796,6 +805,10 @@
   .filter-review-layout {
     grid-template-columns: 1fr;
   }
+
+  .review-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* 반응형 디자인 */
@@ -815,6 +828,10 @@
   
   .category-title {
     font-size: 1.2rem;
+  }
+
+  .review-list {
+    grid-template-columns: 1fr;
   }
 }
 

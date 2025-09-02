@@ -95,21 +95,23 @@ function ReviewCard({ review, onLikeClick, onCommentClick }) {
         <div className="review-user">
           <div className="review-avatar" aria-hidden />
           <div className="review-user-meta">
-            <div className="review-name">
-              {review.userName} <span className="review-badge">{review.userBadge}</span>
+            <div className="review-name-row">
+              <span className="review-name">{review.userName}</span>
+              <span className="review-badge">{review.userBadge}</span>
             </div>
+            <div className="review-rating">{stars}</div>
+            {/* 
             <div className="review-sub">
               Area: {review.area} | Activities: {review.activities.join(', ')}
             </div>
+            */}
           </div>
-        </div>
-        <div className="review-rating" aria-label={`${review.rating} out of 5`}>
-          {stars}
         </div>
       </header>
 
-      <div className="review-body">
-        <div className="review-photo">
+      <p className="review-text">{review.content}</p>
+
+      {/* <div className="review-photo">
           {review.photos?.length ? (
             <img referrerPolicy="no-referrer" src={review.photos[0]} alt="review" onError={(e) => { 
               e.currentTarget.onerror = null; // 무한 루프 방지
@@ -119,9 +121,7 @@ function ReviewCard({ review, onLikeClick, onCommentClick }) {
           ) : (
             <div className="photo-placeholder">🖼 사진 영역</div>
           )}
-        </div>
-        <p className="review-text">{review.content}</p>
-      </div>
+        </div> */}
 
       <footer className="review-footer">
         <div className="review-chips">
