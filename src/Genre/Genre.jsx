@@ -582,7 +582,7 @@ const Genre = () => {
       <Topnav />
 
       <h2 className="genre-title">
-        {category ? `${category} 이벤트` : '전체 이벤트'}
+        {category ? `${category} 이벤트` : '전체 카테고리'}
       </h2>
       {category && <span className="category-chip">{category}</span>}
 
@@ -591,11 +591,10 @@ const Genre = () => {
         <div style={{ opacity: 0.7, padding: '24px 0' }}>조건에 맞는 결과가 없습니다.</div>
       ) : (
         <div className="category-posters-section">
-          <h3 className="section-title">All Category Posters</h3>
           
           {Object.entries(groupedPlays).map(([genre, genrePlays]) => (
             <div key={genre} className="category-group">
-              <h4 className="category-title">| {genre}</h4>
+              <h4 className="category-title">{genre}</h4>
               <div className="poster-grid">
                 {genrePlays.map((play) => (
                   <div 
