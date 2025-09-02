@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Topnav from "../components/Topnav";
-import SearchModal from "../components/SearchModal";
+// import SearchModal from "../components/SearchModal";
 import EventCalendar from "./EventCalendar.jsx"; // ✅ 분리한 캘린더
 import EventPanel from "./EventPanel.jsx";       // ✅ 분리한 우측 패널
 import { playAPI } from "../services/api";
@@ -268,16 +268,24 @@ function RecommendedShows({ plays, isLoading, error }) {
 /* ---------------- 검색 및 장르 필터 ---------------- */
 function SearchAndGenre({ onSearchClick, onGenreClick }) {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleMoreGenres = () => {
     navigate('/genre');
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
   };
 
   return (
     <section className="search-genre-section">
       {/* 검색바 */}
       <div className="search-bar">
-        <div className="search-input-wrapper">
+        <form className="search-input-wrapper" onSubmit={handleSearch}>
           <svg className="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="11" cy="11" r="8"/>
             <path d="m21 21-4.35-4.35"/>
@@ -286,10 +294,10 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
             type="text" 
             placeholder="원하는 장르 또는 작품을 검색해보세요." 
             className="search-input"
-            onClick={onSearchClick}
-            readOnly
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-        </div>
+        </form>
       </div>
 
       {/* 장르 필터 */}
@@ -316,8 +324,8 @@ export default function Main() {
   const navigate = useNavigate();
   const goGenre = (slug) => navigate(`/genre?category=${slug}`);
 
-  // 검색 모달 제어
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  // 검색 모달 제어 (주석처리)
+  // const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // ✅ 날짜 선택 상태
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -362,7 +370,7 @@ export default function Main() {
       <div className="curtain-decoration"></div>
       
       <Topnav variant="home" />
-      {isSearchOpen && <SearchModal onClose={() => setIsSearchOpen(false)} />}
+      {/* {isSearchOpen && <SearchModal onClose={() => setIsSearchOpen(false)} />} */}
 
       {/* <div className="spacer" /> */}
       <main className="main-container">
@@ -371,7 +379,7 @@ export default function Main() {
 
           {/* 검색 및 장르 필터 */}
           <SearchAndGenre 
-            onSearchClick={() => setIsSearchOpen(true)} 
+            onSearchClick={() => {}} 
             onGenreClick={goGenre} 
           />
         </section>
