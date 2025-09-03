@@ -150,8 +150,14 @@ body {
   color: var(--text-sub);
 }
 
-.apply-btn {
-  width: 100%;
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.apply-btn, .reset-btn {
+  flex: 1;
   background: linear-gradient(145deg, var(--burgundy), var(--burgundy-light));
   color: var(--text);
   padding: 12px 16px;
@@ -165,6 +171,23 @@ body {
   letter-spacing: 0.5px;
   position: relative;
   overflow: hidden;
+}
+
+.reset-btn {
+  background: linear-gradient(145deg, #666, #888);
+  border-color: #ccc;
+}
+
+.reset-btn:hover {
+  background: linear-gradient(145deg, #777, #999);
+  border-color: #ddd;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.reset-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .apply-btn:hover {
@@ -303,10 +326,38 @@ body {
   text-align: center;
 }
 
-.found-experiences {
+.filter-results, .found-experiences {
   padding: 30px;
   position: relative;
   z-index: 2;
+}
+
+.filter-results {
+  background: rgba(212, 175, 55, 0.05);
+  border-top: 2px solid var(--gold);
+}
+
+.filter-results h4 {
+  color: var(--gold);
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.no-filter-message {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-sub);
+  font-size: 1.1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  margin: 20px;
+  border: 1px dashed rgba(212, 175, 55, 0.3);
+}
+
+.no-filter-message p {
+  margin: 0;
+  line-height: 1.6;
 }
 
 .found-experiences::before {
@@ -487,6 +538,12 @@ body {
 .category {
   font-size: 12px;
   color: #888;
+  margin: 2px 0;
+}
+
+.genre {
+  font-size: 12px;
+  color: #a52a2a;
   margin: 2px 0;
 }
   
