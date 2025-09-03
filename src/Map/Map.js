@@ -608,7 +608,6 @@ const Map = () => {
             <option>전체 카테고리</option>
             <option>뮤지컬</option>
             <option>연극</option>
-            <option>전시</option>
           </select>
           <select 
             value={selectedGenre}

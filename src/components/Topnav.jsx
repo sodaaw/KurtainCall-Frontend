@@ -137,6 +137,7 @@ export default function Topnav({ variant = "default "}) {
             <li><a href="/ai-translation" onClick={closeSideMenu}>AI 번역</a></li>
             <li><a href="/login" onClick={closeSideMenu}>로그인</a></li>
             <li><a href="/signup" onClick={closeSideMenu}>회원가입</a></li>
+            <li><a href="/biodata" onClick={closeSideMenu}>생체데이터</a></li>
           </ul>
         </nav>
 
