@@ -51,7 +51,7 @@
 ======================== */
 
 .topnav.is-home {
-  background: none;
+  background: rgba(15, 15, 15, 0.8);
   border-bottom: none;
 }
 
@@ -178,7 +178,7 @@
   font-family: 'Swanley', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 28px;
   color: #FFF4B7 !important;
-  margin: 0;
+  margin-top: 20px;
   font-weight: 500;
   text-shadow: 0 4px 8px rgba(255, 244, 183, 0.5);
   transition: all 0.3s ease;
@@ -187,7 +187,7 @@
 .topnav .tagline {
   font-size: 12px;
   color: #FFF4B7 !important;
-  margin: 2px 0 0 0;
+  margin: -3px 0 0 0;
   font-weight: 400;
   opacity: 1;
   transition: all 0.3s ease;
