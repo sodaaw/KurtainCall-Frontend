@@ -84,7 +84,7 @@ export default function Topnav({ variant = "default" }) {
             style={{ cursor: 'pointer' }}
           >
             <h1 className="logo">KurtainCall</h1>
-            <p className="tagline">Your Gateway to Korea's Hidden Stages</p>
+            <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션</p>
           </div>
         )}
 
