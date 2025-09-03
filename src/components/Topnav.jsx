@@ -113,7 +113,6 @@ export default function Topnav({ variant = "default" }) {
           <ul>
             <li><a href="/" onClick={closeSideMenu}>홈</a></li>
             <li><a href="/login" onClick={closeSideMenu}>로그인</a></li>
-            <li><a href="/signup" onClick={closeSideMenu}>회원가입</a></li>
             <li><a href="/genre" onClick={closeSideMenu}>장르</a></li>
             <li><a href="/map" onClick={closeSideMenu}>지도</a></li>
             <li><a href="/biodata" onClick={closeSideMenu}>생체데이터</a></li>
