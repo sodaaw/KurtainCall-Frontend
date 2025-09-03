@@ -1,4 +1,4 @@
-/* TestDatabase.css - ¸ŞÀÎÆäÀÌÁö¿Í ÀÏ°üµÈ µğÀÚÀÎ */
+/* TestDatabase.css - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
 :root {
   --primary-color: #0f0f0f;
@@ -22,7 +22,7 @@
   overflow-x: hidden;
 }
 
-/* Ä¿Æ° ¹è°æ È¿°ú */
+/* Ä¿Æ° ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ */
 .testdatabase-container::before {
   content: '';
   position: fixed;
@@ -66,14 +66,14 @@
   50% { transform: skewX(-15deg) translateX(20px); }
 }
 
-/* ¸ŞÀÎ ÄÁÅ×ÀÌ³Ê */
+/* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ */
 .testdatabase-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 120px 20px 20px 20px; /* ìƒë‹¨ ì—¬ë°± 120pxë¡œ ì¦ê°€ */
 }
 
-/* Çì´õ */
+/* ï¿½ï¿½ï¿½ */
 .testdatabase-header {
   background: var(--card-bg);
   border: 2px solid var(--border-accent);
@@ -138,7 +138,7 @@
   color: var(--text-light);
 }
 
-/* Ä³¸¯ÅÍ Åë°è ¼½¼Ç */
+/* Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 .character-statistics {
   background: var(--card-bg);
   border: 2px solid var(--border-accent);
@@ -206,7 +206,7 @@
   font-weight: 500;
 }
 
-/* ÇÊÅÍ ¼½¼Ç */
+/* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 .filter-section {
   background: var(--card-bg);
   border: 2px solid var(--border-accent);
@@ -256,7 +256,7 @@
   box-shadow: 0 0 20px rgba(245, 245, 245, 0.3);
 }
 
-/* Å×½ºÆ® °á°ú ¸ñ·Ï */
+/* ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ */
 .test-results-list {
   background: var(--card-bg);
   border: 2px solid var(--border-accent);
@@ -364,7 +364,7 @@
   font-weight: 600;
 }
 
-/* Ä³¸¯ÅÍ ¸ğ´Ş */
+/* Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ */
 .character-modal-overlay {
   position: fixed;
   top: 0;
@@ -481,7 +481,7 @@
   transform: translateY(-2px);
 }
 
-/* ¹İÀÀÇü µğÀÚÀÎ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 @media (max-width: 768px) {
   .testdatabase-content {
     padding: 15px;

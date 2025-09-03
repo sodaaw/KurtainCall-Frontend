@@ -5,20 +5,20 @@
     --panel-2: #1e2026;
     --text: #e9e9ee;
     --muted: #a8acb8;
-    --primary: #e11d48;          /* 포인트 레드 */
-    --primary-20: rgba(225,29,72,0.2);
-    --ring: rgba(225,29,72,0.35);
+    --primary: #1b178e;          /* 포인트 레드 */
+    --primary-20: rgba(0, 11, 88, 0.2);
+    --ring: rgba(0, 11, 88, 0.35);
     --card-radius: 14px;
     --gap: 16px;
   }
   
   /* 전체 페이지 컨테이너 */
   .search-results-page {
-    color: var(--text);
-    background: radial-gradient(1200px 600px at 50% -200px, #2a0f14 0%, #12090a 40%, var(--bg) 70%);
-    min-height: 100vh;
-    padding: 24px clamp(16px, 4vw, 40px);
-  }
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 50% -200px, #2a0f14 0%, #12090a 40%, var(--bg) 70%);
+  min-height: 100vh;
+  padding: 120px clamp(16px, 4vw, 40px) 24px clamp(16px, 4vw, 40px); /* 상단 여백 120px로 증가 */
+}
   
   /* 상단 헤더: 스티키 */
   .results-header {

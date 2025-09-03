@@ -21,23 +21,56 @@
   overflow-x: hidden;
 }
 
-/* 상단 골드 라인 */
+/* 커튼 배경 요소들 */
 .ai-translation-container::before {
   content: '';
-  position: absolute;
+  position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--burgundy), var(--gold), var(--burgundy));
+  left: -50px;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(90deg, 
+    rgba(0, 11, 88, 0.8) 0%,
+    rgba(0, 11, 88, 0.6) 30%,
+    rgba(0, 11, 88, 0.3) 70%,
+    transparent 100%);
+  transform: skewX(-15deg);
   z-index: 1;
+  animation: curtainLeft 8s ease-in-out infinite;
+}
+
+.ai-translation-container::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: -50px;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(-90deg, 
+    rgba(0, 11, 88, 0.8) 0%,
+    rgba(0, 11, 88, 0.6) 30%,
+    rgba(0, 11, 88, 0.3) 70%,
+    transparent 100%);
+  transform: skewX(15deg);
+  z-index: 1;
+  animation: curtainRight 8s ease-in-out infinite;
+}
+
+@keyframes curtainLeft {
+  0%, 100% { transform: skewX(-15deg) translateX(0); }
+  50% { transform: skewX(-15deg) translateX(-20px); }
+}
+
+@keyframes curtainRight {
+  0%, 100% { transform: skewX(15deg) translateX(0); }
+  50% { transform: skewX(15deg) translateX(20px); }
 }
 
 /* 메인 콘텐츠 */
 .ai-translation-content {
   max-width: 900px;
   margin: 0 auto;
-  padding: 30px 20px;
+  padding: 120px 20px 30px 20px; /* 상단 여백 120px로 증가 */
   position: relative;
   z-index: 2;
 }

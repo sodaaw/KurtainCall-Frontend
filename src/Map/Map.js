@@ -26,7 +26,21 @@ const Map = () => {
   const [isMapReady, setIsMapReady] = useState(false);
 
   // 사용자 UI용 데이터
-  const popularAreas = ['Gangnam', 'Hongdae', 'Myeongdong', 'Insadong'];
+  const popularAreas = [
+    { name: 'Daehangno', displayName: '대학로', lat: 37.5791, lng: 126.9990 },
+    { name: 'Hongdae', displayName: '홍대', lat: 37.5572, lng: 126.9244 },
+    { name: 'Gangnam', displayName: '강남', lat: 37.4979, lng: 127.0276 },
+  ];
+
+  // 검색 및 필터 상태
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('전체 카테고리');
+  const [selectedGenre, setSelectedGenre] = useState('전체 장르');
+  const [selectedRegion, setSelectedRegion] = useState('전체 지역');
+  const [filteredPlays, setFilteredPlays] = useState([]);
+
+  // 장르 목록 (Genre.jsx와 동일한 장르 사용)
+  const genres = ['전체 장르', 'comedy', 'romance', 'horror', 'musical', 'drama', 'action', 'thriller'];
 
   // 연극 데이터 가져오기
   useEffect(() => {
@@ -167,12 +181,8 @@ const Map = () => {
       const customOverlay = new kakao.maps.CustomOverlay({});
       const infowindow = new kakao.maps.InfoWindow({ removable: true });
 
-      const centers = [
-        { name: 'Gangnam', lat: 37.4979, lng: 127.0276 },
-        { name: 'Hongdae', lat: 37.5572, lng: 126.9244 },
-        { name: 'Myeongdong', lat: 37.5636, lng: 126.982 },
-        { name: 'Insadong', lat: 37.5740, lng: 126.9850 },
-      ];
+      // popularAreas에서 좌표 정보 가져오기
+      const centers = popularAreas;
 
       // 동 지역 표시 함수
       const displayDongAreas = (dongGeo) => {
@@ -310,11 +320,108 @@ const Map = () => {
     }
   };
 
-  // 마커 갱신: plays가 바뀔 때마다
+  // 검색 및 필터링 함수
+  const applyFilters = () => {
+    let filtered = [...plays];
+    
+    // 검색어로 필터링
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(play => 
+        play.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        play.location?.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        play.category?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    // 카테고리로 필터링
+    if (selectedCategory !== '전체 카테고리') {
+      filtered = filtered.filter(play => 
+        play.category === selectedCategory
+      );
+    }
+    
+    // 장르로 필터링 (Genre.jsx와 동일한 로직 사용)
+    if (selectedGenre !== '전체 장르') {
+      filtered = filtered.filter(play => {
+        const category = (play.category || '').toLowerCase();
+        const selectedGenreLower = selectedGenre.toLowerCase();
+        
+        // 공포/스릴러 통합 처리 (Genre.jsx와 동일)
+        if (selectedGenreLower === 'horror') {
+          return category === 'horror' || category === 'thriller';
+        }
+        
+        return category === selectedGenreLower;
+      });
+    }
+    
+    // 지역으로 필터링 (주소에 해당 지역명이 포함된 경우)
+    if (selectedRegion !== '전체 지역') {
+      filtered = filtered.filter(play => 
+        play.location?.address?.includes(selectedRegion)
+      );
+    }
+    
+    setFilteredPlays(filtered);
+    
+    // 필터링된 결과가 있으면 해당 지역으로 지도 이동
+    if (filtered.length > 0) {
+      // 첫 번째 결과의 위치로 지도 이동
+      const firstPlay = filtered[0];
+      if (firstPlay.location?.lat && firstPlay.location?.lng) {
+        const map = mapObjRef.current;
+        if (map) {
+          const position = new kakaoRef.current.maps.LatLng(
+            firstPlay.location.lat, 
+            firstPlay.location.lng
+          );
+          map.setCenter(position);
+          map.setLevel(7);
+        }
+      }
+    }
+  };
+
+  // 필터 초기화 함수
+  const resetFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('전체 카테고리');
+    setSelectedGenre('전체 장르');
+    setSelectedRegion('전체 지역');
+    setFilteredPlays([]);
+  };
+
+  // 인기지역 클릭 시 해당 지역으로 지도 이동
+  const focusOnArea = (area) => {
+    if (!mapObjRef.current) return;
+    
+    const map = mapObjRef.current;
+    const position = new kakaoRef.current.maps.LatLng(area.lat, area.lng);
+    
+    // 지도 중심을 해당 지역으로 이동
+    map.setCenter(position);
+    // 적절한 줌 레벨로 설정
+    map.setLevel(6);
+    
+    // 해당 지역에 마커 추가 (선택된 지역 표시)
+    const marker = new kakaoRef.current.maps.Marker({
+      position: position,
+      map: map,
+      zIndex: 2000
+    });
+    
+    // 3초 후 마커 제거
+    setTimeout(() => {
+      marker.setMap(null);
+    }, 3000);
+  };
+
+  // 마커 갱신: plays 또는 filteredPlays가 바뀔 때마다
   useEffect(() => {
     console.log('[Map] Marker update effect triggered');
     console.log('[Map] plays data:', plays);
     console.log('[Map] plays length:', plays?.length);
+    console.log('[Map] filtered plays length:', filteredPlays?.length);
     console.log('[Map] isMapReady:', isMapReady);
     
     const kakao = kakaoRef.current;
@@ -326,14 +433,14 @@ const Map = () => {
     console.log('[Map] geocoder ref:', !!geocoder);
     console.log('[Map] map object details:', map);
     
-         // 지도가 완전히 준비되었는지 확인
-     if (!kakao || !map || !geocoder || !Array.isArray(plays) || !isMapReady) {
-       console.log('[Map] Early return - missing dependencies or map not ready');
-       console.log('[Map] Missing: kakao=', !kakao, 'map=', !map, 'geocoder=', !geocoder, 'plays=', !Array.isArray(plays), 'isMapReady=', !isMapReady);
-       return;
-     }
-     
-     console.log('[Map] All dependencies ready, proceeding with marker creation');
+    // 지도가 완전히 준비되었는지 확인
+    if (!kakao || !map || !geocoder || !Array.isArray(plays) || !isMapReady) {
+      console.log('[Map] Early return - missing dependencies or map not ready');
+      console.log('[Map] Missing: kakao=', !kakao, 'map=', !map, 'geocoder=', !geocoder, 'plays=', !Array.isArray(plays), 'isMapReady=', !isMapReady);
+      return;
+    }
+    
+    console.log('[Map] All dependencies ready, proceeding with marker creation');
 
     // 기존 마커 제거
     markersRef.current.forEach(m => m.setMap(null));
@@ -341,49 +448,51 @@ const Map = () => {
 
     const toLatLng = (lat, lng) => new kakao.maps.LatLng(Number(lat), Number(lng));
     
-         const addMarker = (play, position) => {
-       // 마커 생성
-       const marker = new kakao.maps.Marker({ 
-         position, 
-         map,
-         // 마커 스타일 개선
-         zIndex: 1000
-       });
-       
-       // 인포윈도우 내용
-       const html = `
-         <div style="padding:12px; min-width:250px; background:white; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-           <h4 style="margin:0 0 8px 0; color:#333; font-size:16px;">${play.title || 'Untitled'}</h4>
-           <div style="font-size:13px;color:#666; margin-bottom:6px;">📍 ${play.location?.address || ''}</div>
-           ${play.category ? `<div style="font-size:12px;color:#888; margin-bottom:8px;">🎭 ${play.category}</div>` : ''}
-           <a href="${play.detailUrl || '#'}" target="_blank" style="display:inline-block;background:#B36B00;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;">상세보기</a>
-         </div>`;
-       
-       const infowindow = new kakao.maps.InfoWindow({ 
-         content: html, 
-         removable: true,
-         zIndex: 1001
-       });
-       
-       // 마커 클릭 이벤트
-       kakao.maps.event.addListener(marker, 'click', () => {
-         infowindow.open(map, marker);
-       });
-       
-       markersRef.current.push(marker);
-       console.log('[Map] Marker created for:', play.title, 'at position:', position);
-     };
+    const addMarker = (play, position) => {
+      // 마커 생성
+      const marker = new kakao.maps.Marker({ 
+        position, 
+        map,
+        // 마커 스타일 개선
+        zIndex: 1000
+      });
+      
+      // 인포윈도우 내용
+      const html = `
+        <div style="padding:12px; min-width:250px; background:white; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+          <h4 style="margin:0 0 8px 0; color:#333; font-size:16px;">${play.title || 'Untitled'}</h4>
+          <div style="font-size:13px;color:#666; margin-bottom:6px;">📍 ${play.location?.address || ''}</div>
+          ${play.category ? `<div style="font-size:12px;color:#888; margin-bottom:8px;">🎭 ${play.category}</div>` : ''}
+          <a href="${play.detailUrl || '#'}" target="_blank" style="display:inline-block;background:#B36B00;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;">상세보기</a>
+        </div>`;
+      
+      const infowindow = new kakao.maps.InfoWindow({ 
+        content: html, 
+        removable: true,
+        zIndex: 1001
+      });
+      
+      // 마커 클릭 이벤트
+      kakao.maps.event.addListener(marker, 'click', () => {
+        infowindow.open(map, marker);
+      });
+      
+      markersRef.current.push(marker);
+      console.log('[Map] Marker created for:', play.title, 'at position:', position);
+    };
 
     const bounds = new kakao.maps.LatLngBounds();
 
     (async () => {
-      console.log('[Map] Starting marker creation for', plays.length, 'plays');
+      // 필터링된 결과가 있으면 그것을 사용, 없으면 전체 plays 사용
+      const playsToShow = filteredPlays.length > 0 ? filteredPlays : plays;
+      console.log('[Map] Starting marker creation for', playsToShow.length, 'plays');
       console.log('[Map] Map object at marker creation:', map);
       console.log('[Map] Geocoder object at marker creation:', geocoder);
       
-             try {
-         console.log('[Map] Total plays to process:', plays.length);
-         for (const p of plays) {
+      try {
+        console.log('[Map] Total plays to process:', playsToShow.length);
+        for (const p of playsToShow) {
            console.log('[Map] Processing play:', p.title);
            const loc = p.location || {};
            console.log('[Map] Location data:', loc);
@@ -464,7 +573,7 @@ const Map = () => {
         console.error('[Map] Error during marker creation:', err);
       }
     })();
-     }, [plays, isMapReady]);
+     }, [plays, filteredPlays, isMapReady]);
 
   // 디버깅용 렌더링 확인
   console.log('[Map] Component rendering, plays:', plays?.length, 'isMapReady:', isMapReady);
@@ -474,36 +583,85 @@ const Map = () => {
       <Topnav />
 
       <div className="map-header-text">
-        <h2>Theatre Map</h2>
-        <p>Select the desired district in Seoul.</p>
+        <h2>공연 지도</h2>
+        <p>공연 정보를 조회할 지역을 선택하세요.</p>
         {/* 디버깅용 상태 표시 */}
-        <div style={{fontSize: '12px', color: '#666', marginTop: '10px'}}>
+        {/* <div style={{fontSize: '12px', color: '#666', marginTop: '10px'}}>
           Debug: Plays: {plays?.length || 0}, Map Ready: {isMapReady ? 'Yes' : 'No'}
-        </div>
+        </div> */}
       </div>
 
       <div className="map-content">
         <aside className="map-filter">
-          <h4>Search & Filter</h4>
-          <input type="text" placeholder="Search experiences or location..." />
-          <select>
-            <option>All Categories</option>
-            <option>Musical</option>
-            <option>Play</option>
-            <option>Exhibition</option>
+          <h4>검색 및 필터</h4>
+          <input 
+            type="text" 
+            placeholder="장소 또는 공연을 검색해 보세요" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
+          />
+          <select 
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option>전체 카테고리</option>
+            <option>뮤지컬</option>
+            <option>연극</option>
           </select>
-          <select>
-            <option>All Locations</option>
-            <option>Seoul</option>
-            <option>Incheon</option>
+          <select 
+            value={selectedGenre}
+            onChange={(e) => setSelectedGenre(e.target.value)}
+          >
+            {genres.map((genre, index) => {
+              // 장르별 한글 표시명 매핑
+              const genreLabels = {
+                '전체 장르': '전체 장르',
+                'comedy': '코미디',
+                'romance': '로맨스',
+                'horror': '공포/스릴러',
+                'musical': '뮤지컬',
+                'drama': '드라마',
+                'action': '액션',
+                'thriller': '스릴러'
+              };
+              return (
+                <option key={index} value={genre}>
+                  {genreLabels[genre] || genre}
+                </option>
+              );
+            })}
           </select>
-          <button className="apply-btn">Apply Filters</button>
+          <select 
+            value={selectedRegion}
+            onChange={(e) => setSelectedRegion(e.target.value)}
+          >
+            <option>전체 지역</option>
+            <option>서울</option>
+            <option>인천</option>
+          </select>
+          <div className="filter-buttons">
+            <button className="apply-btn" onClick={applyFilters}>
+              필터 적용하기
+            </button>
+            <button className="reset-btn" onClick={resetFilters}>
+              초기화
+            </button>
+          </div>
 
           <div className="popular-areas">
-            <h4>Popular Areas</h4>
+            <h4>인기 지역</h4>
             <ul>
-              {popularAreas.map((a, i) => (
-                <li key={i}>📍 {a}</li>
+              {popularAreas.map((area, i) => (
+                <li 
+                  key={i} 
+                  onClick={() => focusOnArea(area)}
+                  style={{ cursor: 'pointer', padding: '8px', borderRadius: '4px', transition: 'background-color 0.2s' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                >
+                  📍 {area.displayName}
+                </li>
               ))}
             </ul>
           </div>
@@ -519,21 +677,18 @@ const Map = () => {
         </div>
       </div>
 
-      <section className="found-experiences">
-        <h4>연극 정보</h4>
-        {isLoading ? (
-          <div className="loading">연극 데이터를 불러오는 중...</div>
-        ) : error ? (
-          <div className="error">⚠️ {error}</div>
-        ) : plays && plays.length > 0 ? (
+      {/* 필터 결과 표시 (필터를 적용했을 때만 표시) */}
+      {filteredPlays.length > 0 && (
+        <section className="filter-results">
+          <h4>검색 결과 ({filteredPlays.length}개)</h4>
           <div className="experience-list">
-            {plays.slice(0, 6).map((play, index) => (
+            {filteredPlays.map((play, index) => (
               <div key={play._id || index} className="exp-card">
-                <div className="exp-info">
-                  <h5>{play.title}</h5>
-                  <p>{play.location?.address || '주소 정보 없음'}</p>
-                  {play.category && <p className="category">🎭 {play.category}</p>}
-                </div>
+                                  <div className="exp-info">
+                    <h5>{play.title}</h5>
+                    <p>{play.location?.address || '주소 정보 없음'}</p>
+                    {play.category && <p className="category">🎭 {play.category}</p>}
+                  </div>
                 <a 
                   href={play.detailUrl || '#'} 
                   target="_blank" 
@@ -545,10 +700,15 @@ const Map = () => {
               </div>
             ))}
           </div>
-        ) : (
-          <div className="no-data">표시할 연극 데이터가 없습니다.</div>
-        )}
-      </section>
+        </section>
+      )}
+
+      {/* 필터를 적용하지 않았을 때는 아무것도 표시하지 않음 */}
+      {filteredPlays.length === 0 && (
+        <div className="no-filter-message">
+          <p>검색 조건을 설정하고 "필터 적용하기"를 클릭하여 공연을 찾아보세요.</p>
+        </div>
+      )}
     </div>
   );
 };

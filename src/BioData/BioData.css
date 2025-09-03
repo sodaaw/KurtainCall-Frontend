@@ -1,0 +1,231 @@
+/* ========================
+   BioData 페이지 스타일
+======================== */
+
+.biodata-page {
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  min-height: 100vh;
+  color: #f5f5f5;
+  padding: 100px 20px 40px 20px; /* 상단 여백을 100px로 조정 */
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 커튼 배경 요소들 */
+.biodata-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: -50px;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(90deg, 
+    rgba(0, 11, 88, 0.8) 0%,
+    rgba(0, 11, 88, 0.6) 30%,
+    rgba(0, 11, 88, 0.3) 70%,
+    transparent 100%);
+  transform: skewX(-15deg);
+  z-index: 1;
+  animation: curtainLeft 8s ease-in-out infinite;
+}
+
+.biodata-page::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: -50px;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(-90deg, 
+    rgba(0, 11, 88, 0.8) 0%,
+    rgba(0, 11, 88, 0.6) 30%,
+    rgba(0, 11, 88, 0.3) 70%,
+    transparent 100%);
+  transform: skewX(15deg);
+  z-index: 1;
+  animation: curtainRight 8s ease-in-out infinite;
+}
+
+@keyframes curtainLeft {
+  0%, 100% { transform: skewX(-15deg) translateX(0); }
+  50% { transform: skewX(-15deg) translateX(-20px); }
+}
+
+@keyframes curtainRight {
+  0%, 100% { transform: skewX(15deg) translateX(0); }
+  50% { transform: skewX(15deg) translateX(20px); }
+}
+
+/* 메인 컨테이너 */
+.biodata-container {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* 페이지 제목 */
+.biodata-page > h2 {
+  font-family: 'Swanley', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(30px, 5vw, 40px);
+  color: #FFF4B7;
+  text-align: center;
+  margin-bottom: -10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  font-weight: 500;
+}
+
+.biodata-page > p {
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: #c5a572;
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: 400;
+}
+
+/* 생체 데이터 카드 */
+.bio-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 244, 183, 0.2);
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 30px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.bio-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #FFF4B7, #c5a572);
+  opacity: 0.8;
+}
+
+.bio-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 244, 183, 0.4);
+}
+
+.bio-card h3 {
+  margin-top: 10px;
+  font-size: clamp(20px, 2.2vw, 24px);
+  color: #FFF4B7;
+  margin-bottom: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bio-card p {
+  font-size: clamp(16px, 1.6vw, 18px);
+  color: #f5f5f5;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.bio-card p:last-child {
+  margin-bottom: 0;
+}
+
+.bio-card strong {
+  color: #FFF4B7;
+  font-weight: 600;
+}
+
+/* 기분 분석 카드 */
+.bio-card.mood {
+  background: rgba(255, 244, 183, 0.08);
+  border-color: rgba(255, 244, 183, 0.3);
+}
+
+.bio-card.mood h3 {
+  color: #FFF4B7;
+}
+
+.bio-card.mood strong {
+  color: #c5a572;
+  font-size: clamp(18px, 1.8vw, 20px);
+}
+
+/* 추천 버튼 */
+.recommend-btn {
+  background: linear-gradient(135deg, #FFF4B7 0%, #c5a572 100%);
+  color: #0f0f0f;
+  border: none;
+  border-radius: 25px;
+  padding: 18px 36px;
+  font-size: clamp(16px, 1.8vw, 18px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  margin: 40px auto 0;
+  box-shadow: 0 4px 15px rgba(255, 244, 183, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.recommend-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.recommend-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 244, 183, 0.4);
+}
+
+.recommend-btn:hover::before {
+  left: 100%;
+}
+
+.recommend-btn:active {
+  transform: translateY(0);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .biodata-page {
+    padding: 100px 15px 30px 15px;
+  }
+  
+  .bio-card {
+    padding: 25px;
+    margin-bottom: 25px;
+  }
+  
+  .recommend-btn {
+    padding: 16px 32px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .biodata-page h2 {
+    font-size: 36px;
+  }
+  
+  .bio-card {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .recommend-btn {
+    padding: 14px 28px;
+    font-size: 15px;
+  }
+}

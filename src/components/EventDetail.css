@@ -7,7 +7,7 @@
 .event-detail-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 120px 20px 20px 20px; /* 상단 여백 120px로 증가 */
 }
 
 .event-detail-header {

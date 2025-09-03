@@ -3,10 +3,10 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Topnav from "../components/Topnav";
 import SearchModal from "../components/SearchModal";
-import EventCalendar from "./EventCalendar.jsx"; // ✅ 분리한 캘린더
-import EventPanel from "./EventPanel.jsx";       // ✅ 분리한 우측 패널
+// import EventCalendar from "./EventCalendar.jsx"; // ✅ 분리한 캘린더
+// import EventPanel from "./EventPanel.jsx";       // ✅ 분리한 우측 패널
 import { playAPI } from "../services/api";
-import "./Main.css";
+// import "./Main.css";
 
 // 카테고리 버튼 데이터 (API에서 받아올 예정)
 const DEFAULT_CATS = [
@@ -67,9 +67,9 @@ function Hero({ plays, isLoading, error }) {
   if (isLoading) {
     return (
       <header className="hero">
-        <h1>Recommendation For U</h1>
-        <p>Live Local. Explore Korea.</p>
-        <div className="loading-spinner">Loading...</div>
+        <h1>당신을 위한 추천</h1>
+        <p>로컬로 살기, 한국 탐험하기.</p>
+        <div className="loading-spinner">로딩 중...</div>
       </header>
     );
   }
@@ -77,8 +77,8 @@ function Hero({ plays, isLoading, error }) {
   if (error) {
     return (
       <header className="hero">
-        <h1>Recommendation For U</h1>
-        <p>Live Local. Explore Korea.</p>
+        <h1>당신을 위한 추천</h1>
+        <p>로컬로 살기, 한국 탐험하기.</p>
         <div className="error-message">
           <p>⚠️ {error}</p>
           <p>백엔드 서버가 실행 중인지 확인해주세요.</p>
@@ -90,8 +90,8 @@ function Hero({ plays, isLoading, error }) {
   if (!plays || plays.length === 0) {
     return (
       <header className="hero">
-        <h1>Recommendation For U</h1>
-        <p>Live Local. Explore Korea.</p>
+        <h1>당신을 위한 추천</h1>
+        <p>로컬로 살기, 한국 탐험하기.</p>
         <div className="no-data">데이터를 불러올 수 없습니다.</div>
       </header>
     );
@@ -104,8 +104,8 @@ function Hero({ plays, isLoading, error }) {
   if (!current) {
     return (
       <header className="hero">
-        <h1>Recommendation For U</h1>
-        <p>Live Local. Explore Korea.</p>
+        <h1>당신을 위한 추천</h1>
+        <p>로컬로 살기, 한국 탐험하기.</p>
         <div className="no-data">데이터를 불러올 수 없습니다.</div>
       </header>
     );
@@ -113,8 +113,8 @@ function Hero({ plays, isLoading, error }) {
 
   return (
     <header className="hero">
-      <h1>Recommendation For U</h1>
-      <p>Live Local. Explore Korea.</p>
+      <h1>당신을 위한 추천</h1>
+      <p>로컬로 살기, 한국 탐험하기.</p>
 
       {/* 한 장만 표시 */}
       <div className="poster-carousel" style={{ justifyContent: "center" }}>
@@ -137,9 +137,9 @@ function Hero({ plays, isLoading, error }) {
 
       {/* 좌우 버튼 + 인디케이터 유지 */}
       <div className="slide-indicator">
-        <button type="button" aria-label="Previous" onClick={() => setIdx((i) => (i - 1 + total) % total)}>‹</button>
+        <button type="button" aria-label="이전" onClick={() => setIdx((i) => (i - 1 + total) % total)}>‹</button>
         <span>{(idx % total) + 1}/{total}</span>
-        <button type="button" aria-label="Next" onClick={() => setIdx((i) => (i + 1) % total)}>›</button>
+        <button type="button" aria-label="다음" onClick={() => setIdx((i) => (i + 1) % total)}>›</button>
       </div>
     </header>
   );
@@ -223,7 +223,7 @@ export default function Main() {
         <CategoryGrid onPick={goGenre} />
 
         {/* ✅ 좌: 캘린더 / 우: 이벤트 패널 */}
-        <section className="schedule">
+        {/* <section className="schedule">
           <EventCalendar
             selected={selectedDate}
             onSelect={setSelectedDate}
@@ -233,7 +233,7 @@ export default function Main() {
             date={selectedDate}
             events={eventsOfDay}
           />
-        </section>
+        </section> */}
       </main>
     </div>
   );

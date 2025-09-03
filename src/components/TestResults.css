@@ -72,7 +72,7 @@
   justify-content: center;
   max-width: 800px;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 120px 20px 60px 20px; /* 상단 여백 120px로 증가 */
   gap: 40px;
   text-align: center;
 }

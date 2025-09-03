@@ -284,86 +284,86 @@ const Recommended = () => {
             <h1 className="poster-title">{selectedPoster.title}</h1>
             <div className="poster-category">{selectedPoster.category}</div>
             
-            <div className="info-grid">
-              <div className="info-item">
-                <span className="info-label">📍 Venue</span>
-                <span className="info-value">{playData.area || '정보없음'}</span>
+            <div className="info-and-calendar-container">
+              <div className="info-grid">
+                <div className="info-item">
+                  <span className="info-label">📍 Venue</span>
+                  <span className="info-value">{playData.area || '정보없음'}</span>
+                </div>
+                
+                <div className="info-item">
+                  <span className="info-label">🎭 Category</span>
+                  <span className="info-value">{playData.category || '정보없음'}</span>
+                </div>
+                
+                <div className="info-item">
+                  <span className="info-label">💰 Price</span>
+                  <span className="info-value">{playData.price || '정보 없음'}</span>
+                </div>
+                
+                <div className="info-item">
+                  <span className="info-label">⭐ Rating</span>
+                  <span className="info-value">{playData.stars ? `${playData.stars}/5.0` : '정보 없음'}</span>
+                </div>
               </div>
               
-              <div className="info-item">
-                <span className="info-label">🎭 Category</span>
-                <span className="info-value">{playData.category || '정보없음'}</span>
-              </div>
-              
-              <div className="info-item">
-                <span className="info-label">💰 Price</span>
-                <span className="info-value">{playData.price || '정보 없음'}</span>
-              </div>
-              
-              <div className="info-item">
-                <span className="info-label">⭐ Rating</span>
-                <span className="info-value">{playData.stars ? `${playData.stars}/5.0` : '정보 없음'}</span>
+              <div className="calendar-preview">
+                <h3 className="calendar-preview-title">📅 Select Date</h3>
+                <div className="calendar-preview-container">
+                  <div className="calendar-preview-header">
+                    <button onClick={goToPreviousMonth} className="month-nav-btn-small">‹</button>
+                    <span className="current-month-small">
+                      {currentMonth.getFullYear()} {currentMonth.getMonth() + 1}
+                    </span>
+                    <button onClick={goToNextMonth} className="month-nav-btn-small">›</button>
+                  </div>
+                  
+                  <div className="calendar-preview-grid">
+                    <div className="calendar-preview-weekdays">
+                      <span>S</span>
+                      <span>M</span>
+                      <span>T</span>
+                      <span>W</span>
+                      <span>T</span>
+                      <span>F</span>
+                      <span>S</span>
+                    </div>
+                    
+                    <div className="calendar-preview-days">
+                      {days.slice(0, 35).map((day, index) => (
+                        <div key={index} className="calendar-preview-day-wrapper">
+                          <button
+                            className={`calendar-preview-day ${
+                              !day.isCurrentMonth ? 'other-month' : ''
+                            } ${
+                              day.isAvailable ? 'available' : 'unavailable'
+                            } ${
+                              selectedDate && 
+                              day.date.toDateString() === selectedDate.toDateString() 
+                                ? 'selected' : ''
+                            }`}
+                            onClick={() => handleDateSelect(day)}
+                            disabled={!day.isAvailable}
+                          >
+                            {day.date.getDate()}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 달력 섹션 */}
-        <div className="calendar-section">
-          <h2 className="section-title">📅 Select Date</h2>
-          
-          <div className="calendar-container">
-            <div className="calendar-header">
-              <button onClick={goToPreviousMonth} className="month-nav-btn">‹</button>
-              <h3 className="current-month">
-                {currentMonth.getFullYear()} {currentMonth.getMonth() + 1}
-              </h3>
-              <button onClick={goToNextMonth} className="month-nav-btn">›</button>
-            </div>
-            
-            <div className="calendar-grid">
-              <div className="calendar-weekdays">
-                <span>Sun</span>
-                <span>Mon</span>
-                <span>Tue</span>
-                <span>Wed</span>
-                <span>Thu</span>
-                <span>Fri</span>
-                <span>Sat</span>
-              </div>
-              
-              <div className="calendar-days">
-                {days.map((day, index) => (
-                  <div key={index} className="calendar-day-wrapper">
-                    <button
-                      className={`calendar-day ${
-                        !day.isCurrentMonth ? 'other-month' : ''
-                      } ${
-                        day.isAvailable ? 'available' : 'unavailable'
-                      } ${
-                        selectedDate && 
-                        day.date.toDateString() === selectedDate.toDateString() 
-                          ? 'selected' : ''
-                      }`}
-                      onClick={() => handleDateSelect(day)}
-                      disabled={!day.isAvailable}
-                    >
-                      {day.date.getDate()}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+        {/* 선택된 날짜 정보 표시 */}
+        {selectedDate && (
+          <div className="selected-date-info">
+            <h4>Selected Date: {selectedDate.getFullYear()}/{selectedDate.getMonth() + 1}/{selectedDate.getDate()}</h4>
+            <p>Select a time slot below to proceed with booking.</p>
           </div>
-          
-          {/* 선택된 날짜 정보 표시 */}
-          {selectedDate && (
-            <div className="selected-date-info">
-              <h4>Selected Date: {selectedDate.getFullYear()}/{selectedDate.getMonth() + 1}/{selectedDate.getDate()}</h4>
-              <p>Select a time slot below to proceed with booking.</p>
-            </div>
-          )}
-        </div>
+        )}
 
         {/* 선택된 날짜의 옵션들 */}
         {selectedDate && (

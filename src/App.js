@@ -14,6 +14,8 @@ import UserPage from './UserPage/userPage';
 import Login from './Login/Login'; 
 import Signup from './Signup/Signup';
 import ContentDetail from "./ContentDetail/ContentDetail";
+import BioData from "./BioData/BioData";
+
 import MyTest from './components/MyTest';
 import TestResults from './components/TestResults';
 import TestDatabase from './components/TestDatabase';
@@ -27,11 +29,11 @@ import SearchResults from './components/SearchResults';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <UserPage />,
+    element: <Main />,
   },
   {
-    path: "/mainpage",
-    element: <Main />,
+    path: "/user-selection",
+    element: <UserPage />,
   },
   {
     path: "/map",
@@ -40,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: "/genre",
     element: <Genre />,
+  },
+  {
+    path: "/biodata",
+    element: <BioData />
   },
   {
     path: "/community",

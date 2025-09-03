@@ -9,7 +9,7 @@
 .review-container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 120px 20px 40px 20px; /* 상단 여백 120px로 증가 */
 }
 
 /* 뒤로가기 버튼 */

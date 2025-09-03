@@ -12,12 +12,19 @@ export default function SearchResults() {
   const q = (params.get("q") || "").trim();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!q) return;
     setLoading(true);
+    setError("");
     searchAPI.search(q, 30)
       .then(({ data }) => setItems(data.items || data.results || []))
+      .catch((e) => {
+        const msg = e?.response?.data?.message || e?.message || "검색 중 오류가 발생했습니다.";
+        setError(msg);
+        setItems([]);
+      })
       .finally(() => setLoading(false));
   }, [q]);
 
@@ -36,11 +43,12 @@ export default function SearchResults() {
   return (
     <main className="search-results-page">
       <header className="results-header">
-        <button onClick={onBack}>←</button>
+        <button onClick={onBack}>← 뒤로</button>
         <h1>“{q}” 검색 결과</h1>
       </header>
 
       {loading && <p>검색 중…</p>}
+      {error && <p style={{color:'#f66'}}>오류: {error}</p>}
       {!loading && !q && <p>검색어를 입력해주세요.</p>}
       {!loading && q && items.length === 0 && <p>검색 결과가 없습니다.</p>}
 
@@ -50,7 +58,7 @@ export default function SearchResults() {
           return (
             <li key={it.detailUrl || it._id} className="result-card">
               <a href={it.detailUrl} target="_blank" rel="noreferrer">
-                <img src={img} alt="" onError={(e)=>{e.currentTarget.src='/fallback-poster.png'}} />
+                <img src={img} alt="" onError={(e)=>{e.currentTarget.src='/images/fallback.jpg'}} />
                 <div className="meta">
                   <h3>{mark(it.title)}</h3>
                   <p>
