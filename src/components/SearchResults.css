@@ -14,11 +14,11 @@
   
   /* 전체 페이지 컨테이너 */
   .search-results-page {
-    color: var(--text);
-    background: radial-gradient(1200px 600px at 50% -200px, #2a0f14 0%, #12090a 40%, var(--bg) 70%);
-    min-height: 100vh;
-    padding: 24px clamp(16px, 4vw, 40px);
-  }
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 50% -200px, #2a0f14 0%, #12090a 40%, var(--bg) 70%);
+  min-height: 100vh;
+  padding: 100px clamp(16px, 4vw, 40px) 24px clamp(16px, 4vw, 40px); /* 상단 여백 100px 추가 */
+}
   
   /* 상단 헤더: 스티키 */
   .results-header {

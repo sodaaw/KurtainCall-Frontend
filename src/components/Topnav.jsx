@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Topnav.css';
 import SearchModal from './SearchModal';
-// import LanguageModal from './LanguageModal'; // 언어 기능 임시 비활성화
 
-export default function Topnav({ variant = "default "}) {
+export default function Topnav({ variant = "default" }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
-  // const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false); // 언어 기능 임시 비활성화
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-  // const [currentLanguage, setCurrentLanguage] = useState('ko'); // 언어 기능 임시 비활성화
 
-  // 홈화면에서만 다른 디자인 적용
-  const isHome = variant === "home";
+  // Main.jsx인지 확인 (홈페이지)
+  const isHome = location.pathname === '/';
+  
   const toggleSideMenu = () => {
     setIsSideMenuOpen(!isSideMenuOpen);
   };
@@ -20,11 +19,6 @@ export default function Topnav({ variant = "default "}) {
   const closeSideMenu = () => {
     setIsSideMenuOpen(false);
   };
-
-  // const handleLanguageChange = (languageCode) => {
-  //   setCurrentLanguage(languageCode); // 언어 변경 시 Topnav의 상태 업데이트
-  //   setIsLanguageModalOpen(false); // 모달 닫기
-  // };
 
   const openSearchModal = () => {
     setIsSearchModalOpen(true);
@@ -60,6 +54,7 @@ export default function Topnav({ variant = "default "}) {
             <span className="hamburger-line"></span>
           </div>
           
+          {/* Main.jsx가 아닌 경우에만 검색 아이콘 표시 */}
           {!isHome && (
             <span
               className="search-icon"
@@ -77,7 +72,7 @@ export default function Topnav({ variant = "default "}) {
           )}
         </div>
 
-        {/* 로고 + 태그라인 (중앙) -> 홈에서 숨김 */}
+        {/* 중앙 영역 - Main.jsx가 아닌 경우에만 로고 표시 */}
         {!isHome && (
           <div 
             className="logo-wrapper"
@@ -93,20 +88,8 @@ export default function Topnav({ variant = "default "}) {
           </div>
         )}
 
+        {/* 오른쪽 영역 */}
         <div className="topnav-right">
-          {/*
-          <button 
-            className="lang-btn" 
-            onClick={() => setIsLanguageModalOpen(true)}
-            aria-label="Change language"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/>
-              <path d="M2 12h20" stroke="currentColor" strokeWidth="2"/>
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" strokeWidth="2" fill="none"/>
-            </svg>
-          </button>
-          */}
           <button 
             className="login-btn" 
             onClick={() => navigate('/login')}
@@ -133,11 +116,11 @@ export default function Topnav({ variant = "default "}) {
             <li><a href="/genre" onClick={closeSideMenu}>장르</a></li>
             <li><a href="/community" onClick={closeSideMenu}>커뮤니티</a></li>
             <li><a href="/map" onClick={closeSideMenu}>지도</a></li>
+            <li><a href="/biodata" onClick={closeSideMenu}>생체데이터</a></li>
             <li><a href="/test/my-test" onClick={closeSideMenu}>취향테스트</a></li>
             <li><a href="/ai-translation" onClick={closeSideMenu}>AI 번역</a></li>
             <li><a href="/login" onClick={closeSideMenu}>로그인</a></li>
             <li><a href="/signup" onClick={closeSideMenu}>회원가입</a></li>
-            <li><a href="/biodata" onClick={closeSideMenu}>생체데이터</a></li>
           </ul>
         </nav>
 
@@ -151,16 +134,6 @@ export default function Topnav({ variant = "default "}) {
       {isSearchModalOpen && (
         <SearchModal onClose={closeSearchModal} />
       )}
-
-      {/* 언어 변경 모달 비활성화
-      {isLanguageModalOpen && (
-        <LanguageModal 
-          onClose={() => setIsLanguageModalOpen(false)}
-          currentLanguage={currentLanguage}
-          onLanguageChange={handleLanguageChange}
-        />
-      )}
-      */}
     </>
   );
 }

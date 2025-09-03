@@ -53,7 +53,7 @@
 .mytest-content {
   max-width: 900px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 100px 20px 20px 20px; /* 상단 여백 100px 추가 */
   position: relative;
   z-index: 1;
 }

@@ -3,7 +3,7 @@
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
   color: #e5e7eb;
   min-height: 100vh;
-  padding: 20px;
+  padding: 100px 20px 20px 20px; /* 상단 여백 100px 추가 */
   position: relative;
   overflow: hidden;
 }

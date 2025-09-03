@@ -55,7 +55,7 @@ body {
   color: #f5f5f5;
   position: relative;
   overflow-x: hidden;
-  padding: 20px;
+  padding: 100px 20px 20px 20px; /* 상단 여백 100px 추가 */
   font-family: 'Pretendard', sans-serif;
 }
 
