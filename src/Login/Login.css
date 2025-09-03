@@ -113,7 +113,7 @@
 
 .form-label {
   display: block;
-  color: #d4af37;
+  color: #FFF4B7;
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 8px;
@@ -147,9 +147,8 @@
 .login-btn {
   width: 100%;
   padding: 16px 32px;
-  background: linear-gradient(135deg, #8B0000 0%, #A52A2A 50%, #8B0000 100%);
   color: #ffffff;
-  border: 3px solid #d4af37;
+  border: 3px solid #FFF4B7;
   border-radius: 50px;
   font-size: 1.1rem;
   font-weight: 700;
@@ -174,7 +173,6 @@
 }
 
 .login-btn:hover {
-  background: linear-gradient(135deg, #660000 0%, #8B0000 50%, #660000 100%);
   transform: translateY(-4px) scale(1.02);
   box-shadow: 0 15px 35px rgba(139, 0, 0, 0.4), 0 0 20px rgba(212, 175, 55, 0.3);
   border-color: #ffd700;
@@ -204,7 +202,7 @@
 }
 
 .signup-btn {
-  color: #d4af37;
+  color: #FFF4B7;
   text-decoration: none;
   font-weight: 600;
   font-size: 1rem;
