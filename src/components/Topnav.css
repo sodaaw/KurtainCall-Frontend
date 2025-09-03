@@ -276,11 +276,11 @@
   border-bottom: 1px solid rgba(255, 244, 183, 0.1);
 }
 
-.side-menu-header h2 {
-  color: #FFF4B7;
-  font-size: 24px;
-  margin: 0;
-  font-weight: 600;
+.topnav .side-menu .side-menu-header h2 {
+  color: #FFF4B7 !important;
+  font-size: 24px !important;
+  margin: 0 !important;
+  font-weight: 600 !important;
 }
 
 .close-menu-btn {

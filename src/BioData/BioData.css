@@ -65,7 +65,7 @@
 }
 
 /* 페이지 제목 */
-.biodata-page h2 {
+.biodata-page > h2 {
   font-family: 'Swanley', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: clamp(48px, 5vw, 64px);
   color: #FFF4B7;
