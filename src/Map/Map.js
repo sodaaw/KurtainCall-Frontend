@@ -552,7 +552,7 @@ const Map = () => {
         </div>
       </div>
 
-      <section className="found-experiences">
+      {/* <section className="found-experiences">
         <h4>연극 정보</h4>
         {isLoading ? (
           <div className="loading">연극 데이터를 불러오는 중...</div>
@@ -581,7 +581,7 @@ const Map = () => {
         ) : (
           <div className="no-data">표시할 연극 데이터가 없습니다.</div>
         )}
-      </section>
+      </section> */}
     </div>
   );
 };
