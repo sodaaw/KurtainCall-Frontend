@@ -26,11 +26,12 @@ body {
   align-items: center;
 }
 
-.logo {
+/* .logo 스타일 제거 - Topnav와 충돌 방지 */
+/* .logo {
   color: var(--primary);
   font-weight: bold;
   font-size: 20px;
-}
+} */
 
 .topnav-right {
   display: flex;
