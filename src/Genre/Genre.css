@@ -4,12 +4,58 @@
 
 .genre-container {
   margin-top: 50px;
-
   padding: 120px 20px 20px 20px; /* 상단 여백 120px로 증가 */
   background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); /* 검정 그라데이션 */
   font-family: 'Pretendard', sans-serif;
   color: #f5f5f5;
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 커튼 배경 요소들 */
+.genre-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: -50px;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(90deg, 
+    rgba(0, 11, 88, 0.8) 0%,
+    rgba(0, 11, 88, 0.6) 30%,
+    rgba(0, 11, 88, 0.3) 70%,
+    transparent 100%);
+  transform: skewX(-15deg);
+  z-index: 1;
+  animation: curtainLeft 8s ease-in-out infinite;
+}
+
+.genre-container::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: -50px;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(-90deg, 
+    rgba(0, 11, 88, 0.8) 0%,
+    rgba(0, 11, 88, 0.6) 30%,
+    rgba(0, 11, 88, 0.3) 70%,
+    transparent 100%);
+  transform: skewX(15deg);
+  z-index: 1;
+  animation: curtainRight 8s ease-in-out infinite;
+}
+
+@keyframes curtainLeft {
+  0%, 100% { transform: skewX(-15deg) translateX(0); }
+  50% { transform: skewX(-15deg) translateX(-20px); }
+}
+
+@keyframes curtainRight {
+  0%, 100% { transform: skewX(15deg) translateX(0); }
+  50% { transform: skewX(15deg) translateX(20px); }
 }
 
 /* Header */
