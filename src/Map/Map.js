@@ -474,33 +474,33 @@ const Map = () => {
       <Topnav />
 
       <div className="map-header-text">
-        <h2>Theatre Map</h2>
-        <p>Select the desired district in Seoul.</p>
+        <h2>공연 지도</h2>
+        <p>공연 정보를 조회할 지역을 선택하세요.</p>
         {/* 디버깅용 상태 표시 */}
-        <div style={{fontSize: '12px', color: '#666', marginTop: '10px'}}>
+        {/* <div style={{fontSize: '12px', color: '#666', marginTop: '10px'}}>
           Debug: Plays: {plays?.length || 0}, Map Ready: {isMapReady ? 'Yes' : 'No'}
-        </div>
+        </div> */}
       </div>
 
       <div className="map-content">
         <aside className="map-filter">
-          <h4>Search & Filter</h4>
-          <input type="text" placeholder="Search experiences or location..." />
+          <h4>검색 및 필터</h4>
+          <input type="text" placeholder="장소 또는 공연을 검색해 보세요" />
           <select>
-            <option>All Categories</option>
-            <option>Musical</option>
-            <option>Play</option>
-            <option>Exhibition</option>
+            <option>전체 카테고리</option>
+            <option>뮤지컬</option>
+            <option>연극</option>
+            <option>전시</option>
           </select>
           <select>
-            <option>All Locations</option>
-            <option>Seoul</option>
-            <option>Incheon</option>
+            <option>전체 지역</option>
+            <option>서울</option>
+            <option>인천</option>
           </select>
-          <button className="apply-btn">Apply Filters</button>
+          <button className="apply-btn">필터 적용하기</button>
 
           <div className="popular-areas">
-            <h4>Popular Areas</h4>
+            <h4>인기 지역</h4>
             <ul>
               {popularAreas.map((a, i) => (
                 <li key={i}>📍 {a}</li>
