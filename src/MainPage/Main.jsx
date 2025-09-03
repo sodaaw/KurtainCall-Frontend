@@ -3,8 +3,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Topnav from "../components/Topnav";
 // import SearchModal from "../components/SearchModal";
-import EventCalendar from "./EventCalendar.jsx"; // ✅ 분리한 캘린더
-import EventPanel from "./EventPanel.jsx";       // ✅ 분리한 우측 패널
+import EventCalendar from "./EventCalendar"; // ✅ 분리한 캘린더
+import EventPanel from "./EventPanel";       // ✅ 분리한 우측 패널
 import { playAPI } from "../services/api";
 import "./Main.css";
 

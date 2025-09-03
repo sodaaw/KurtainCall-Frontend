@@ -70,27 +70,27 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(139, 0, 0, 0.1);
-  border: 2px solid #8B0000;
+  background: rgba(0, 49, 97, 0.1);
+  border: 2px solid #003161;
   border-radius: 15px;
   padding: 25px;
   backdrop-filter: blur(10px);
 }
 
 .header-content h1 {
-  color: #FFD700;
+  color: #FFF4B7;
   font-size: 2.5rem;
   font-weight: 800;
   margin: 0;
-  text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+  text-shadow: 0 0 30px rgba(255, 244, 183, 0.5);
   text-align: center;
   flex: 1;
 }
 
 .previous-results-btn {
-  background: linear-gradient(135deg, #8B0000, #A52A2A);
-  border: 2px solid #FFD700;
-  color: #FFD700;
+  background: linear-gradient(135deg, #003161, #004c9e);
+  border: 2px solid #FFF4B7;
+  color: #FFF4B7;
   padding: 12px 20px;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -103,10 +103,10 @@
 }
 
 .previous-results-btn:hover {
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: #8B0000;
+  background: linear-gradient(135deg, #FFF4B7, #fdeb85);
+  color: #1a1a1a;
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 5px 20px rgba(255, 244, 183, 0.3);
 }
 
 
@@ -120,16 +120,16 @@
 .progress-bar {
   width: 100%;
   height: 12px;
-  background: rgba(139, 0, 0, 0.3);
+  background: rgba(0, 49, 97, 0.3);
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 15px;
-  border: 1px solid #8B0000;
+  border: 1px solid #003161;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #8B0000, #FFD700);
+  background: linear-gradient(90deg, #003161, #FFF4B7);
   border-radius: 6px;
   transition: width 0.5s ease;
 }
