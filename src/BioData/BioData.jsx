@@ -1,5 +1,6 @@
 // src/BioData/BioData.jsx
 import React, { useState, useEffect } from "react";
+import Topnav from "../components/Topnav";
 import "./BioData.css";
 
 export default function BioData() {
@@ -17,6 +18,7 @@ export default function BioData() {
 
   return (
     <div className="biodata-page">
+      <Topnav />
       <h2>생체 데이터 측정</h2>
       <p>당신의 현재 상태에 기반한 맞춤 공연을 추천해드려요 🎭</p>
 
