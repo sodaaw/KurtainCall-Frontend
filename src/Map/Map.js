@@ -26,7 +26,11 @@ const Map = () => {
   const [isMapReady, setIsMapReady] = useState(false);
 
   // 사용자 UI용 데이터
-  const popularAreas = ['Gangnam', 'Hongdae', 'Myeongdong', 'Insadong'];
+  const popularAreas = [
+    { name: 'Daehangno', displayName: '대학로', lat: 37.5791, lng: 126.9990 },
+    { name: 'Hongdae', displayName: '홍대', lat: 37.5572, lng: 126.9244 },
+    { name: 'Gangnam', displayName: '강남', lat: 37.4979, lng: 127.0276 },
+  ];
 
   // 연극 데이터 가져오기
   useEffect(() => {
@@ -167,12 +171,8 @@ const Map = () => {
       const customOverlay = new kakao.maps.CustomOverlay({});
       const infowindow = new kakao.maps.InfoWindow({ removable: true });
 
-      const centers = [
-        { name: 'Gangnam', lat: 37.4979, lng: 127.0276 },
-        { name: 'Hongdae', lat: 37.5572, lng: 126.9244 },
-        { name: 'Myeongdong', lat: 37.5636, lng: 126.982 },
-        { name: 'Insadong', lat: 37.5740, lng: 126.9850 },
-      ];
+      // popularAreas에서 좌표 정보 가져오기
+      const centers = popularAreas;
 
       // 동 지역 표시 함수
       const displayDongAreas = (dongGeo) => {
@@ -308,6 +308,31 @@ const Map = () => {
     } catch (err) {
       console.error('Seoul map initialization error:', err);
     }
+  };
+
+  // 인기지역 클릭 시 해당 지역으로 지도 이동
+  const focusOnArea = (area) => {
+    if (!mapObjRef.current) return;
+    
+    const map = mapObjRef.current;
+    const position = new kakaoRef.current.maps.LatLng(area.lat, area.lng);
+    
+    // 지도 중심을 해당 지역으로 이동
+    map.setCenter(position);
+    // 적절한 줌 레벨로 설정
+    map.setLevel(6);
+    
+    // 해당 지역에 마커 추가 (선택된 지역 표시)
+    const marker = new kakaoRef.current.maps.Marker({
+      position: position,
+      map: map,
+      zIndex: 2000
+    });
+    
+    // 3초 후 마커 제거
+    setTimeout(() => {
+      marker.setMap(null);
+    }, 3000);
   };
 
   // 마커 갱신: plays가 바뀔 때마다
@@ -502,8 +527,16 @@ const Map = () => {
           <div className="popular-areas">
             <h4>인기 지역</h4>
             <ul>
-              {popularAreas.map((a, i) => (
-                <li key={i}>📍 {a}</li>
+              {popularAreas.map((area, i) => (
+                <li 
+                  key={i} 
+                  onClick={() => focusOnArea(area)}
+                  style={{ cursor: 'pointer', padding: '8px', borderRadius: '4px', transition: 'background-color 0.2s' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                >
+                  📍 {area.displayName}
+                </li>
               ))}
             </ul>
           </div>
