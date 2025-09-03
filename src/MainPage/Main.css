@@ -1069,6 +1069,7 @@
   min-height: calc(30svh - var(--topnav-h, 70px));
   display: flex;
   flex-direction: column;
+  margin-top: 30px;
   align-items: center;
   justify-content: center;   /* 수직 가운데 */
   gap: clamp(8px, 2vh, 16px);

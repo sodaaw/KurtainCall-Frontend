@@ -37,7 +37,7 @@
 .ai-translation-content {
   max-width: 900px;
   margin: 0 auto;
-  padding: 100px 20px 30px 20px; /* 상단 여백 100px 추가 */
+  padding: 120px 20px 30px 20px; /* 상단 여백 120px로 증가 */
   position: relative;
   z-index: 2;
 }

@@ -62,7 +62,7 @@ body {
 
 .map-header-text {
   text-align: center;
-  padding: 100px 20px 30px 20px; /* 상단 여백 100px 추가 */
+  padding: 60px 20px 30px 20px; /* 상단 여백 100px 추가 */
   position: relative;
   z-index: 2;
 }
