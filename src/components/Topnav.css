@@ -158,10 +158,24 @@
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  padding: 10px;
+  border-radius: 8px;
 }
 
 .logo-wrapper:hover {
-  transform: scale(1.05);
+  transform: translateX(-50%) scale(1.05);
+  background: rgba(255, 244, 183, 0.1);
+  box-shadow: 0 4px 15px rgba(255, 244, 183, 0.2);
+}
+
+.logo-wrapper:hover .logo {
+  color: #FFF4B7;
+  text-shadow: 0 4px 8px rgba(255, 244, 183, 0.5);
+}
+
+.logo-wrapper:hover .tagline {
+  color: #FFF4B7;
+  opacity: 1;
 }
 
 .logo {
@@ -171,6 +185,7 @@
   margin: 0;
   font-weight: 500;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
 }
 
 .tagline {
@@ -179,6 +194,7 @@
   margin: 2px 0 0 0;
   font-weight: 400;
   opacity: 0.8;
+  transition: all 0.3s ease;
 }
 
 /* ========================
