@@ -49,6 +49,8 @@ const Community = () => {
   const [locationModal, setLocationModal] = useState({ isOpen: false });
   const [activeFilter, setActiveFilter] = useState("top");
 
+  // 사진 업로드 기능 주석처리
+  /*
   const handlePhotoUpload = (event) => {
     const files = Array.from(event.target.files);
     const validFiles = files.filter(file => 
@@ -76,6 +78,7 @@ const Community = () => {
     }
     setSelectedPhotos(selectedPhotos.filter(photo => photo.id !== photoId));
   };
+  */
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
@@ -191,7 +194,7 @@ const Community = () => {
       <Topnav onSearchClick={() => setIsSearchOpen(true)} />
       {isSearchOpen && <SearchModal onClose={() => setIsSearchOpen(false)} />}
 
-      <h2 className="community-title">커뮤니티에 오신 것을 환영합니다</h2>
+      <h2 className="community-title">오늘 본 공연, 같이 얘기해볼래?</h2>
 
       {/* 필터 탭 */}
       <div className="community-filters">
@@ -231,7 +234,8 @@ const Community = () => {
           />
         </div>
         
-        {/* 사진 미리보기 영역 */}
+        {/* 사진 미리보기 영역 - 주석처리 */}
+        {/*
         {selectedPhotos.length > 0 && (
           <div className="photo-preview-container">
             <div className="photo-preview-grid">
@@ -254,6 +258,7 @@ const Community = () => {
             </div>
           </div>
         )}
+        */}
 
         {/* 위치 미리보기 영역 */}
         {selectedLocation && (
@@ -278,6 +283,8 @@ const Community = () => {
         )}
 
         <div className="upload-options">
+          {/* 사진 업로드 버튼 주석처리 */}
+          {/*
           <input
             type="file"
             ref={fileInputRef}
@@ -289,6 +296,7 @@ const Community = () => {
           <button onClick={() => fileInputRef.current?.click()}>
             📷 Add Photo ({selectedPhotos.length}/5)
           </button>
+          */}
           <button onClick={() => setLocationModal({ isOpen: true })}>
             📍 Add Location
           </button>

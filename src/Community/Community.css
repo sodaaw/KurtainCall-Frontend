@@ -51,11 +51,12 @@ body {
 /* 커뮤니티 페이지 전체 배경 */
 .community-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
-  color: var(--text-light);
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  color: #f5f5f5;
   position: relative;
   overflow-x: hidden;
   padding: 20px;
+  font-family: 'Pretendard', sans-serif;
 }
 
 /* 커튼 배경 효과 */
@@ -110,11 +111,13 @@ body {
 
 /* 타이틀 */
 .community-title {
-  color: var(--gold);
+  color: #d4af37;
   font-size: 2rem;
+  font-weight: 700;
   text-align: center;
   margin: 20px 0 30px 0;
   position: relative;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .community-title::before {
@@ -144,9 +147,9 @@ body {
 }
 
 .filter-select {
-  background: var(--dark-light);
-  border: 2px solid var(--burgundy);
-  color: var(--text-light);
+  background: #2a2a2a;
+  border: 2px solid #8B0000;
+  color: #f5f5f5;
   padding: 8px 16px;
   border-radius: 25px;
   font-size: 14px;
@@ -156,14 +159,14 @@ body {
 
 .filter-select:focus {
   outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  border-color: #d4af37;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
 .tab {
-  background: var(--dark-light);
-  border: 2px solid var(--burgundy);
-  color: var(--text-light);
+  background: #2a2a2a;
+  border: 2px solid #8B0000;
+  color: #f5f5f5;
   padding: 8px 20px;
   border-radius: 25px;
   font-size: 14px;
@@ -180,7 +183,7 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
   transition: left 0.5s ease;
 }
 
@@ -189,27 +192,27 @@ body {
 }
 
 .tab:hover {
-  background: var(--burgundy);
-  border-color: var(--gold);
+  background: #8B0000;
+  border-color: #d4af37;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-gold);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
 }
 
 .tab.active {
-  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
-  border-color: var(--gold);
-  color: var(--gold);
-  box-shadow: var(--shadow-gold);
+  background: linear-gradient(135deg, #8B0000, #a52a2a);
+  border-color: #d4af37;
+  color: #d4af37;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
 }
 
 /* 업로드 박스 */
 .upload-box {
-  background: linear-gradient(135deg, var(--dark-light), var(--dark));
+  background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
   padding: 25px;
   border-radius: 20px;
-  border: 2px solid var(--burgundy);
+  border: 2px solid #8B0000;
   margin-bottom: 35px;
-  box-shadow: var(--shadow-dark);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
   position: relative;
   overflow: hidden;
   max-width: 1200px;
@@ -224,7 +227,7 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--gold), var(--burgundy), var(--gold));
+  background: linear-gradient(90deg, #d4af37, #8B0000, #d4af37);
   animation: curtainLine 4s ease-in-out infinite;
 }
 
@@ -238,15 +241,15 @@ body {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  border: 2px solid var(--gold);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  border: 2px solid #d4af37;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
 .upload-box textarea {
   width: 100%;
-  background: var(--dark);
-  border: 2px solid var(--burgundy);
-  color: var(--text-light);
+  background: #1a1a1a;
+  border: 2px solid #8B0000;
+  color: #f5f5f5;
   padding: 15px;
   border-radius: 15px;
   resize: none;
@@ -257,12 +260,12 @@ body {
 
 .upload-box textarea:focus {
   outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  border-color: #d4af37;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
 .upload-box textarea::placeholder {
-  color: var(--text-grey);
+  color: #9ca3af;
 }
 
 .upload-options {
@@ -274,9 +277,9 @@ body {
 }
 
 .upload-options button {
-  background: var(--dark);
-  border: 2px solid var(--burgundy);
-  color: var(--text-light);
+  background: #1a1a1a;
+  border: 2px solid #8B0000;
+  color: #f5f5f5;
   padding: 10px 18px;
   border-radius: 25px;
   cursor: pointer;
@@ -293,7 +296,7 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
   transition: left 0.5s ease;
 }
 
@@ -303,7 +306,7 @@ body {
   padding: 15px;
   background: rgba(26, 26, 26, 0.8);
   border-radius: 15px;
-  border: 1px solid var(--burgundy);
+  border: 1px solid #8B0000;
 }
 
 .photo-preview-grid {
@@ -318,14 +321,14 @@ body {
   aspect-ratio: 1;
   border-radius: 10px;
   overflow: hidden;
-  border: 2px solid var(--burgundy);
+  border: 2px solid #8B0000;
   transition: all 0.3s ease;
 }
 
 .photo-preview-item:hover {
-  border-color: var(--gold);
+  border-color: #d4af37;
   transform: scale(1.02);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
 .photo-preview {
@@ -390,7 +393,7 @@ body {
   padding: 15px;
   background: rgba(26, 26, 26, 0.8);
   border-radius: 15px;
-  border: 1px solid var(--burgundy);
+  border: 1px solid #8B0000;
 }
 
 .location-preview {
@@ -409,7 +412,7 @@ body {
 
 .location-icon {
   font-size: 1.2rem;
-  color: var(--gold);
+  color: #d4af37;
 }
 
 .location-details {
@@ -419,13 +422,13 @@ body {
 }
 
 .location-name {
-  color: var(--text-light);
+  color: #f5f5f5;
   font-weight: 600;
   font-size: 0.95rem;
 }
 
 .location-address {
-  color: var(--text-grey);
+  color: #9ca3af;
   font-size: 0.85rem;
 }
 
@@ -458,7 +461,7 @@ body {
   padding: 10px;
   background: rgba(139, 0, 0, 0.1);
   border-radius: 8px;
-  border-left: 3px solid var(--gold);
+  border-left: 3px solid #d4af37;
 }
 
 /* 위치 모달 스타일 */
@@ -1120,24 +1123,24 @@ body {
 }
 
 .upload-options button:hover {
-  background: var(--burgundy);
-  border-color: var(--gold);
+  background: #8B0000;
+  border-color: #d4af37;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-gold);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light)) !important;
-  border-color: var(--gold) !important;
-  color: var(--gold) !important;
+  background: linear-gradient(135deg, #8B0000, #a52a2a) !important;
+  border-color: #d4af37 !important;
+  color: #d4af37 !important;
   font-weight: 600;
-  box-shadow: var(--shadow-gold);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
 }
 
 .submit-btn:hover {
-  background: linear-gradient(135deg, var(--burgundy-light), var(--burgundy)) !important;
+  background: linear-gradient(135deg, #a52a2a, #8B0000) !important;
   transform: translateY(-3px) !important;
-  box-shadow: 0 6px 25px rgba(255, 215, 0, 0.4) !important;
+  box-shadow: 0 6px 25px rgba(212, 175, 55, 0.4) !important;
 }
 
 /* 메인 */
@@ -1159,12 +1162,15 @@ body {
   border: 2px solid #8B0000;
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  padding: 20px;
-  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
   transition: all 0.3s ease;
+  justify-content: space-between;
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  padding: 20px;
+  margin-bottom: 30px;
 }
 
 .review-card::before {
@@ -1202,9 +1208,9 @@ body {
 .review-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .review-user { 
@@ -1214,9 +1220,9 @@ body {
 }
 
 .review-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   background: linear-gradient(135deg, #8B0000, #a52a2a);
   border: 2px solid #d4af37;
   flex-shrink: 0;
@@ -1231,13 +1237,13 @@ body {
 .review-name { 
   font-weight: 700; 
   color: #f5f5f5; 
+  font-size: 1rem;
 }
 
 .review-badge {
-  font-size: 0.8rem;
-  margin-left: 6px;
+  font-size: 0.75rem;
   padding: 2px 6px;
-  border-radius: 10px;
+  border-radius: 6px;
   background: rgba(139, 0, 0, 0.2);
   color: #d4af37;
   border: 1px solid #d4af37;
@@ -1249,15 +1255,17 @@ body {
 }
 
 .review-rating { 
-  font-size: 1.1rem; 
+  font-size: 0.9rem; 
   letter-spacing: 1px; 
   color: #d4af37; 
+  margin-top: 2px; 
+  align-self: flex-start;
 }
 
 /* Body */
 .review-body {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 240px 1fr;
   gap: 16px;
   align-items: start;
   margin-top: 6px;
@@ -1271,7 +1279,6 @@ body {
   background: #1a1a1a;
   border: 2px dashed #8B0000;
   border-radius: 12px;
-  min-height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1332,14 +1339,16 @@ body {
   font-size: 0.98rem;
   color: #d1d5db;
   line-height: 1.55rem;
+  margin: 12px 0;
+  flex-grow: 1;
 }
 
 /* Footer */
 .review-footer {
-  margin-top: 12px;
+  margin-top: 8px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
 }
 
@@ -1366,37 +1375,30 @@ body {
 
 .review-actions { 
   display: flex; 
-  gap: 10px; 
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
 }
 
 .icon-btn {
-  border: 2px solid #8B0000;
-  background: #1a1a1a;
-  padding: 6px 10px;
-  border-radius: 10px;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
-  color: #f5f5f5;
+  color: #9ca3af;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
 }
 
 .icon-btn:hover { 
-  background: rgba(139, 0, 0, 0.2);
-  border-color: #d4af37;
-}
-
-/* 좋아요 버튼 특별 스타일 */
-.icon-btn.liked {
-  background: rgba(139, 0, 0, 0.4);
-  border-color: #d4af37;
-  color: #d4af37;
-  animation: heartBeat 0.3s ease-in-out;
-}
-
-@keyframes heartBeat {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+  background: rgba(139, 0, 0, 0.15);
+  color: #f5f5f5;
+  transform: translateY(-1px);
 }
 
 /* 하트 버튼 특별 스타일 */
@@ -1406,13 +1408,13 @@ body {
 }
 
 .icon-btn[title="like"]:hover {
-  background: rgba(139, 0, 0, 0.3);
-  border-color: #d4af37;
-  transform: scale(1.05);
+  background: rgba(139, 0, 0, 0.2);
+  color: #ff6b6b;
+  transform: translateY(-1px);
 }
 
 .icon-btn[title="like"]:active {
-  transform: scale(0.95);
+  transform: translateY(0);
 }
 
 /* 하트 클릭 애니메이션 */
@@ -1426,6 +1428,28 @@ body {
   50% { transform: scale(0.9); }
   75% { transform: scale(1.1); }
   100% { transform: scale(1); }
+}
+
+/* 댓글 버튼 특별 스타일 */
+.icon-btn[title="comment"]:hover {
+  background: rgba(139, 0, 0, 0.2);
+  color: #4ecdc4;
+  transform: translateY(-1px);
+}
+
+.icon-btn[title="comment"]:active {
+  transform: translateY(0);
+}
+
+/* 공유 버튼 특별 스타일 */
+.icon-btn[title="share"]:hover {
+  background: rgba(139, 0, 0, 0.2);
+  color: #f39c12;
+  transform: translateY(-1px);
+}
+
+.icon-btn[title="share"]:active {
+  transform: translateY(0);
 }
 
 /* 댓글 버튼 특별 스타일 */
@@ -1446,12 +1470,12 @@ body {
 
 .upcoming-events,
 .community-lists {
-  background: linear-gradient(135deg, var(--dark-light), var(--dark));
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
   padding: 20px;
   border-radius: 18px;
-  border: 2px solid var(--burgundy);
+  border: 2px solid #8B0000;
   margin-bottom: 25px;
-  box-shadow: var(--shadow-dark);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
   position: relative;
   overflow: hidden;
 }
@@ -1464,16 +1488,16 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--gold), var(--burgundy), var(--gold));
+  background: linear-gradient(90deg, #d4af37, #8B0000, #d4af37);
 }
 
 .upcoming-events h4,
 .community-lists h4 {
   font-size: 1.2rem;
-  color: var(--gold);
+  color: #d4af37;
   margin-bottom: 15px;
   margin-top: 10px;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 .upcoming-events ul,
@@ -1486,7 +1510,7 @@ body {
 .community-lists li {
   margin-bottom: 8px;
   list-style: none;
-  color: var(--text-light);
+  color: #f5f5f5;
   position: relative;
   padding-left: 20px;
 }
@@ -1496,7 +1520,7 @@ body {
   content: '✦';
   position: absolute;
   left: 0;
-  color: var(--gold);
+  color: #d4af37;
   font-size: 14px;
 }
 
@@ -1511,7 +1535,7 @@ body {
 
 .clickable-list-item:hover {
   background: rgba(139, 0, 0, 0.2);
-  color: var(--gold);
+  color: #d4af37;
   transform: translateX(5px);
 }
 
@@ -1521,10 +1545,10 @@ body {
 
 .view-all {
   margin-top: 15px;
-  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
-  color: var(--gold);
+  background: linear-gradient(135deg, #8B0000, #a52a2a);
+  color: #d4af37;
   padding: 10px 20px;
-  border: 2px solid var(--gold);
+  border: 2px solid #d4af37;
   border-radius: 20px;
   cursor: pointer;
   font-size: 14px;
@@ -1541,7 +1565,7 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
   transition: left 0.5s ease;
 }
 
@@ -1551,8 +1575,8 @@ body {
 
 .view-all:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-gold);
-  background: linear-gradient(135deg, var(--burgundy-light), var(--burgundy));
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+  background: linear-gradient(135deg, #a52a2a, #8B0000);
 }
 
 /* 각 게시판별 스타일 */
@@ -1564,9 +1588,9 @@ body {
 }
 
 .back-btn {
-  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
-  border: 2px solid var(--gold);
-  color: var(--gold);
+  background: linear-gradient(135deg, #8B0000, #a52a2a);
+  border: 2px solid #d4af37;
+  color: #d4af37;
   padding: 10px 20px;
   border-radius: 25px;
   cursor: pointer;
@@ -1576,9 +1600,9 @@ body {
 }
 
 .back-btn:hover {
-  background: linear-gradient(135deg, var(--burgundy-light), var(--burgundy));
+  background: linear-gradient(135deg, #a52a2a, #8B0000);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-gold);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
 }
 
 /* 국가별 게시판 스타일 */
@@ -1591,9 +1615,9 @@ body {
 }
 
 .country-filter {
-  background: var(--dark-light);
-  border: 2px solid var(--burgundy);
-  color: var(--text-light);
+  background: #2a2a2a;
+  border: 2px solid #8B0000;
+  color: #f5f5f5;
   padding: 10px 20px;
   border-radius: 25px;
   font-size: 14px;
@@ -1605,15 +1629,15 @@ body {
 }
 
 .country-filter:hover {
-  background: var(--burgundy);
-  border-color: var(--gold);
+  background: #8B0000;
+  border-color: #d4af37;
   transform: translateY(-2px);
 }
 
 .country-filter.active {
-  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
-  border-color: var(--gold);
-  color: var(--gold);
+  background: linear-gradient(135deg, #8B0000, #a52a2a);
+  border-color: #d4af37;
+  color: #d4af37;
 }
 
 .country-flag {
@@ -1646,7 +1670,7 @@ body {
 }
 
 .filter-group label {
-  color: var(--gold);
+  color: #d4af37;
   font-size: 14px;
   font-weight: 600;
 }
@@ -1659,8 +1683,8 @@ body {
 }
 
 .budget-badge {
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-  color: var(--dark);
+  background: linear-gradient(135deg, #d4af37, #B8860B);
+  color: #1a1a1a;
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 12px;
@@ -1668,13 +1692,13 @@ body {
 }
 
 .group-size {
-  color: var(--text-grey);
+  color: #9ca3af;
   font-size: 12px;
 }
 
 .interests-tags {
   margin-top: 10px;
-  color: var(--gold);
+  color: #d4af37;
   font-size: 13px;
 }
 
@@ -1688,7 +1712,7 @@ body {
 }
 
 .review-title {
-  color: var(--gold);
+  color: #d4af37;
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 10px 0;
@@ -1721,11 +1745,11 @@ body {
   border-radius: 15px;
   font-size: 12px;
   font-weight: 600;
-  border: 2px solid var(--gold);
+  border: 2px solid #d4af37;
 }
 
 .ticket-title {
-  color: var(--gold);
+  color: #d4af37;
   font-size: 1.3rem;
   font-weight: 600;
   margin: 0 0 15px 0;
@@ -1745,7 +1769,7 @@ body {
 }
 
 .discount-price {
-  color: var(--gold);
+  color: #d4af37;
   font-size: 18px;
   font-weight: 600;
 }
@@ -1755,7 +1779,7 @@ body {
   gap: 15px;
   margin-bottom: 15px;
   font-size: 13px;
-  color: var(--text-grey);
+  color: #9ca3af;
 }
 
 .ticket-details {
@@ -1782,18 +1806,18 @@ body {
 
 .stat-icon {
   font-size: 20px;
-  color: var(--gold);
+  color: #d4af37;
 }
 
 .stat-count {
   font-size: 18px;
   font-weight: 600;
-  color: var(--gold);
+  color: #d4af37;
 }
 
 .stat-name {
   font-size: 12px;
-  color: var(--text-light);
+  color: #f5f5f5;
   flex: 1;
 }
 
@@ -1812,8 +1836,8 @@ body {
 }
 
 .comment-modal {
-  background: linear-gradient(135deg, var(--dark-light), var(--dark));
-  border: 2px solid var(--burgundy);
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border: 2px solid #8B0000;
   border-radius: 20px;
   padding: 25px;
   width: 90%;
@@ -1831,7 +1855,7 @@ body {
 }
 
 .comment-modal-header h3 {
-  color: var(--gold);
+  color: #d4af37;
   margin: 0;
   font-size: 1.3rem;
 }
@@ -1839,7 +1863,7 @@ body {
 .close-btn {
   background: none;
   border: none;
-  color: var(--text-light);
+  color: #9ca3af;
   font-size: 24px;
   cursor: pointer;
   padding: 0;
@@ -1853,25 +1877,25 @@ body {
 }
 
 .close-btn:hover {
-  background: rgba(139, 0, 0, 0.3);
-  color: var(--gold);
+  background: rgba(139, 0, 0, 0.2);
+  color: #d4af37;
 }
 
 .post-title {
-  color: var(--text-grey);
+  color: #9ca3af;
   font-style: italic;
   margin-bottom: 15px;
   padding: 10px;
   background: rgba(139, 0, 0, 0.1);
   border-radius: 8px;
-  border-left: 3px solid var(--gold);
+  border-left: 3px solid #d4af37;
 }
 
 .comment-input {
   width: 100%;
-  background: var(--dark);
-  border: 2px solid var(--burgundy);
-  color: var(--text-light);
+  background: #1a1a1a;
+  border: 2px solid #8B0000;
+  color: #f5f5f5;
   padding: 15px;
   border-radius: 12px;
   resize: none;
@@ -1882,8 +1906,8 @@ body {
 
 .comment-input:focus {
   outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  border-color: #d4af37;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
 .comment-modal-actions {
@@ -1893,9 +1917,9 @@ body {
 }
 
 .cancel-btn {
-  background: var(--dark);
-  border: 2px solid var(--burgundy);
-  color: var(--text-light);
+  background: #1a1a1a;
+  border: 2px solid #8B0000;
+  color: #f5f5f5;
   padding: 10px 20px;
   border-radius: 20px;
   cursor: pointer;
@@ -1904,14 +1928,14 @@ body {
 }
 
 .cancel-btn:hover {
-  background: var(--burgundy);
-  border-color: var(--gold);
+  background: #8B0000;
+  border-color: #d4af37;
 }
 
 .submit-comment-btn {
-  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
-  border: 2px solid var(--gold);
-  color: var(--gold);
+  background: linear-gradient(135deg, #8B0000, #a52a2a);
+  border: 2px solid #d4af37;
+  color: #d4af37;
   padding: 10px 20px;
   border-radius: 20px;
   cursor: pointer;
@@ -1921,9 +1945,9 @@ body {
 }
 
 .submit-comment-btn:hover {
-  background: linear-gradient(135deg, var(--burgundy-light), var(--burgundy));
+  background: linear-gradient(135deg, #a52a2a, #8B0000);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-gold);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
 }
 
 /* 결제 페이지 스타일 */
@@ -1941,10 +1965,10 @@ body {
 }
 
 .payment-title {
-  color: var(--gold);
+  color: #d4af37;
   font-size: 2rem;
   margin: 0;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
 }
 
 .payment-content {
@@ -1954,15 +1978,15 @@ body {
 }
 
 .ticket-summary {
-  background: linear-gradient(135deg, var(--dark-light), var(--dark));
-  border: 2px solid var(--burgundy);
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border: 2px solid #8B0000;
   border-radius: 15px;
   padding: 25px;
-  box-shadow: var(--shadow-dark);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
 }
 
 .ticket-summary h3 {
-  color: var(--gold);
+  color: #d4af37;
   margin-bottom: 20px;
   font-size: 1.3rem;
 }
@@ -2007,15 +2031,15 @@ body {
 }
 
 .payment-form-container {
-  background: linear-gradient(135deg, var(--dark-light), var(--dark));
-  border: 2px solid var(--burgundy);
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border: 2px solid #8B0000;
   border-radius: 15px;
   padding: 25px;
-  box-shadow: var(--shadow-dark);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
 }
 
 .payment-form-container h3 {
-  color: var(--gold);
+  color: #d4af37;
   margin-bottom: 20px;
   font-size: 1.3rem;
 }
@@ -2033,15 +2057,15 @@ body {
 }
 
 .form-group label {
-  color: var(--text-light);
+  color: #f5f5f5;
   font-weight: 500;
   font-size: 14px;
 }
 
 .form-group input {
-  background: var(--dark);
-  border: 2px solid var(--burgundy);
-  color: var(--text-light);
+  background: #1a1a1a;
+  border: 2px solid #8B0000;
+  color: #f5f5f5;
   padding: 12px;
   border-radius: 8px;
   font-size: 14px;
@@ -2050,8 +2074,8 @@ body {
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  border-color: #d4af37;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
 .form-row {
@@ -2061,9 +2085,9 @@ body {
 }
 
 .payment-submit-btn {
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  background: linear-gradient(135deg, #d4af37, #B8860B);
   border: none;
-  color: var(--dark);
+  color: #1a1a1a;
   padding: 15px 30px;
   border-radius: 10px;
   font-size: 1.1rem;
@@ -2074,9 +2098,9 @@ body {
 }
 
 .payment-submit-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  background: linear-gradient(135deg, #B8860B, #d4af37);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
 }
 
 .payment-submit-btn:disabled {
@@ -2124,7 +2148,7 @@ body {
   }
   
   .upload-box,
-  .post-card {
+  .review-card {
     padding: 20px;
   }
 }
