@@ -112,14 +112,13 @@ export default function Topnav({ variant = "default" }) {
         <nav className="side-menu-nav">
           <ul>
             <li><a href="/" onClick={closeSideMenu}>홈</a></li>
+            <li><a href="/login" onClick={closeSideMenu}>로그인</a></li>
             <li><a href="/genre" onClick={closeSideMenu}>장르</a></li>
-            <li><a href="/community" onClick={closeSideMenu}>커뮤니티</a></li>
             <li><a href="/map" onClick={closeSideMenu}>지도</a></li>
             <li><a href="/biodata" onClick={closeSideMenu}>생체데이터</a></li>
             <li><a href="/test/my-test" onClick={closeSideMenu}>취향테스트</a></li>
             <li><a href="/ai-translation" onClick={closeSideMenu}>AI 번역</a></li>
-            <li><a href="/login" onClick={closeSideMenu}>로그인</a></li>
-            <li><a href="/signup" onClick={closeSideMenu}>회원가입</a></li>
+            <li><a href="/community" onClick={closeSideMenu}>커뮤니티</a></li>
           </ul>
         </nav>
 

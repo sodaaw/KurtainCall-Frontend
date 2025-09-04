@@ -366,9 +366,8 @@ const AITranslation = () => {
   // TTS API 호출 (백엔드 연동)
   const performTTS = async (text, language) => {
     try {
-      // 실제 백엔드 TTS API 호출 (실제 구현 시 아래 주석 해제)
-      /*
-      const response = await fetch('/api/tts', {
+      // 백엔드 TTS API 호출
+      const response = await fetch(`${API_BASE}/api/transcribe/tts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -383,26 +382,19 @@ const AITranslation = () => {
         throw new Error(`TTS 실패: ${response.status}`);
       }
       
-      const result = await response.json();
-      // TTS 오디오 재생 로직
-      const audio = new Audio(result.audioUrl);
-      await audio.play();
-      */
+      // 백엔드에서 오디오 파일 받아서 재생
+      const audioBlob = await response.blob();
+      await playAudioResult(audioBlob);
       
-      // 시뮬레이션: 실제 TTS 처리 시간을 고려한 지연
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('TTS 출력 완료:', text, '언어:', language);
-      
-      // 브라우저 내장 TTS 사용 (실제 TTS API가 없을 때)
+    } catch (error) {
+      console.error('TTS API 오류:', error);
+      // 폴백: 브라우저 내장 TTS 사용
       if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = language === 'ko' ? 'ko-KR' : 'en-US';
         utterance.rate = 0.9;
         speechSynthesis.speak(utterance);
       }
-    } catch (error) {
-      console.error('TTS API 오류:', error);
-      throw error;
     }
   };
 
