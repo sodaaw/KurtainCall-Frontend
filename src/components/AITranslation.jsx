@@ -15,7 +15,7 @@ const AITranslation = () => {
   const [inputText, setInputText] = useState(''); // 텍스트 입력
   const [fromLanguage, setFromLanguage] = useState('ko'); // 출발 언어
   const [toLanguage, setToLanguage] = useState('en'); // 도착 언어
-
+  const [ttsEnabled, setTtsEnabled] = useState(true); // TTS 활성화 (realtime에서는 '텍스트도 같이 출력' 토글로 사용)
   const [intermediateResults, setIntermediateResults] = useState({}); // 중간 결과들
   
   // 백엔드 연동 상태
@@ -145,20 +145,22 @@ const AITranslation = () => {
       const filename = await uploadAudioToBackend(audioBlob);
       setIntermediateResults(prev => ({ ...prev, stt: `음성 파일 업로드 완료: ${filename}` }));
       
-      // 2. STS(오디오)와 STT(텍스트) 병렬 요청 (항상 텍스트 출력)
-      const sttPromise = getSTTText(filename).catch((e) => {
-        // 서버가 STT 텍스트 엔드포인트를 제공하지 않을 수 있으므로 조용히 폴백
-        console.info('[info] STT 텍스트 엔드포인트 미지원 또는 404. 텍스트 출력 생략.', e?.message || e);
-        return '';
-      });
+      // 2. STS(오디오)와 STT(텍스트) 병렬 요청
+      const sttPromise = ttsEnabled
+        ? getSTTText(filename).catch((e) => {
+            // 서버가 STT 텍스트 엔드포인트를 제공하지 않을 수 있으므로 조용히 폴백
+            console.info('[info] STT 텍스트 엔드포인트 미지원 또는 404. 텍스트 출력 생략.', e?.message || e);
+            return '';
+          })
+        : Promise.resolve('');
 
       const [translatedAudioBlob, sttText] = await Promise.all([
         getSTSResult(filename), // 오디오(항상 재생)
         sttPromise
       ]);
 
-      // 3. 텍스트가 있으면 TT(텍스트 번역) 수행 및 화면 표시 (항상 텍스트 출력)
-      if (sttText) {
+      // 3. 텍스트가 있으면 TT(텍스트 번역) 수행 및 화면 표시
+      if (sttText && ttsEnabled) {
         setIntermediateResults(prev => ({ ...prev, stt: `음성 인식 텍스트: ${sttText}` }));
         const finalTranslatedText = await performTranslation(sttText, fromLanguage, toLanguage);
         setIntermediateResults(prev => ({ ...prev, translation: finalTranslatedText }));
@@ -306,8 +308,9 @@ const AITranslation = () => {
       const translatedText = await performTranslation(inputText, fromLanguage, toLanguage);
       setTranslationResult(translatedText);
       
-      // 항상 TTS 출력
-      await performTTS(translatedText, toLanguage);
+      if (ttsEnabled) {
+        await performTTS(translatedText, toLanguage);
+      }
     } catch (error) {
       console.error('텍스트 번역 오류:', error);
       setTranslationResult('번역 중 오류가 발생했습니다.');
@@ -363,9 +366,8 @@ const AITranslation = () => {
   // TTS API 호출 (백엔드 연동)
   const performTTS = async (text, language) => {
     try {
-      // 실제 백엔드 TTS API 호출 (실제 구현 시 아래 주석 해제)
-      /*
-      const response = await fetch('/api/tts', {
+      // 백엔드 TTS API 호출
+      const response = await fetch(`${API_BASE}/api/transcribe/tts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -380,26 +382,19 @@ const AITranslation = () => {
         throw new Error(`TTS 실패: ${response.status}`);
       }
       
-      const result = await response.json();
-      // TTS 오디오 재생 로직
-      const audio = new Audio(result.audioUrl);
-      await audio.play();
-      */
+      // 백엔드에서 오디오 파일 받아서 재생
+      const audioBlob = await response.blob();
+      await playAudioResult(audioBlob);
       
-      // 시뮬레이션: 실제 TTS 처리 시간을 고려한 지연
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('TTS 출력 완료:', text, '언어:', language);
-      
-      // 브라우저 내장 TTS 사용 (실제 TTS API가 없을 때)
+    } catch (error) {
+      console.error('TTS API 오류:', error);
+      // 폴백: 브라우저 내장 TTS 사용
       if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = language === 'ko' ? 'ko-KR' : 'en-US';
         utterance.rate = 0.9;
         speechSynthesis.speak(utterance);
       }
-    } catch (error) {
-      console.error('TTS API 오류:', error);
-      throw error;
     }
   };
 
@@ -449,7 +444,17 @@ const AITranslation = () => {
             </div>
           </div>
 
-          {/* TTS 토글 - 제거됨, 항상 텍스트 출력 */}
+          {/* TTS 토글 */}
+          <div className="tts-toggle">
+            <label>
+              <input 
+                type="checkbox" 
+                checked={ttsEnabled} 
+                onChange={(e) => setTtsEnabled(e.target.checked)}
+              />
+              {selectedMode === 'text' ? '🔊 음성도 같이 출력' : '📝 텍스트도 같이 출력'}
+            </label>
+          </div>
 
           {/* 입력 영역 */}
           <div className="input-section">
