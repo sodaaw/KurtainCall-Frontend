@@ -11,13 +11,13 @@ import "./Main.css";
 // 카테고리 버튼 데이터 (API에서 받아올 예정)
 const DEFAULT_CATS = [
   { 
-    label: "Comedy", 
+    label: "코미디", 
     slug: "comedy", 
     //icon: "😄",
     description: "웃음과 유머"
   },
   { 
-    label: "Musical", 
+    label: "뮤지컬", 
     slug: "musical", 
     //icon: "🎵",
     description: "음악과 노래"

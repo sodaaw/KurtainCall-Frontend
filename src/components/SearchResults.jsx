@@ -18,14 +18,43 @@ export default function SearchResults() {
     if (!q) return;
     setLoading(true);
     setError("");
+    
+    // 백엔드 검색 시도
     searchAPI.search(q, 30)
-      .then(({ data }) => setItems(data.items || data.results || []))
-      .catch((e) => {
-        const msg = e?.response?.data?.message || e?.message || "검색 중 오류가 발생했습니다.";
-        setError(msg);
-        setItems([]);
+      .then(({ data }) => {
+        const backendResults = data.items || data.results || [];
+        setItems(backendResults);
+        setLoading(false);
       })
-      .finally(() => setLoading(false));
+      .catch((e) => {
+        console.log('백엔드 검색 실패, 로컬 검색 시도:', e.message);
+        
+        // 백엔드 검색 실패 시 로컬 검색 시도
+        // 전체 연극 데이터를 가져와서 로컬에서 필터링
+        fetch('https://re-local.onrender.com/api/play')
+          .then(res => res.json())
+          .then(data => {
+            const allPlays = Array.isArray(data) ? data : (data?.items || []);
+            const filteredPlays = allPlays.filter(play => {
+              const searchTerm = q.toLowerCase();
+              return (
+                play.title?.toLowerCase().includes(searchTerm) ||
+                play.category?.toLowerCase().includes(searchTerm) ||
+                play.location?.address?.toLowerCase().includes(searchTerm) ||
+                play.location?.areaName?.toLowerCase().includes(searchTerm)
+              );
+            });
+            setItems(filteredPlays);
+            setLoading(false);
+          })
+          .catch(localError => {
+            console.error('로컬 검색도 실패:', localError);
+            const msg = e?.response?.data?.message || e?.message || "검색 중 오류가 발생했습니다.";
+            setError(msg);
+            setItems([]);
+            setLoading(false);
+          });
+      });
   }, [q]);
 
   // 하이라이트(간단)
