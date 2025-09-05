@@ -136,13 +136,13 @@ function RecommendedShows({ plays, isLoading, error }) {
       handleNext();
     }, 5000);
     return () => clearInterval(timer);
-  }, [total, currentIndex]);
+  }, [total]);
 
   const handleNext = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % (total - 2));
+      setCurrentIndex((prev) => (prev + 1) % total);
       setIsTransitioning(false);
     }, 800);
   };
@@ -151,7 +151,7 @@ function RecommendedShows({ plays, isLoading, error }) {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setTimeout(() => {
-      setCurrentIndex((prev) => (prev - 1 + (total - 2)) % (total - 2));
+      setCurrentIndex((prev) => (prev - 1 + total) % total);
       setIsTransitioning(false);
     }, 800);
   };
