@@ -4,111 +4,62 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Topnav from './Topnav';
 import './TestResults.css';
 
-// (A) 허용 카테고리(6종)
-const VALID_CATS = ['Comedy', 'Romance', 'Horror', 'Tragedy', 'Thriller', 'Musical'];
+// (A) 허용 카테고리(4종)
+const VALID_CATS = ['Sentinel', 'Guardian', 'Navigator', 'Unaware'];
 
-// (B) 캐릭터별 가중치 (문항 1~20, 무응답=4점)
+// (B) 안전 유형별 가중치 (문항 1~20, 무응답=4점)
 const WEIGHTS = {
-  Romeo:        {1:2, 2:2, 11:1},
-  Hamlet:       {3:2, 4:2, 14:1, 17:1},
-  Macbeth:      {5:2, 6:1, 15:1, 16:1, 17:1},
-  LadyMacbeth:  {6:2, 5:1, 15:1, 14:1},
-  Viola:        {9:2, 11:1, 7:1},
-  Beatrice:     {7:2, 8:2, 9:1},
-  Puck:         {10:2, 11:2, 16:1},
-  Cordelia:     {12:2, 20:2, 15:1},
-  Cyrano:       {8:2, 4:1, 7:1, 14:1},
-  JeanValjean:  {13:2, 12:1, 20:1, 15:1},
+  Sentinel:     {1:2, 2:2, 3:2, 4:2, 5:2, 6:2, 7:2, 8:2, 9:2, 10:2, 11:2, 12:2, 17:2, 18:2, 19:2, 20:2},
+  Guardian:     {6:3, 15:3, 18:2, 20:2, 1:1, 2:1, 5:1, 7:1, 8:1, 9:1, 10:1, 11:1, 12:1, 17:1, 19:1},
+  Navigator:    {13:3, 17:2, 19:2, 1:1, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1, 9:1, 10:1, 11:1, 12:1, 18:1, 20:1},
+  Unaware:      {14:3, 15:2, 16:3, 1:1, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1, 9:1, 10:1, 11:1, 12:1, 13:1, 17:1, 18:1, 19:1, 20:1}
 };
 
-// (C) 캐릭터 메타 + 추천 카테고리(해시태그로 노출)
+// (C) 안전 유형 메타 + 추천 카테고리(해시태그로 노출)
 const CHARACTER_META = {
-  Romeo: {
-    title: '로미오형 – 즉흥적 낭만주의자',
-    why: '감정이 먼저 움직이고, 빠르게 달리는 로맨스에 심장이 바로 반응한다고 하셨어요. 큰 감정선이 치고 나가는 이야기에서 가장 행복해지는 타입이에요.',
-    mood: ['로맨틱 드라마', '청춘극', '뮤지컬'],
+  Sentinel: {
+    title: 'Sentinel (경계자) – 위험 신호에 민감한 예방형',
+    why: '혼잡한 곳에서 불안감을 느끼고, 주변 상황 변화를 민감하게 감지한다고 답하셨어요. 비상구 위치 확인부터 안전 장치까지 모든 것을 미리 체크하는 예방적 성향이 강한 타입이에요.',
+    mood: ['위험 감지', '예방 행동', '안전 체크'],
     imageSrc: '/images/1. 로미오.png',
-    // ← 결과 하단 해시태그에 표시될 추천 카테고리
-    recommend: ['Romance', 'Tragedy', 'Musical'],
+    recommend: ['Sentinel'],
     tip: (q18, q19) => ({
-      seat: q19 >= 5 ? '근거리(감정선·호흡)' : '중간열(균형)',
-      subtitle: q18 <= 3 ? '자막/해설 권장' : '자막 선택'
+      seat: '출입구 근처',
+      subtitle: '스마트 알림 앱 적극 활용'
     }),
   },
-  Hamlet: {
-    title: '햄릿형 – 깊이 사색하는 관객',
-    why: '길어도 좋은 대사와 생각할 거리가 많은 작품을 좋아한다고 하셨죠. 인물의 마음 결을 따라가며 의미를 오래 씹는 편이에요.',
-    mood: ['심리극', '고전 비극'],
+  Guardian: {
+    title: 'Guardian (수호자) – 공동체 안전을 중시하는 타입',
+    why: '친구나 가족의 안전을 걱정하고, 사고 뉴스를 보면 대비책을 생각한다고 하셨어요. 자신보다 주변 사람들의 안전을 더 의식하는 공동체형 안전 의식이 강한 타입이에요.',
+    mood: ['공동체 안전', '타인 배려', '사회적 책임'],
     imageSrc: '/images/2. 햄릿.png',
-    recommend: ['Tragedy'],
+    recommend: ['Guardian'],
     tip: (q18, q19) => ({
-      seat: q19 >= 5 ? '중전방 중앙' : '중간열',
-      subtitle: q18 <= 3 ? '자막 권장' : '자막 선택'
+      seat: '중앙 위치',
+      subtitle: '가족/친구와 함께 이용'
     }),
   },
-  Macbeth: {
-    title: '맥베스형 – 강렬한 속도·야망 서사 선호',
-    why: '팽팽한 긴장감과 거침없는 연출에 쾌감을 느낀다고 답하셨어요. 템포 빠르고 에너지 높은 이야기에서 몰입이 최대로 올라갑니다.',
-    mood: ['스릴러 드라마', '다크 클래식'],
+  Navigator: {
+    title: 'Navigator (대처가) – 위기 상황에서 침착한 타입',
+    why: '위험한 상황에서 침착하게 행동할 자신이 있고, 스마트 기기로 경보를 받는다면 적극 활용하겠다고 답하셨어요. 평소 대비는 소홀하지만 위기 상황에서는 냉정한 판단력을 가진 타입이에요.',
+    mood: ['침착함', '기술 활용', '위기 대응'],
     imageSrc: '/images/3. 맥베스.png',
-    recommend: ['Thriller', 'Tragedy', 'Horror'],
-    tip: (q18) => ({ seat: '중간열', subtitle: q18 <= 3 ? '자막 권장' : '자막 선택' }),
+    recommend: ['Navigator'],
+    tip: (q18) => ({ 
+      seat: '유동적 위치', 
+      subtitle: '스마트 기기 필수' 
+    }),
   },
-  LadyMacbeth: {
-    title: '레이디 맥베스형 – 주도권과 심리의 파고',
-    why: '욕망과 권력의 심리전, 선택의 무게에 끌린다고 하셨어요. 인물의 결단이 판을 뒤집는 순간에 강하게 몰입하는 타입이에요.',
-    mood: ['심리극', '권력·도덕 갈등'],
+  Unaware: {
+    title: 'Unaware (안전 불감형) – 위험을 과소평가하는 타입',
+    why: '사람 많은 곳에서도 "설마 사고 나겠어?"라고 대수롭지 않게 여기고, 군중 속에서 신체 접촉이 잦아도 별로 신경 안 쓴다고 하셨어요. 위험을 과소평가하는 안전 불감증이 있는 타입이에요.',
+    mood: ['안전 불감', '과소평가', '무관심'],
     imageSrc: '/images/4. 레이디 맥베스.png',
-    recommend: ['Thriller', 'Tragedy'],
-    tip: (q18, q19) => ({ seat: q19 >= 5 ? '근·중거리' : '중간열', subtitle: q18 <= 3 ? '자막 권장' : '자막 선택' }),
-  },
-  Viola: {
-    title: '비올라형(〈십이야〉) – 재치와 변장의 코미디 감각',
-    why: '가볍고 유쾌한 톤, 위트 있는 상황극이 취향이라고 하셨죠. 정체성 뒤바뀜과 오해 게임에서 오는 유머를 특히 즐깁니다.',
-    mood: ['로맨틱 코미디', '상황극'],
-    imageSrc: '/images/5. 비올라형.png',
-    recommend: ['Comedy', 'Romance'],
-    tip: (q18) => ({ seat: '사이드 중간열', subtitle: q18 <= 3 ? '해설 추천' : '자막 선택' }),
-  },
-  Beatrice: {
-    title: '베아트리체형(〈헛소동〉) – 말맛과 티키타카 애호가',
-    why: '말맛 좋은 대사, 빠른 티키타카에 설렌다고 하셨어요. 재치 있는 설전과 밀당 로맨스에서 재미를 가장 크게 느끼는 타입이에요.',
-    mood: ['코미디 오브 매너스', '대사 위주 로코'],
-    imageSrc: '/images/6. 베아트라체.png',
-    recommend: ['Comedy', 'Romance'],
-    tip: (q18) => ({ seat: '중간열', subtitle: q18 <= 3 ? '해설 추천' : '자막 선택' }),
-  },
-  Puck: {
-    title: '퍽형(〈한여름밤의 꿈〉) – 판타지·무대마술 애호가',
-    why: '시각적인 장치와 환상적인 분위기에 끌린다고 하셨어요. 몸으로 느끼는 리듬과 무대의 ‘마술’이 있는 작품을 좋아합니다.',
-    mood: ['판타지극', '넌버벌'],
-    imageSrc: '/images/7. 퍽.png',
-    recommend: ['Comedy', 'Musical'],
-    tip: () => ({ seat: '중·후열(전경)', subtitle: '자막 불필요' }),
-  },
-  Cordelia: {
-    title: '코델리아형(〈리어왕〉) – 진정성과 가족 드라마 지향',
-    why: '관계의 진심, 책임과 윤리 같은 주제가 마음에 남는다고 하셨어요. 조용하지만 묵직한 감정선을 오래 품는 타입이에요.',
-    mood: ['가족 비극', '인물 드라마'],
-    imageSrc: '/images/8. 코델리아.png',
-    recommend: ['Tragedy'],
-    tip: (q18) => ({ seat: '근거리', subtitle: q18 <= 3 ? '자막 권장' : '자막 선택' }),
-  },
-  Cyrano: {
-    title: '시라노형 – 언어와 낭만의 미학',
-    why: '시적인 표현과 우아한 낭만을 즐긴다고 하셨죠. 말의 리듬과 운율, 고전적 매무새에서 큰 만족을 느낍니다.',
-    mood: ['낭만드라마', '클래식 코미디'],
-    imageSrc: '/images/9. 시라노.png',
-    recommend: ['Romance', 'Comedy'],
-    tip: (q18) => ({ seat: '중간열(대사 밸런스)', subtitle: q18 <= 3 ? '자막 권장' : '자막 선택' }),
-  },
-  JeanValjean: {
-    title: '장 발장형(〈레 미제라블〉) – 구원·도덕의 휴먼 드라마',
-    why: '선한 의지와 구원의 이야기에 약하다고 하셨어요. 사람을 살리는 선택과 눈물 포인트에서 깊게 흔들리는 타입이에요.',
-    mood: ['휴먼 드라마', '대형 뮤지컬'],
-    imageSrc: '/images/10. 장발장.png',
-    recommend: ['Musical', 'Tragedy'],
-    tip: (q18) => ({ seat: '중·후열(스케일)', subtitle: q18 <= 3 ? '해설 추천' : '자막 선택' }),
+    recommend: ['Unaware'],
+    tip: (q18, q19) => ({ 
+      seat: '어디든 상관없음', 
+      subtitle: '기초 안전 교육 필요' 
+    }),
   },
 };
 
@@ -186,7 +137,7 @@ const TestResults = () => {
       <div className="results-hero">
         <div className="hero-text">
           <h1 className="hero-title">
-            당신의 연극 캐릭터는<br />
+            당신의 안전 유형은<br />
             <span className="hero-emph">{resultMeta.title}</span>
           </h1>
         </div>
@@ -206,13 +157,13 @@ const TestResults = () => {
           <li><strong>왜 이 결과?</strong> {resultMeta.why}</li>
           <li><strong>추천 무드</strong> : {resultMeta.mood.join(' · ')}</li>
           {tips && (
-            <li>
-              <strong>관람 팁</strong> : 좌석 {tips.seat} · {tips.subtitle}
-            </li>
+                      <li>
+            <strong>안전 팁</strong> : 위치 {tips.seat} · {tips.subtitle}
+          </li>
           )}
           <li>
-            <strong>캐릭터 특징</strong> : {resultMeta.title}은(는) 연극을 통해 새로운 경험과
-            감정을 찾는 타입이에요. 무대 위의 이야기에 깊이 몰입할 수 있는 관객이 될 거예요!
+            <strong>안전 특징</strong> : {resultMeta.title}은(는) 군중 안전에 대한 인식과 대응 방식이
+            독특한 타입이에요. 스마트 매트와 같은 안전 기술을 통해 더 나은 안전 환경을 만들어갈 수 있어요!
           </li>
         </ul>
       </div>
@@ -227,19 +178,19 @@ const TestResults = () => {
         </button>
       </div>
 
-      {/* === 추천 카테고리 해시태그 (맨 아래) === */}
+      {/* === 추천 안전 유형 해시태그 (맨 아래) === */}
       <div className="recommend-hashtags" style={{ marginTop: 28 }}>
-        <h3 className="hashtags-title">추천 카테고리</h3>
-        <div className="hashtag-wrap" role="group" aria-label="추천 카테고리">
+        <h3 className="hashtags-title">안전 유형 정보</h3>
+        <div className="hashtag-wrap" role="group" aria-label="안전 유형 정보">
           {recCats.length === 0 ? (
-            <span style={{ opacity: 0.7 }}>추천 카테고리가 없습니다.</span>
+            <span style={{ opacity: 0.7 }}>추천 안전 유형이 없습니다.</span>
           ) : (
             recCats.map((cat) => (
               <button
                 key={cat}
                 className="hashtag"
                 onClick={() => goCategory(cat)}
-                aria-label={`${cat} 카테고리로 이동`}
+                aria-label={`${cat} 안전 유형 정보`}
               >
                 #{cat}
               </button>
