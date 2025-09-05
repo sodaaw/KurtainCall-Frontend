@@ -286,10 +286,6 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
       {/* 검색바 */}
       <div className="search-bar">
         <form className="search-input-wrapper" onSubmit={handleSearch}>
-          <svg className="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
-          </svg>
           <input 
             type="text" 
             placeholder="원하는 장르 또는 작품을 검색해보세요." 
@@ -297,6 +293,18 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+          <button type="submit" className="search-submit-btn">
+            <svg 
+              className="search-icon-svg"  
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="1.5"
+            >
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+          </button>
         </form>
       </div>
 

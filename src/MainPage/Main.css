@@ -640,6 +640,13 @@
   margin: -10px 0;
 }
 
+.search-icon-svg {
+  width: 14px;   
+  height: 14px;
+  stroke-width: 1.5;
+  color: #FFF4B7;
+}
+
 /* 인풋 정리 */
 .search-input {
   flex: 1;
@@ -663,11 +670,9 @@
 }
 
 .search-submit-btn {
-  background: linear-gradient(135deg, rgba(255, 244, 183, 0.1), rgba(255, 244, 183, 0.05));
-  border: 1px solid rgba(255, 244, 183, 0.3);
+  background: none;
+  border: none;
   color: rgba(255, 244, 183, 0.8);
-  padding: 8px;
-  border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
