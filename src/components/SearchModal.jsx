@@ -8,7 +8,7 @@ export default function SearchModal({ onClose }) {
   const navigate = useNavigate();
 
   const trendingKeywords = useMemo(
-    () => ["대학로", "Romance", "Comedy", "뱀프 X 헌터", "종로구"], []
+    () => ["대학로", "코미디", "뮤지컬", "로맨스", "뱀프 X 헌터", "종로구", "드라마", "액션"], []
   );
 
   const goSearch = (kw) => {

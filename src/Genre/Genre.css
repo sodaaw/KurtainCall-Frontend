@@ -1180,7 +1180,7 @@
 
 @media (max-width: 768px) {
   .genre-tabs {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     gap: 15px;
     margin: 20px 0;
