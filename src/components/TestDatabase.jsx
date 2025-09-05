@@ -9,87 +9,39 @@ const TestDatabase = () => {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [filterCharacter, setFilterCharacter] = useState('all');
 
-  // 10가지 캐릭터 정보 (TestResults와 일치)
+  // 4가지 안전 유형 정보 (TestResults와 일치)
   const characterInfo = {
-    Romeo: {
-      emoji: '💕',
-      name: '로미오형',
-      description: '즉흥적 낭만주의자로, 감정이 먼저 움직이고 빠르게 달리는 로맨스에 심장이 바로 반응합니다. 큰 감정선이 치고 나가는 이야기에서 가장 행복해집니다.',
-      traits: ['즉흥적', '낭만적', '감정적', '로맨틱'],
-      recommendedGenres: ['로맨틱 드라마', '청춘극', '뮤지컬'],
-      recommendedPlays: ['로미오와 줄리엣', '청춘극', '로맨틱 뮤지컬']
+    Sentinel: {
+      emoji: '🔍',
+      name: 'Sentinel (경계자)',
+      description: '위험 신호에 아주 민감하고, 사전 대비를 중시하는 타입입니다. 빠른 감지와 예방적 행동이 강점이지만, 지나친 불안이 피로로 이어질 수 있어 균형 잡힌 태도가 필요합니다.',
+      traits: ['위험 감지', '예방 행동', '안전 체크', '민감함'],
+      recommendedGenres: ['스마트 알림', '예방 시스템', '안전 체크'],
+      recommendedPlays: ['출입구 근처', '안전 장치 활용', '스마트 앱 적극 사용']
     },
-    Hamlet: {
-      emoji: '🤔',
-      name: '햄릿형',
-      description: '깊이 사색하는 관객으로, 길어도 좋은 대사와 생각할 거리가 많은 작품을 좋아합니다. 인물의 마음 결을 따라가며 의미를 오래 씹는 편입니다.',
-      traits: ['사색적', '깊이 있는', '철학적', '성찰적'],
-      recommendedGenres: ['심리극', '고전 비극', '철학극'],
-      recommendedPlays: ['햄릿', '오이디푸스', '맥베스']
+    Guardian: {
+      emoji: '🛡️',
+      name: 'Guardian (수호자)',
+      description: '자신보다 주변 사람들의 안전을 더 의식하는 공동체형입니다. 지역사회 안전 네트워크에 기여할 수 있지만, 본인 스스로의 안전 대비를 놓칠 수 있어 자기 보호 습관 강화가 필요합니다.',
+      traits: ['공동체 안전', '타인 배려', '사회적 책임', '수호자'],
+      recommendedGenres: ['가족 안전', '공동체 시스템', '사회적 책임'],
+      recommendedPlays: ['중앙 위치', '가족/친구와 함께', '공동체 참여']
     },
-    Macbeth: {
-      emoji: '⚡',
-      name: '맥베스형',
-      description: '강렬한 속도와 야망 서사를 선호하며, 팽팽한 긴장감과 거침없는 연출에 쾌감을 느낍니다. 템포 빠르고 에너지 높은 이야기에서 몰입이 최대로 올라갑니다.',
-      traits: ['강렬한', '속도감', '야망적', '긴장감'],
-      recommendedGenres: ['스릴러 드라마', '다크 클래식', '액션극'],
-      recommendedPlays: ['맥베스', '리어왕', '스릴러 작품']
+    Navigator: {
+      emoji: '🧭',
+      name: 'Navigator (대처가)',
+      description: '위험 상황에서는 침착하게 행동하지만, 평소 대비는 소홀한 편입니다. 위기 상황에서의 침착함이 강점이지만, 사전 인식과 예방 행동이 부족해 훈련과 기술 활용을 생활화할 필요가 있습니다.',
+      traits: ['침착함', '기술 활용', '위기 대응', '대처력'],
+      recommendedGenres: ['스마트 기기', '위기 대응', '기술 활용'],
+      recommendedPlays: ['유동적 위치', '스마트 기기 필수', '위기 대응 훈련']
     },
-    LadyMacbeth: {
-      emoji: '👑',
-      name: '레이디 맥베스형',
-      description: '주도권과 심리의 파고를 선호하며, 욕망과 권력의 심리전, 선택의 무게에 끌립니다. 인물의 결단이 판을 뒤집는 순간에 강하게 몰입합니다.',
-      traits: ['주도적', '심리적', '권력적', '결단적'],
-      recommendedGenres: ['심리극', '권력 드라마', '도덕극'],
-      recommendedPlays: ['맥베스', '권력 드라마', '심리 스릴러']
-    },
-    Viola: {
-      emoji: '🎭',
-      name: '비올라형',
-      description: '재치와 변장의 코미디 감각을 가진 타입으로, 가볍고 유쾌한 톤, 위트 있는 상황극이 취향입니다. 정체성 뒤바뀜과 오해 게임에서 오는 유머를 특히 즐깁니다.',
-      traits: ['재치있는', '유쾌한', '위트있는', '상황극'],
-      recommendedGenres: ['로맨틱 코미디', '상황극', '가벼운 코미디'],
-      recommendedPlays: ['십이야', '로맨틱 코미디', '상황극']
-    },
-    Beatrice: {
-      emoji: '💬',
-      name: '베아트리체형',
-      description: '말맛과 티키타카를 애호하는 타입으로, 말맛 좋은 대사, 빠른 티키타카에 설렙니다. 재치 있는 설전과 밀당 로맨스에서 재미를 가장 크게 느낍니다.',
-      traits: ['말맛있는', '티키타카', '재치있는', '밀당'],
-      recommendedGenres: ['코미디 오브 매너스', '대사 위주 로코', '밀당극'],
-      recommendedPlays: ['헛소동', '대사 위주 코미디', '밀당 로맨스']
-    },
-    Puck: {
-      emoji: '✨',
-      name: '퍽형',
-      description: '판타지와 무대마술을 애호하는 타입으로, 시각적인 장치와 환상적인 분위기에 끌립니다. 몸으로 느끼는 리듬과 무대의 마술이 있는 작품을 좋아합니다.',
-      traits: ['판타지적', '마술적', '시각적', '환상적'],
-      recommendedGenres: ['판타지극', '넌버벌', '마술극'],
-      recommendedPlays: ['한여름밤의 꿈', '판타지 작품', '넌버벌']
-    },
-    Cordelia: {
-      emoji: '💝',
-      name: '코델리아형',
-      description: '진정성과 가족 드라마를 지향하는 타입으로, 관계의 진심, 책임과 윤리 같은 주제가 마음에 남습니다. 조용하지만 묵직한 감정선을 오래 품는 편입니다.',
-      traits: ['진정성', '가족적', '책임감', '묵직한'],
-      recommendedGenres: ['가족 비극', '인물 드라마', '윤리극'],
-      recommendedPlays: ['리어왕', '가족 드라마', '인물극']
-    },
-    Cyrano: {
-      emoji: '📝',
-      name: '시라노형',
-      description: '언어와 낭만의 미학을 추구하는 타입으로, 시적인 표현과 우아한 낭만을 즐깁니다. 말의 리듬과 운율, 고전적 매무새에서 큰 만족을 느낍니다.',
-      traits: ['시적', '낭만적', '우아한', '고전적'],
-      recommendedGenres: ['낭만드라마', '클래식 코미디', '시극'],
-      recommendedPlays: ['시라노 드 베르주라크', '낭만 드라마', '시극']
-    },
-    JeanValjean: {
-      emoji: '🕊️',
-      name: '장 발장형',
-      description: '구원과 도덕의 휴먼 드라마를 선호하는 타입으로, 선한 의지와 구원의 이야기에 약합니다. 사람을 살리는 선택과 눈물 포인트에서 깊게 흔들립니다.',
-      traits: ['구원적', '도덕적', '휴먼', '감동적'],
-      recommendedGenres: ['휴먼 드라마', '대형 뮤지컬', '구원극'],
-      recommendedPlays: ['레 미제라블', '휴먼 드라마', '구원의 이야기']
+    Unaware: {
+      emoji: '😅',
+      name: 'Unaware (안전 불감형)',
+      description: '"설마 나한테?"라는 태도로 위험을 과소평가하는 타입입니다. 군중 속에서도 불안이 적고 스트레스가 덜하지만, 안전 불감증은 대형사고로 직결될 수 있어 기초 안전 교육과 기술 기반 알림이 꼭 필요합니다.',
+      traits: ['안전 불감', '과소평가', '무관심', '낙관적'],
+      recommendedGenres: ['기초 안전 교육', '기술 기반 알림', '안전 인식 개선'],
+      recommendedPlays: ['어디든 상관없음', '기초 안전 교육', '스마트 알림 활용']
     }
   };
 
@@ -129,18 +81,12 @@ const TestDatabase = () => {
     ? testResults 
     : testResults.filter(result => result.topCharacter === filterCharacter);
 
-  // 캐릭터별 통계 (TestResults의 10개 캐릭터에 맞춤)
+  // 안전 유형별 통계 (TestResults의 4개 유형에 맞춤)
   const characterStats = {
-    Romeo: testResults.filter(r => r.topCharacter === 'Romeo').length,
-    Hamlet: testResults.filter(r => r.topCharacter === 'Hamlet').length,
-    Macbeth: testResults.filter(r => r.topCharacter === 'Macbeth').length,
-    LadyMacbeth: testResults.filter(r => r.topCharacter === 'LadyMacbeth').length,
-    Viola: testResults.filter(r => r.topCharacter === 'Viola').length,
-    Beatrice: testResults.filter(r => r.topCharacter === 'Beatrice').length,
-    Puck: testResults.filter(r => r.topCharacter === 'Puck').length,
-    Cordelia: testResults.filter(r => r.topCharacter === 'Cordelia').length,
-    Cyrano: testResults.filter(r => r.topCharacter === 'Cyrano').length,
-    JeanValjean: testResults.filter(r => r.topCharacter === 'JeanValjean').length
+    Sentinel: testResults.filter(r => r.topCharacter === 'Sentinel').length,
+    Guardian: testResults.filter(r => r.topCharacter === 'Guardian').length,
+    Navigator: testResults.filter(r => r.topCharacter === 'Navigator').length,
+    Unaware: testResults.filter(r => r.topCharacter === 'Unaware').length
   };
 
   const handleCharacterClick = (characterName) => {
@@ -170,7 +116,7 @@ const TestDatabase = () => {
       <div className="testdatabase-content">
         <div className="testdatabase-header">
           <div className="header-content">
-            <h1 className="testdatabase-title">테스트 데이터베이스</h1>
+            <h1 className="testdatabase-title">안전 불감도 테스트 데이터베이스</h1>
             <div className="header-buttons">
               <button className="take-test-btn" onClick={handleTakeTest}>
                 테스트 하기
@@ -182,9 +128,9 @@ const TestDatabase = () => {
           </div>
         </div>
 
-        {/* 캐릭터 통계 섹션 */}
+        {/* 안전 유형 통계 섹션 */}
         <section className="character-statistics">
-          <h2>캐릭터별 통계</h2>
+          <h2>안전 유형별 통계</h2>
           <div className="character-stats-grid">
             {Object.entries(characterStats).map(([character, count]) => (
               <div 
@@ -292,7 +238,7 @@ const TestDatabase = () => {
                 </div>
                 
                 <div className="character-recommendations">
-                  <h3>추천 장르</h3>
+                  <h3>추천 시스템</h3>
                   <div className="tag-list">
                     {characterInfo[selectedCharacter].recommendedGenres.map((genre, index) => (
                       <span key={index} className="tag">{genre}</span>
@@ -301,7 +247,7 @@ const TestDatabase = () => {
                 </div>
                 
                 <div className="character-recommendations">
-                  <h3>추천 작품</h3>
+                  <h3>추천 행동</h3>
                   <div className="tag-list">
                     {characterInfo[selectedCharacter].recommendedPlays.map((play, index) => (
                       <span key={index} className="tag">{play}</span>
