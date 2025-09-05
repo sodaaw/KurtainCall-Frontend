@@ -87,7 +87,13 @@ export default function SearchResults() {
           return (
             <li key={it.detailUrl || it._id} className="result-card">
               <a href={it.detailUrl} target="_blank" rel="noreferrer">
-                <img src={img} alt="" onError={(e)=>{e.currentTarget.src='/images/fallback.jpg'}} />
+              <img
+                src={it.posterUrl}
+                alt={it.title}
+                className="poster-img"
+                loading="lazy"
+                onError={(e)=>{ e.currentTarget.src='/images/fallback.jpg'; }}
+              />
                 <div className="meta">
                   <h3>{mark(it.title)}</h3>
                   <p>
