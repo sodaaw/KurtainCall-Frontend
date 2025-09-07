@@ -26,6 +26,7 @@
   position: relative;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  padding-bottom: 100px; /* 버튼 공간 확보 */
 }
 
 /* 커튼 배경 요소들 */
@@ -77,18 +78,15 @@
 .testdatabase-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 120px 20px 20px 20px;
+  margin-top: 50px;
+  padding: 70px 20px 20xpx 20px;
   position: relative;
   z-index: 1;
 }
 
 /* 헤더 */
 .testdatabase-header {
-  background: var(--card-bg);
-  border: 1px solid var(--border-accent);
-  border-radius: 15px;
   padding: 25px;
-  margin-bottom: 30px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -596,19 +594,64 @@
   box-shadow: none;
 }
 
+/* 고정된 테스트 다시 하기 버튼 */
+.fixed-test-button {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: 100%;
+  max-width: 400px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.fixed-test-button .take-test-btn {
+  width: 100%;
+  max-width: 200px;
+  background: var(--button-bg);
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fixed-test-button .take-test-btn:hover {
+  background: var(--button-hover);
+  color: var(--button-text);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .testdatabase-content {
-    padding: 80px 15px 15px 15px;
+    padding: 50px 15px 15px 15px;
+    margin-top: 20px; /* 모바일에서 topnav와의 간격 줄이기 */
   }
   
   .header-content {
     flex-direction: column;
     text-align: center;
+    margin-bottom: -40px;
   }
   
   .testdatabase-title {
     font-size: 2rem;
+  }
+  
+  .character-statistics {
+    margin-top: 15px; /* 헤더와 통계 섹션 사이 간격 줄이기 */
   }
   
   .character-stats-grid {
@@ -638,11 +681,33 @@
     margin-top: 60px;
     padding: 20px;
   }
+  
+  .fixed-test-button {
+    padding: 0 15px;
+  }
+  
+  .fixed-test-button .take-test-btn {
+    max-width: 180px;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+  }
 }
 
 @media (max-width: 480px) {
+  .testdatabase-content {
+    margin-top: 10px; /* 더 작은 모바일에서 간격 더 줄이기 */
+  }
+  
   .testdatabase-title {
     font-size: 1.8rem;
+  }
+  
+  .header-content {
+    margin-bottom: -40px;
+  }
+  
+  .character-statistics {
+    margin-top: 10px; /* 더 작은 모바일에서 간격 더 줄이기 */
   }
   
   .character-stats-grid {
@@ -671,5 +736,15 @@
   .filter-btn {
     width: 100%;
     max-width: 200px;
+  }
+  
+  .fixed-test-button {
+    padding: 0 10px;
+  }
+  
+  .fixed-test-button .take-test-btn {
+    max-width: 160px;
+    font-size: 0.85rem;
+    padding: 8px 16px;
   }
 }

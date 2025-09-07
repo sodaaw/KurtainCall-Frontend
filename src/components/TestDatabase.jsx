@@ -129,9 +129,9 @@ const TestDatabase = () => {
           <div className="header-content">
             <h1 className="testdatabase-title">전체 유형 보기</h1>
             <div className="header-buttons">
-              <button className="take-test-btn" onClick={handleTakeTest}>
+              {/* <button className="take-test-btn" onClick={handleTakeTest}>
                 테스트 다시 하기
-              </button>
+              </button> */}
               {/* <button className="clear-results-btn" onClick={handleClearResults}>
                 결과 삭제하기
               </button> */}
@@ -310,6 +310,13 @@ const TestDatabase = () => {
             </div>
           </div>
         )}
+
+        {/* 고정된 테스트 다시 하기 버튼 */}
+        <div className="fixed-test-button">
+          <button className="take-test-btn" onClick={handleTakeTest}>
+            테스트 다시 하기
+          </button>
+        </div>
       </div>
     </div>
   );
