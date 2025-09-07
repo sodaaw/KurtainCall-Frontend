@@ -281,19 +281,11 @@
   position: relative;
 } */
 
-/* NCLNeovibes 폰트 정의 */
-@font-face {
-  font-family: 'NCLNeovibes';
-  src: url('../assets/fonts/NCLNeovibes.woff2') format('woff2'),
-       url('../assets/fonts/NCLNeovibes.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+/* NCLNeovibes 폰트는 index.css에서 정의됨 */
 
 /* FestiGuard 제목 */
 .hero h1 {
-  font-family: 'NCLNeovibes', 'Swanley', sans-serif;
+  font-family: 'NCLNeovibes', sans-serif;
   font-size: clamp(60px, 6.2vw, 84px); /* 최소 42px, 보통 6.2vw, 최대 84px */
   line-height: 1.06;
   letter-spacing: -0.01em;
@@ -1145,7 +1137,7 @@
   }
   
   .hero h1 {
-    font-family: 'Swanley';
+    font-family: 'NCLNeovibes', 'Swanley', sans-serif;
     /* font-size: 4rem; */
   }
   
@@ -1232,7 +1224,7 @@
   }
   
   .hero h1 {
-    font-family: 'Swanley';
+    font-family: 'NCLNeovibes', 'Swanley', sans-serif;
     /* font-size: 3rem; */
   }
   
