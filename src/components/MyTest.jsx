@@ -92,22 +92,22 @@ return (
         <h1 className="mytest-title">안전 유형 테스트</h1>
         <p className="test-description">군중 속, 나는 얼마나 안전에 민감할까?</p>
         <button className="previous-results-btn" onClick={() => navigate('/test/database')}>
-            Previous Results
+            이전 결과 보기
         </button>
         </div>
     </div>
 
     {/* 진행률 표시 */}
     <div className="progress-section">
+        <p className="progress-text">
+            {Object.keys(answers).length} / {questions.length} 완료
+        </p>
         <div className="progress-bar">
         <div 
             className="progress-fill" 
             style={{ width: `${getProgressPercentage()}%` }}
         ></div>
         </div>
-        <p className="progress-text">
-        {Object.keys(answers).length} / {questions.length} 완료
-        </p>
     </div>
 
     {/* 질문 섹션 */}
