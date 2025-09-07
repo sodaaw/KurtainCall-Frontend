@@ -1,67 +1,69 @@
 /* TestResults.css - 현재 UI 구조에 맞는 스타일 */
 
-:root {
-  --primary-color: #8B0000;
-  --accent-color: #FFD700;
-  --background-dark: #1a1a2e;
-  --background-medium: #16213e;
-  --background-light: #0f3460;
-  --text-light: #ffffff;
-  --text-secondary: #cccccc;
-  --border-accent: rgba(255, 215, 0, 0.3);
-  --shadow-accent: rgba(255, 215, 0, 0.3);
-}
-
 .testresults-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--background-dark) 0%, var(--background-medium) 50%, var(--background-light) 100%);
-  color: var(--text-light);
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+  background-attachment: fixed; /* 배경을 고정하여 스크롤해도 유지 */
+  background-size: cover; /* 배경이 전체 영역을 덮도록 */
+  background-repeat: no-repeat; /* 배경 반복 방지 */
+  color: #e0e0e0;
   position: relative;
   overflow-x: hidden;
+  scroll-behavior: smooth; /* 부드러운 스크롤을 위한 기본 설정 */
 }
 
-/* 커튼 배경 효과 */
+body {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+}
+
+/* 커튼 배경 요소들 */
 .testresults-container::before {
   content: '';
   position: fixed;
   top: 0;
-  left: -50%;
-  width: 200%;
-  height: 100%;
-  background: linear-gradient(45deg, 
-    rgba(139, 0, 0, 0.1) 0%, 
-    rgba(255, 215, 0, 0.05) 25%, 
-    rgba(139, 0, 0, 0.1) 50%, 
-    rgba(255, 215, 0, 0.05) 75%, 
-    rgba(139, 0, 0, 0.1) 100%);
+  left: -50px;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(90deg, 
+    rgba(0, 11, 88, 0.8) 0%,
+    rgba(0, 11, 88, 0.6) 30%,
+    rgba(0, 11, 88, 0.3) 70%,
+    transparent 100%);
   transform: skewX(-15deg);
-  z-index: -1;
-  animation: curtainFloat 20s ease-in-out infinite;
-  will-change: transform;
+  z-index: 1;
+  animation: curtainLeft 8s ease-in-out infinite;
 }
 
 .testresults-container::after {
   content: '';
   position: fixed;
   top: 0;
-  right: -50%;
-  width: 200%;
-  height: 100%;
-  background: linear-gradient(-45deg, 
-    rgba(255, 215, 0, 0.05) 0%, 
-    rgba(139, 0, 0, 0.1) 25%, 
-    rgba(255, 215, 0, 0.05) 50%, 
-    rgba(139, 0, 0, 0.1) 75%, 
-    rgba(255, 215, 0, 0.05) 100%);
+  right: -50px;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(-90deg, 
+    rgba(0, 11, 88, 0.8) 0%,
+    rgba(0, 11, 88, 0.6) 30%,
+    rgba(0, 11, 88, 0.3) 70%,
+    transparent 100%);
   transform: skewX(15deg);
-  z-index: -1;
-  animation: curtainFloat 25s ease-in-out infinite reverse;
-  will-change: transform;
+  z-index: 1;
+  animation: curtainRight 8s ease-in-out infinite;
 }
 
-@keyframes curtainFloat {
+@keyframes curtainLeft {
   0%, 100% { transform: skewX(-15deg) translateX(0); }
-  50% { transform: skewX(-15deg) translateX(20px); }
+  50% { transform: skewX(-15deg) translateX(-20px); }
+}
+
+@keyframes curtainRight {
+  0%, 100% { transform: skewX(15deg) translateX(0); }
+  50% { transform: skewX(15deg) translateX(20px); }
 }
 
 /* 히어로 섹션 */
@@ -83,16 +85,22 @@
 }
 
 .hero-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  color: var(--text-light);
+  font-size: 2.0rem;
+  font-weight: 700;
+  color: #DDF4E7;
   line-height: 1.2;
   margin: 0;
 }
 
+.hero-subtitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #DDF4E7;
+  opacity: 0.8;
+}
+
 .hero-emph {
-  color: var(--accent-color);
-  text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+  text-shadow: 0 0 30px rgba(0, 42, 255, 0.5);
   display: block;
   margin-top: 10px;
 }
@@ -103,9 +111,7 @@
   height: 280px;
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid var(--accent-color);
-  box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
-  background: rgba(255, 255, 255, 0.1);
+  background: none;
 }
 
 .hero-avatar img {
@@ -117,7 +123,7 @@
 /* 설명 카드 */
 .results-card {
   max-width: 1200px;
-  margin: 0 auto 40px;
+  margin: 0 auto 30px;
   padding: 0 20px;
 }
 
@@ -183,27 +189,31 @@
 }
 
 .results-actions button.primary {
-  background: linear-gradient(135deg, var(--accent-color), #FFA500);
-  color: var(--primary-color);
-  border-color: var(--accent-color);
+  background: #26667F;
+  color: #DDF4E7;
+  border: 1px solid #DDF4E7;
+  width: 180px; /* 버튼 너비 설정 */
 }
 
 .results-actions button.primary:hover {
+  background: #DDF4E7;
+  color: #124170;
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(38, 102, 127, 0.4);
 }
 
 .results-actions button.secondary {
-  background: transparent;
-  color: var(--accent-color);
-  border-color: var(--accent-color);
+  background: #26667F;
+  color: #DDF4E7;
+  border: 1px solid #DDF4E7;
+  width: 180px; /* 버튼 너비 설정 */
 }
 
 .results-actions button.secondary:hover {
-  background: var(--accent-color);
-  color: var(--primary-color);
+  background: #DDF4E7;
+  color: #124170;
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(38, 102, 127, 0.4);
 }
 
 /* 디버그 섹션 (개발용) */
@@ -429,7 +439,7 @@
 
 .recommendations h2 {
   font-size: 1.5rem;
-  color: #FFD700;
+  color: #26667F;
   margin-bottom: 20px;
   text-align: center;
   font-weight: bold;
@@ -540,7 +550,7 @@
 .score-value {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #FFD700;
+  color: #26667F;
   background: rgba(255, 215, 0, 0.1);
   padding: 8px 15px;
   border-radius: 20px;
@@ -626,13 +636,18 @@
   .results-hero {
     flex-direction: column;
     text-align: center;
-    padding: 40px 20px;
+    padding: 80px 20px 40px 20px; /* 상단 여백을 80px로 조정 (Topnav 높이 50px + 여유공간 30px) */
     gap: 30px;
     max-width: 600px;
   }
   
   .hero-title {
-    font-size: 2.8rem;
+    margin-top: 20px;
+    font-size: 1.8rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
   }
   
   .hero-avatar {
@@ -650,13 +665,15 @@
   }
   
   .results-actions {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    gap: 15px;
+    margin-top: 20px;
   }
   
   .results-actions button {
-    width: 100%;
-    max-width: 300px;
+    width: auto;
+    max-width: 200px;
   }
   
   .hashtag-wrap {
@@ -675,7 +692,11 @@
   }
   
   .hero-title {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.0rem;
   }
   
   .hero-avatar {
@@ -688,14 +709,21 @@
   }
   
   .bullet-list li {
-    font-size: 1rem;
+    font-size: 0.9rem;
     padding-left: 20px;
     margin-bottom: 20px;
   }
   
-  .results-actions button {
+  .results-actions {
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .testresults-container .results-actions button {
     padding: 15px 30px;
     font-size: 1rem;
+    max-width: none;
   }
   
   .hashtags-title {

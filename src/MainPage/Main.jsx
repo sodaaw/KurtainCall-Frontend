@@ -11,13 +11,13 @@ import "./Main.css";
 // 카테고리 버튼 데이터 (API에서 받아올 예정)
 const DEFAULT_CATS = [
   { 
-    label: "Comedy", 
+    label: "코미디", 
     slug: "comedy", 
     //icon: "😄",
     description: "웃음과 유머"
   },
   { 
-    label: "Musical", 
+    label: "뮤지컬", 
     slug: "musical", 
     //icon: "🎵",
     description: "음악과 노래"
@@ -43,7 +43,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (isLoading) {
     return (
       <header className="hero">
-        <h1>KurtainCall</h1>
+        <h1>FestiGuard</h1>
         <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
         <div className="loading-spinner">
           <div className="spinner-animation"></div>
@@ -56,7 +56,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (error) {
     return (
       <header className="hero">
-        <h1>KurtainCall</h1>
+        <h1>FestiGuard</h1>
         <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
         <div className="error-message">
           <div className="error-icon">⚠️</div>
@@ -70,7 +70,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (!plays || plays.length === 0) {
     return (
       <header className="hero">
-        <h1>KurtainCall</h1>
+        <h1>FestiGuard</h1>
         <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
         <div className="no-data">
           <div className="no-data-icon">📭</div>
@@ -88,7 +88,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (!current) {
     return (
       <header className="hero">
-        <h1>KurtainCall</h1>
+        <h1>FestiGuard</h1>
         <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
         <div className="no-data">
           <div className="no-data-icon">📭</div>
@@ -116,7 +116,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
       
 
       {/* 제목 */}
-      <h1>KurtainCall</h1>
+      <h1>FestiGuard</h1>
 
       {/* 태그라인 */}
       <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
@@ -136,13 +136,13 @@ function RecommendedShows({ plays, isLoading, error }) {
       handleNext();
     }, 5000);
     return () => clearInterval(timer);
-  }, [total, currentIndex]);
+  }, [total]);
 
   const handleNext = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % (total - 2));
+      setCurrentIndex((prev) => (prev + 1) % total);
       setIsTransitioning(false);
     }, 800);
   };
@@ -151,7 +151,7 @@ function RecommendedShows({ plays, isLoading, error }) {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setTimeout(() => {
-      setCurrentIndex((prev) => (prev - 1 + (total - 2)) % (total - 2));
+      setCurrentIndex((prev) => (prev - 1 + total) % total);
       setIsTransitioning(false);
     }, 800);
   };
@@ -286,10 +286,6 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
       {/* 검색바 */}
       <div className="search-bar">
         <form className="search-input-wrapper" onSubmit={handleSearch}>
-          <svg className="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
-          </svg>
           <input 
             type="text" 
             placeholder="원하는 장르 또는 작품을 검색해보세요." 
@@ -297,6 +293,18 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+          <button type="submit" className="search-submit-btn">
+            <svg 
+              className="search-icon-svg"  
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="1.5"
+            >
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+          </button>
         </form>
       </div>
 

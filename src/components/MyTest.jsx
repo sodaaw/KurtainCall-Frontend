@@ -8,28 +8,28 @@ const MyTest = () => {
   const [answers, setAnswers] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
-  // 연극 입문자 흥미 유도형 20문항 (7점 척도: 1 매우 그렇지 않다 ~ 7 매우 그렇다)
+  // 안전 불감도 테스트 20문항 (7점 척도: 1 전혀 그렇지 않다 ~ 7 매우 그렇다)
   const questions = [
-    "빠르게 몰입되는 강한 감정선의 로맨스를 보면 심장이 먼저 반응한다.",
-    "사랑/관계가 이야기의 중심이면 더 끌린다.",
-    "긴 독백과 사유할 거리가 많은 작품을 좋아한다.",
-    "공연 후 해설/프로그램북을 읽으며 의미를 곱씹는 편이다.",
-    "팽팽한 긴장감과 다소 어두운 분위기에 잘 몰입한다.",
-    "권력·욕망·도덕적 선택의 무게를 다루는 서사를 선호한다.",
-    "재치 있는 말싸움(티키타카)과 위트 넘치는 대사에 쾌감을 느낀다.",
-    "시적이고 아름다운 문장(운율·수사)을 특히 좋아한다.",
-    "정체성 뒤바뀜/오해가 만드는 상황 코미디가 재미있다.",
-    "시각 효과·무대 마술·신체 퍼포먼스가 돋보이면 더 즐겁다.",
-    "환상적/동화 같은 분위기**의 공연을 보면 기분이 좋아진다.",
-    "가족·세대·책임 같은 주제를 다루면 오래 여운이 남는다.",
-    "선한 의지·구원·연대의 메시지에 약하다.",
-    "길어도 좋으니 차분한 템포로 관계·심리를 깊게 파는 작품이 좋다.",
-    "극적 결말도 기꺼이 받아들이는 편이다.",
-    "형식 실험(4의 벽 깨기, 시간 파편화 등)이 있어도 흥미롭다.",
-    "러닝타임 2시간 30분+도 집중이 유지된다.",
-    "자막/해설이 있으면 복잡한 구조도 따라갈 자신이 있다.",
-    "배우의 표정·호흡을 가까이서 느끼는 걸 좋아한다.",
-    "공연 후 어떻게 살아야 하지? 같은 질문을 품게 되는 작품이 좋다."
+    "혼잡한 곳에 있으면 불안하거나 긴장한다.",
+    "주변 사람들의 움직임 변화를 민감하게 눈치챈다.",
+    "행사나 축제에 가면 '비상구' 위치부터 확인하는 편이다.",
+    "군중 속에서 갑자기 큰 소리/진동이 나면 바로 반응한다.",
+    "안전 관련 안내방송이 나오면 주의 깊게 듣는다.",
+    "친구나 가족이 위험을 무시하면 불안하다.",
+    "안전 장치(경보기, 센서, CCTV)가 있으면 안심된다.",
+    "비상 상황 대피 훈련을 적극적으로 참여하는 편이다.",
+    "낯선 공간에서는 출입구/탈출구를 자동으로 체크한다.",
+    "사람들이 몰려서 밀릴 때 곧 위험해질 수 있다고 생각한다.",
+    "지역 축제·행사에 가면 안전 요원 수를 확인하게 된다.",
+    "위험 징후(과밀, 소음, 압박 등)를 빨리 눈치챈다.",
+    "위험한 상황에서 침착하게 행동할 자신이 있다.",
+    "사람 많은 곳에서도 '설마 사고가 나겠어?'라고 대수롭지 않게 여긴다.",
+    "군중 안전 문제는 개인보다 사회가 해결해야 한다고 생각한다.",
+    "군중 속에서 신체 접촉이 잦아도 별로 신경 안 쓴다.",
+    "비상벨·알람이 울리면 무조건 원인을 확인한다.",
+    "사고 관련 뉴스를 보면 '나도 대비해야겠다'라고 생각한다.",
+    "군중 상황에서 스마트폰 알림이나 경보를 받으면 바로 확인하고 대응할 것이다.",
+    "군중 사고는 언제든 내 주변에서도 일어날 수 있다고 생각한다."
 ];
 
 const handleAnswer = (questionIndex, value) => {
@@ -37,11 +37,26 @@ const handleAnswer = (questionIndex, value) => {
     ...prev,
     [questionIndex]: value
     }));
+    
+    // 질문 선택 후 해당 질문이 화면 중앙에 오도록 부드럽게 스크롤
+    setTimeout(() => {
+        const questionElement = document.getElementById(`question-${questionIndex}`);
+        if (questionElement) {
+            const elementRect = questionElement.getBoundingClientRect();
+            const absoluteElementTop = elementRect.top + window.pageYOffset;
+            const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+            
+            window.scrollTo({
+                top: middle,
+                behavior: 'smooth'
+            });
+        }
+    }, 100); // 약간의 지연을 두어 애니메이션이 자연스럽게 보이도록
 };
 
 const getAnswerLabel = (value) => {
 const labels = {
-    1: "매우 그렇지 않다",
+    1: "전혀 그렇지 않다",
     2: "그렇지 않다",
     3: "약간 그렇지 않다",
     4: "보통이다",
@@ -74,30 +89,31 @@ return (
     <div className="mytest-content">
     <div className="mytest-header">
         <div className="header-content">
-        <h1 className="mytest-title">My Test</h1>
-        <button className="previous-results-btn" onClick={() => navigate('/test/database')}>
-            Previous Results
-        </button>
+        <h1 className="mytest-title">안전 유형 테스트</h1>
+        <p className="test-description">잠깐의 여유 시간, 재미있는 테스트와 함께<br></br>안전 감각도 확인해보세요.</p>
+        {/* <button className="previous-results-btn" onClick={() => navigate('/test/database')}>
+            이전 결과 보기
+        </button> */}
         </div>
     </div>
 
     {/* 진행률 표시 */}
     <div className="progress-section">
+        <p className="progress-text">
+            {Object.keys(answers).length} / {questions.length} 완료
+        </p>
         <div className="progress-bar">
         <div 
             className="progress-fill" 
             style={{ width: `${getProgressPercentage()}%` }}
         ></div>
         </div>
-        <p className="progress-text">
-        {Object.keys(answers).length} / {questions.length} 완료
-        </p>
     </div>
 
     {/* 질문 섹션 */}
     <div className="questions-section">
         {questions.map((question, index) => (
-        <div key={index} className="question-card">
+        <div key={index} id={`question-${index}`} className="question-card">
             <h3 className="question-text">{question}</h3>
             
             {/* 7단계 응답 척도 */}
@@ -143,7 +159,7 @@ return (
         onClick={handleSubmit}
         disabled={Object.keys(answers).length !== questions.length}
         >
-        Submit
+        결과 보기
         </button>
     </div>
     </div>
