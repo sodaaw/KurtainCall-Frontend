@@ -89,6 +89,17 @@ const TestDatabase = () => {
     Unaware: testResults.filter(r => r.topCharacter === 'Unaware').length
   };
 
+  // 총 테스트 수
+  const totalTests = testResults.length;
+
+  // 퍼센트 계산
+  const characterPercentages = {
+    Sentinel: totalTests > 0 ? (characterStats.Sentinel / totalTests * 100) : 0,
+    Guardian: totalTests > 0 ? (characterStats.Guardian / totalTests * 100) : 0,
+    Navigator: totalTests > 0 ? (characterStats.Navigator / totalTests * 100) : 0,
+    Unaware: totalTests > 0 ? (characterStats.Unaware / totalTests * 100) : 0
+  };
+
   const handleCharacterClick = (characterName) => {
     setSelectedCharacter(characterName);
     setFilterCharacter(characterName);
@@ -116,45 +127,81 @@ const TestDatabase = () => {
       <div className="testdatabase-content">
         <div className="testdatabase-header">
           <div className="header-content">
-            <h1 className="testdatabase-title">안전 불감도 테스트 데이터베이스</h1>
+            <h1 className="testdatabase-title">전체 유형 보기</h1>
             <div className="header-buttons">
-              <button className="take-test-btn" onClick={handleTakeTest}>
-                테스트 하기
-              </button>
-              <button className="clear-results-btn" onClick={handleClearResults}>
-                결과 삭제
-              </button>
+              {/* <button className="take-test-btn" onClick={handleTakeTest}>
+                테스트 다시 하기
+              </button> */}
+              {/* <button className="clear-results-btn" onClick={handleClearResults}>
+                결과 삭제하기
+              </button> */}
             </div>
           </div>
         </div>
 
         {/* 안전 유형 통계 섹션 */}
         <section className="character-statistics">
-          <h2>안전 유형별 통계</h2>
+          <h2>유형별 통계</h2>
+          {/* 안내 텍스트 */}
+          <div className="instruction-text">
+            각 유형을 클릭하면 자세한 설명을 확인할 수 있어요!
+          </div>
           <div className="character-stats-grid">
-            {Object.entries(characterStats).map(([character, count]) => (
-              <div 
-                key={character} 
-                className={`character-stat-card ${filterCharacter === character ? 'active' : ''}`}
-                onClick={() => handleCharacterClick(character)}
-              >
-                <div className="character-emoji">{characterInfo[character].emoji}</div>
-                <div className="character-name">{characterInfo[character].name}</div>
-                <div className="character-count">{count}명</div>
-              </div>
-            ))}
+            {Object.entries(characterStats).map(([character, count]) => {
+              const info = characterInfo[character];
+              if (!info) return null; // characterInfo에 없는 캐릭터는 건너뛰기
+              
+              return (
+                <div 
+                  key={character} 
+                  className={`character-stat-card ${filterCharacter === character ? 'active' : ''}`}
+                  onClick={() => handleCharacterClick(character)}
+                >
+                  <div className="character-emoji">{info.emoji}</div>
+                  <div className="character-name">{info.name}</div>
+                  <div className="character-count">{count}명</div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Bar Graph */}
+          <div className="bar-graph-container">
+            <h3>유형별 분포</h3>
+            <div className="bar-graph">
+              {Object.entries(characterPercentages).map(([character, percentage]) => {
+                const info = characterInfo[character];
+                if (!info) return null;
+                
+                return (
+                  <div key={character} className="bar-item">
+                    <div className="bar-label">
+                      <span className="bar-emoji">{info.emoji}</span>
+                      <span className="bar-name">{info.name}</span>
+                      <span className="bar-percentage">{percentage.toFixed(1)}%</span>
+                    </div>
+                    <div className="bar-track">
+                      <div 
+                        className="bar-fill" 
+                        style={{ width: `${percentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </section>
 
         {/* 필터 옵션 */}
-        <section className="filter-section">
+        {/* <section className="filter-section">
           <h3>필터 옵션</h3>
           <div className="filter-buttons">
             <button 
               className={`filter-btn ${filterCharacter === 'all' ? 'active' : ''}`}
               onClick={() => setFilterCharacter('all')}
             >
-              전체 보기
+              전체 유형 보기
             </button>
             {Object.keys(characterInfo).map(character => (
               <button 
@@ -166,10 +213,10 @@ const TestDatabase = () => {
               </button>
             ))}
           </div>
-        </section>
+        </section> */}
 
         {/* 테스트 결과 목록 */}
-        <section className="test-results-list">
+        {/* <section className="test-results-list">
           <h2>테스트 결과 ({filteredResults.length}개)</h2>
           {filteredResults.length === 0 ? (
             <div className="no-results">
@@ -180,36 +227,41 @@ const TestDatabase = () => {
             </div>
           ) : (
             <div className="results-grid">
-              {filteredResults.map((result, index) => (
-                <div key={index} className="result-card">
-                  <div className="result-header">
-                    <div className="character-emoji-large">
-                      {characterInfo[result.topCharacter].emoji}
-                    </div>
-                    <div className="result-info">
-                      <div className="result-character">
-                        {characterInfo[result.topCharacter].name}
+              {filteredResults.map((result, index) => {
+                const info = characterInfo[result.topCharacter];
+                if (!info) return null; // characterInfo에 없는 캐릭터는 건너뛰기
+                
+                return (
+                  <div key={index} className="result-card">
+                    <div className="result-header">
+                      <div className="character-emoji-large">
+                        {info.emoji}
                       </div>
-                      <div className="result-date">
-                        {result.date} {result.time}
+                      <div className="result-info">
+                        <div className="result-character">
+                          {info.name}
+                        </div>
+                        <div className="result-date">
+                          {result.date} {result.time}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="result-scores">
+                      <div className="score-item">
+                        <span className="score-label">1위:</span>
+                        <span className="score-value">{info.name} ({(result.topScore * 100).toFixed(1)}%)</span>
+                      </div>
+                      <div className="score-item">
+                        <span className="score-label">점수:</span>
+                        <span className="score-value">{(result.topScore * 100).toFixed(1)}%</span>
                       </div>
                     </div>
                   </div>
-                  <div className="result-scores">
-                    <div className="score-item">
-                      <span className="score-label">1위:</span>
-                      <span className="score-value">{characterInfo[result.topCharacter]?.name || result.topCharacter} ({(result.topScore * 100).toFixed(1)}%)</span>
-                    </div>
-                    <div className="score-item">
-                      <span className="score-label">점수:</span>
-                      <span className="score-value">{(result.topScore * 100).toFixed(1)}%</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
-        </section>
+        </section> */}
 
         {/* 선택된 캐릭터 상세 정보 모달 */}
         {selectedCharacter && (
@@ -219,8 +271,8 @@ const TestDatabase = () => {
                 <div className="modal-character-emoji">
                   {characterInfo[selectedCharacter].emoji}
                 </div>
-                <h2>{characterInfo[selectedCharacter].emoji} {characterInfo[selectedCharacter].name}</h2>
-                <button className="close-btn" onClick={handleCloseCharacter}>×</button>
+                <h2>{characterInfo[selectedCharacter].name}</h2>
+                <button className="tst-close-btn" onClick={handleCloseCharacter}>×</button>
               </div>
               
               <div className="modal-content">
@@ -258,6 +310,13 @@ const TestDatabase = () => {
             </div>
           </div>
         )}
+
+        {/* 고정된 테스트 다시 하기 버튼 */}
+        <div className="fixed-test-button">
+          <button className="take-test-btn" onClick={handleTakeTest}>
+            테스트 다시 하기
+          </button>
+        </div>
       </div>
     </div>
   );

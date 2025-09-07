@@ -18,47 +18,55 @@ const WEIGHTS = {
 // (C) 안전 유형 메타 + 추천 카테고리(해시태그로 노출)
 const CHARACTER_META = {
   Sentinel: {
-    title: 'Sentinel (경계자) – 위험 신호에 민감한 예방형',
-    why: '혼잡한 곳에서 불안감을 느끼고, 주변 상황 변화를 민감하게 감지한다고 답하셨어요. 비상구 위치 확인부터 안전 장치까지 모든 것을 미리 체크하는 예방적 성향이 강한 타입이에요.',
-    mood: ['위험 감지', '예방 행동', '안전 체크'],
-    imageSrc: '/images/1. 로미오.png',
+    title: 'Sentinel (경계자)',
+    why: '혼잡한 곳에서 불안감을 느끼고, 주변 상황 변화를 민감하게 감지한다고 답하셨어요. 비상구 위치 확인부터 안전 장치까지 미리 체크하는 예방적 성향이 강한 타입이에요.',
+    mood: ['위험 민감', '예방', '대비'],
+    imageSrc: '/images/1.Sentinel.png',
     recommend: ['Sentinel'],
+    strengths: '위험 신호를 빠르게 감지하고, 사전에 대비해 사고 가능성을 줄입니다.',
+    warnings: '불필요한 걱정이나 과도한 긴장으로 스트레스를 받을 수 있으니, 상황을 과장하지 않도록 주의하세요.',
     tip: (q18, q19) => ({
       seat: '출입구 근처',
-      subtitle: '스마트 알림 앱 적극 활용'
+      subtitle: '비상구 위치 먼저 확인, 스마트 알림 앱 활용'
     }),
   },
   Guardian: {
-    title: 'Guardian (수호자) – 공동체 안전을 중시하는 타입',
-    why: '친구나 가족의 안전을 걱정하고, 사고 뉴스를 보면 대비책을 생각한다고 하셨어요. 자신보다 주변 사람들의 안전을 더 의식하는 공동체형 안전 의식이 강한 타입이에요.',
-    mood: ['공동체 안전', '타인 배려', '사회적 책임'],
-    imageSrc: '/images/2. 햄릿.png',
+    title: 'Guardian (수호자)',
+    why: '친구나 가족의 안전을 걱정하고, 사고 뉴스를 보면 대비책을 생각한다고 답하셨어요. 자신보다 주변 사람들의 안전을 더 의식하는 공동체형 성향이에요.',
+    mood: ['공동체', '배려', '책임'],
+    imageSrc: '/images/2.Guardian.png',
     recommend: ['Guardian'],
+    strengths: '혼자가 아닌, 함께하는 사람들의 안전까지 고려해 더 큰 범위에서 위험을 예방합니다.',
+    warnings: '타인을 챙기느라 정작 본인의 안전을 놓칠 수 있으니, 나 자신도 지켜야 한다는 균형을 유지하세요.',
     tip: (q18, q19) => ({
       seat: '중앙 위치',
-      subtitle: '가족/친구와 함께 이용'
+      subtitle: '가족/친구와 함께, 연락 수단 미리 정하기'
     }),
   },
   Navigator: {
-    title: 'Navigator (대처가) – 위기 상황에서 침착한 타입',
-    why: '위험한 상황에서 침착하게 행동할 자신이 있고, 스마트 기기로 경보를 받는다면 적극 활용하겠다고 답하셨어요. 평소 대비는 소홀하지만 위기 상황에서는 냉정한 판단력을 가진 타입이에요.',
-    mood: ['침착함', '기술 활용', '위기 대응'],
-    imageSrc: '/images/3. 맥베스.png',
+    title: 'Navigator (대처가)',
+    why: '위험한 상황에서도 침착하게 행동할 자신이 있고, 스마트 기기로 경보를 받는다면 적극 활용하겠다고 답하셨어요. 평소 대비는 부족하지만 위기 상황에서는 냉정한 판단력을 발휘하는 타입이에요.',
+    mood: ['침착', '기술 활용', '위기 대응'],
+    imageSrc: '/images/3.Navigator.png',
     recommend: ['Navigator'],
+    strengths: '위급 상황이 닥쳤을 때 당황하지 않고, 상황을 객관적으로 파악해 신속하게 대처할 수 있습니다.',
+    warnings: '평소에 안전 대비를 소홀히 하기 쉬우므로, 기본적인 안전 규칙은 미리 익혀두는 것이 필요합니다.',
     tip: (q18) => ({ 
       seat: '유동적 위치', 
-      subtitle: '스마트 기기 필수' 
+      subtitle: '위치 공유 기능 켜두기, 안전 앱 설치' 
     }),
   },
   Unaware: {
-    title: 'Unaware (안전 불감형) – 위험을 과소평가하는 타입',
-    why: '사람 많은 곳에서도 "설마 사고 나겠어?"라고 대수롭지 않게 여기고, 군중 속에서 신체 접촉이 잦아도 별로 신경 안 쓴다고 하셨어요. 위험을 과소평가하는 안전 불감증이 있는 타입이에요.',
-    mood: ['안전 불감', '과소평가', '무관심'],
-    imageSrc: '/images/4. 레이디 맥베스.png',
+    title: 'Unaware (안전 불감형)',
+    why: '사람 많은 곳에서도 "설마 사고 나겠어?"라고 대수롭지 않게 여기고, 군중 속에서 신체 접촉이 잦아도 별로 신경 쓰지 않는다고 답하셨어요. 위험을 과소평가하는 경향이 있는 타입이에요.',
+    mood: ['무관심', '과소평가', '방심'],
+    imageSrc: '/images/4.Unaware.png',
     recommend: ['Unaware'],
+    strengths: '과도하게 긴장하지 않고 즐길 수 있는 태도 덕분에 축제를 편안하게 경험할 수 있습니다.',
+    warnings: '위험 신호를 놓치거나 대피 타이밍을 놓칠 수 있으니, 안전 경보나 주변 안내 방송에 반드시 귀 기울이세요.',
     tip: (q18, q19) => ({ 
       seat: '어디든 상관없음', 
-      subtitle: '기초 안전 교육 필요' 
+      subtitle: '비상구 위치 확인, 기본 안전 수칙 숙지' 
     }),
   },
 };
@@ -137,8 +145,8 @@ const TestResults = () => {
       <div className="results-hero">
         <div className="hero-text">
           <h1 className="hero-title">
-            당신의 안전 유형은<br />
-            <span className="hero-emph">{resultMeta.title}</span>
+            <span className="hero-subtitle">당신의 안전 유형은</span><br />
+            <span className="hero-emph" dangerouslySetInnerHTML={{__html: resultMeta.title.replace(':', ':<br />')}}></span>
           </h1>
         </div>
 
@@ -154,17 +162,15 @@ const TestResults = () => {
       {/* 설명 카드 */}
       <div className="results-card">
         <ul className="bullet-list">
-          <li><strong>왜 이 결과?</strong> {resultMeta.why}</li>
-          <li><strong>추천 무드</strong> : {resultMeta.mood.join(' · ')}</li>
+          <li><strong>왜 이 결과가 나왔을까요?</strong> {resultMeta.why}</li>
+          <li><strong>키워드</strong> : {resultMeta.mood.join(' · ')}</li>
+          <li><strong>강점</strong> : {resultMeta.strengths}</li>
+          <li><strong>주의할 점</strong> : {resultMeta.warnings}</li>
           {tips && (
-                      <li>
-            <strong>안전 팁</strong> : 위치 {tips.seat} · {tips.subtitle}
-          </li>
+            <li>
+              <strong>안전 팁</strong> : {tips.subtitle}
+            </li>
           )}
-          <li>
-            <strong>안전 특징</strong> : {resultMeta.title}은(는) 군중 안전에 대한 인식과 대응 방식이
-            독특한 타입이에요. 스마트 매트와 같은 안전 기술을 통해 더 나은 안전 환경을 만들어갈 수 있어요!
-          </li>
         </ul>
       </div>
 
@@ -174,12 +180,12 @@ const TestResults = () => {
           다시 하기
         </button>
         <button className="secondary" onClick={() => navigate('/test/database')}>
-          내 기록 보기
+          전체결과 보기
         </button>
       </div>
 
       {/* === 추천 안전 유형 해시태그 (맨 아래) === */}
-      <div className="recommend-hashtags" style={{ marginTop: 28 }}>
+      {/* <div className="recommend-hashtags" style={{ marginTop: 28 }}>
         <h3 className="hashtags-title">안전 유형 정보</h3>
         <div className="hashtag-wrap" role="group" aria-label="안전 유형 정보">
           {recCats.length === 0 ? (
@@ -197,7 +203,7 @@ const TestResults = () => {
             ))
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* 개발용 점수 확인 (원하면 주석 해제) */}
       {/* <details className="debug" style={{ marginTop: 16 }}>
