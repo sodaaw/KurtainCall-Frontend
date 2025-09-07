@@ -505,6 +505,7 @@
   margin-bottom: 25px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--border-accent);
+  position: relative;
 }
 
 .modal-character-emoji {
@@ -533,6 +534,10 @@
   justify-content: center;
   border-radius: 50%;
   transition: all 0.3s ease;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-80%);
 }
 
 .close-btn:hover {
@@ -635,6 +640,12 @@
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
+  /* 모바일에서 커튼 요소의 z-index를 낮춰서 모달과 충돌 방지 */
+  .testdatabase-container::before,
+  .testdatabase-container::after {
+    z-index: 0;
+  }
+  
   .testdatabase-content {
     padding: 50px 15px 15px 15px;
     margin-top: 20px; /* 모바일에서 topnav와의 간격 줄이기 */
@@ -680,6 +691,19 @@
     margin: 20px;
     margin-top: 60px;
     padding: 20px;
+    z-index: 1001; /* 모바일에서 더 높은 z-index */
+  }
+  
+  .character-modal-overlay {
+    z-index: 1000; /* 모바일에서 더 높은 z-index */
+  }
+  
+  .close-btn {
+    z-index: 1002; /* X 버튼의 z-index를 가장 높게 */
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-80%);
   }
   
   .fixed-test-button {
@@ -694,6 +718,12 @@
 }
 
 @media (max-width: 480px) {
+  /* 더 작은 모바일에서도 커튼 요소의 z-index를 낮춰서 모달과 충돌 방지 */
+  .testdatabase-container::before,
+  .testdatabase-container::after {
+    z-index: 0;
+  }
+  
   .testdatabase-content {
     margin-top: 10px; /* 더 작은 모바일에서 간격 더 줄이기 */
   }
