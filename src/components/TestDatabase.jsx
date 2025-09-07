@@ -116,21 +116,25 @@ const TestDatabase = () => {
       <div className="testdatabase-content">
         <div className="testdatabase-header">
           <div className="header-content">
-            <h1 className="testdatabase-title">안전 불감도 테스트 데이터베이스</h1>
+            <h1 className="testdatabase-title">전체 유형 보기</h1>
             <div className="header-buttons">
               <button className="take-test-btn" onClick={handleTakeTest}>
-                테스트 하기
+                테스트 다시 하기
               </button>
-              <button className="clear-results-btn" onClick={handleClearResults}>
-                결과 삭제
-              </button>
+              {/* <button className="clear-results-btn" onClick={handleClearResults}>
+                결과 삭제하기
+              </button> */}
             </div>
           </div>
         </div>
 
         {/* 안전 유형 통계 섹션 */}
         <section className="character-statistics">
-          <h2>안전 유형별 통계</h2>
+          <h2>유형별 통계</h2>
+          {/* 안내 텍스트 */}
+          <div className="instruction-text">
+            클릭하면 각 유형의 상세 설명 조회 가능
+          </div>
           <div className="character-stats-grid">
             {Object.entries(characterStats).map(([character, count]) => {
               const info = characterInfo[character];
@@ -159,7 +163,7 @@ const TestDatabase = () => {
               className={`filter-btn ${filterCharacter === 'all' ? 'active' : ''}`}
               onClick={() => setFilterCharacter('all')}
             >
-              전체 보기
+              전체 유형 보기
             </button>
             {Object.keys(characterInfo).map(character => (
               <button 

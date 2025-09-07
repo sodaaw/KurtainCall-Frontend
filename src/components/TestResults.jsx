@@ -180,7 +180,7 @@ const TestResults = () => {
           다시 하기
         </button>
         <button className="secondary" onClick={() => navigate('/test/database')}>
-          내 기록 보기
+          전체결과 보기
         </button>
       </div>
 

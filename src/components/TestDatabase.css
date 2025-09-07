@@ -1,84 +1,93 @@
-/* TestDatabase.css - ������������ �ϰ��� ������ */
+/* TestDatabase.css - MyTest.css와 TestResults.css 스타일 통일 */
 
 :root {
-  --primary-color: #0f0f0f;
-  --accent-color: #f5f5f5;
-  --background-dark: #0f0f0f;
+  --primary-color: #000000;
+  --accent-color: #DDF4E7;
+  --background-dark: #000000;
   --background-medium: #1a1a1a;
-  --background-light: #2a2a2a;
-  --text-light: #f5f5f5;
+  --background-light: #2d2d2d;
+  --text-light: #e0e0e0;
   --text-secondary: #cccccc;
-  --border-accent: rgba(245, 245, 245, 0.3);
-  --shadow-accent: rgba(245, 245, 245, 0.3);
-  --card-bg: rgba(255, 255, 255, 0.1);
-  --button-bg: rgba(255, 255, 255, 0.15);
+  --border-accent: #003161;
+  --shadow-accent: rgba(0, 49, 97, 0.3);
+  --card-bg: rgba(0, 49, 97, 0.1);
+  --button-bg: #26667F;
+  --button-hover: #DDF4E7;
+  --button-text: #124170;
 }
 
 .testdatabase-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--background-dark) 0%, var(--background-medium) 100%);
-  color: var(--text-light);
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #e0e0e0;
   position: relative;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
-/* Ŀư ��� ȿ�� */
+/* 커튼 배경 요소들 */
 .testdatabase-container::before {
   content: '';
   position: fixed;
   top: 0;
-  left: -50%;
-  width: 200%;
-  height: 100%;
-  background: linear-gradient(45deg, 
-    rgba(245, 245, 245, 0.05) 0%, 
-    rgba(255, 255, 255, 0.02) 25%, 
-    rgba(245, 245, 245, 0.05) 50%, 
-    rgba(255, 255, 255, 0.02) 75%, 
-    rgba(245, 245, 245, 0.05) 100%);
+  left: -50px;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(90deg, 
+    rgba(0, 11, 88, 0.8) 0%,
+    rgba(0, 11, 88, 0.6) 30%,
+    rgba(0, 11, 88, 0.3) 70%,
+    transparent 100%);
   transform: skewX(-15deg);
-  z-index: -1;
-  animation: curtainFloat 20s ease-in-out infinite;
-  will-change: transform;
+  z-index: 1;
+  animation: curtainLeft 8s ease-in-out infinite;
 }
 
 .testdatabase-container::after {
   content: '';
   position: fixed;
   top: 0;
-  right: -50%;
-  width: 200%;
-  height: 100%;
-  background: linear-gradient(-45deg, 
-    rgba(255, 255, 255, 0.02) 0%, 
-    rgba(245, 245, 245, 0.05) 25%, 
-    rgba(255, 255, 255, 0.02) 50%, 
-    rgba(245, 245, 245, 0.05) 75%, 
-    rgba(255, 255, 255, 0.02) 100%);
+  right: -50px;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(-90deg, 
+    rgba(0, 11, 88, 0.8) 0%,
+    rgba(0, 11, 88, 0.6) 30%,
+    rgba(0, 11, 88, 0.3) 70%,
+    transparent 100%);
   transform: skewX(15deg);
-  z-index: -1;
-  animation: curtainFloat 25s ease-in-out infinite reverse;
-  will-change: transform;
+  z-index: 1;
+  animation: curtainRight 8s ease-in-out infinite;
 }
 
-@keyframes curtainFloat {
+@keyframes curtainLeft {
   0%, 100% { transform: skewX(-15deg) translateX(0); }
-  50% { transform: skewX(-15deg) translateX(20px); }
+  50% { transform: skewX(-15deg) translateX(-20px); }
 }
 
-/* ���� �����̳� */
+@keyframes curtainRight {
+  0%, 100% { transform: skewX(15deg) translateX(0); }
+  50% { transform: skewX(15deg) translateX(20px); }
+}
+
+/* 메인 콘텐츠 */
 .testdatabase-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 120px 20px 20px 20px; /* 상단 여백 120px로 증가 */
+  padding: 120px 20px 20px 20px;
+  position: relative;
+  z-index: 1;
 }
 
-/* ��� */
+/* 헤더 */
 .testdatabase-header {
   background: var(--card-bg);
-  border: 2px solid var(--border-accent);
-  border-radius: 20px;
-  padding: 30px;
+  border: 1px solid var(--border-accent);
+  border-radius: 15px;
+  padding: 25px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -97,7 +106,8 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0;
-  text-shadow: 0 0 20px rgba(245, 245, 245, 0.3);
+  text-shadow: 0 0 30px rgba(255, 244, 183, 0.5);
+  flex: 1;
 }
 
 .header-buttons {
@@ -108,23 +118,24 @@
 
 .take-test-btn, .clear-results-btn {
   background: var(--button-bg);
-  border: 2px solid var(--accent-color);
+  border: 1px solid var(--accent-color);
   color: var(--accent-color);
   padding: 12px 24px;
-  border-radius: 25px;
+  border-radius: 20px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .take-test-btn:hover, .clear-results-btn:hover {
-  background: var(--accent-color);
-  color: var(--primary-color);
+  background: var(--button-hover);
+  color: var(--button-text);
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(245, 245, 245, 0.2);
+  box-shadow: 0 5px 20px rgba(255, 244, 183, 0.3);
 }
 
 .clear-results-btn {
@@ -138,11 +149,11 @@
   color: var(--text-light);
 }
 
-/* ĳ���� ��� ���� */
+/* 캐릭터 통계 섹션 */
 .character-statistics {
   background: var(--card-bg);
-  border: 2px solid var(--border-accent);
-  border-radius: 20px;
+  border: 1px solid var(--border-accent);
+  border-radius: 15px;
   padding: 30px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
@@ -151,11 +162,11 @@
 
 .character-statistics h2 {
   color: var(--accent-color);
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 500;
   margin: 0 0 25px 0;
   text-align: center;
-  text-shadow: 0 0 15px rgba(245, 245, 245, 0.3);
+  text-shadow: 0 0 15px rgba(255, 244, 183, 0.3);
 }
 
 .character-stats-grid {
@@ -165,8 +176,8 @@
 }
 
 .character-stat-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid var(--border-accent);
+  background: rgba(0, 49, 97, 0.1);
+  border: 1px solid var(--border-accent);
   border-radius: 15px;
   padding: 20px;
   text-align: center;
@@ -175,16 +186,16 @@
 }
 
 .character-stat-card:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 49, 97, 0.2);
   border-color: var(--accent-color);
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(245, 245, 245, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 49, 97, 0.3);
 }
 
 .character-stat-card.active {
   border-color: var(--accent-color);
-  background: rgba(245, 245, 245, 0.1);
-  box-shadow: 0 0 20px rgba(245, 245, 245, 0.3);
+  background: rgba(221, 244, 231, 0.1);
+  box-shadow: 0 0 20px rgba(221, 244, 231, 0.3);
 }
 
 .character-emoji {
@@ -206,11 +217,22 @@
   font-weight: 500;
 }
 
-/* ���� ���� */
+/* 안내 텍스트 */
+.instruction-text {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin: 15px 0 25px 0;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* 필터 섹션 */
 .filter-section {
   background: var(--card-bg);
-  border: 2px solid var(--border-accent);
-  border-radius: 20px;
+  border: 1px solid var(--border-accent);
+  border-radius: 15px;
   padding: 25px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
@@ -233,8 +255,8 @@
 }
 
 .filter-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid var(--border-accent);
+  background: rgba(0, 49, 97, 0.1);
+  border: 1px solid var(--border-accent);
   color: var(--text-light);
   padding: 10px 20px;
   border-radius: 15px;
@@ -246,21 +268,21 @@
 
 .filter-btn:hover {
   border-color: var(--accent-color);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 49, 97, 0.2);
 }
 
 .filter-btn.active {
   background: var(--accent-color);
   border-color: var(--accent-color);
-  color: var(--primary-color);
-  box-shadow: 0 0 20px rgba(245, 245, 245, 0.3);
+  color: var(--button-text);
+  box-shadow: 0 0 20px rgba(221, 244, 231, 0.3);
 }
 
-/* �׽�Ʈ ��� ��� */
+/* 테스트 결과 목록 */
 .test-results-list {
   background: var(--card-bg);
-  border: 2px solid var(--border-accent);
-  border-radius: 20px;
+  border: 1px solid var(--border-accent);
+  border-radius: 15px;
   padding: 30px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -272,7 +294,7 @@
   font-weight: 700;
   margin: 0 0 25px 0;
   text-align: center;
-  text-shadow: 0 0 15px rgba(245, 245, 245, 0.3);
+  text-shadow: 0 0 15px rgba(255, 244, 183, 0.3);
 }
 
 .no-results {
@@ -293,18 +315,18 @@
 }
 
 .result-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid var(--border-accent);
+  background: rgba(0, 49, 97, 0.1);
+  border: 1px solid var(--border-accent);
   border-radius: 15px;
   padding: 20px;
   transition: all 0.3s ease;
 }
 
 .result-card:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 49, 97, 0.2);
   border-color: var(--accent-color);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(245, 245, 245, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 49, 97, 0.3);
 }
 
 .result-header {
@@ -345,7 +367,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 49, 97, 0.3);
 }
 
 .score-item:last-child {
@@ -364,7 +386,7 @@
   font-weight: 600;
 }
 
-/* ĳ���� ��� */
+/* 캐릭터 모달 */
 .character-modal-overlay {
   position: fixed;
   top: 0;
@@ -382,7 +404,7 @@
 
 .character-modal {
   background: var(--background-medium);
-  border: 2px solid var(--border-accent);
+  border: 1px solid var(--border-accent);
   border-radius: 20px;
   padding: 30px;
   max-width: 600px;
@@ -398,7 +420,7 @@
   gap: 15px;
   margin-bottom: 25px;
   padding-bottom: 20px;
-  border-bottom: 2px solid var(--border-accent);
+  border-bottom: 1px solid var(--border-accent);
 }
 
 .modal-character-emoji {
@@ -430,7 +452,7 @@
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 49, 97, 0.2);
   color: var(--accent-color);
 }
 
@@ -466,7 +488,7 @@
 .tag {
   background: var(--button-bg);
   border: 1px solid var(--border-accent);
-  color: var(--text-light);
+  color: var(--accent-color);
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -477,14 +499,14 @@
 .trait-tag:hover,
 .tag:hover {
   background: var(--accent-color);
-  color: var(--primary-color);
+  color: var(--button-text);
   transform: translateY(-2px);
 }
 
-/* ������ ������ */
+/* 반응형 디자인 */
 @media (max-width: 768px) {
   .testdatabase-content {
-    padding: 80px 15px 15px 15px; /* 상단 여백을 80px로 조정 (Topnav 높이 50px + 여유공간 30px) */
+    padding: 80px 15px 15px 15px;
   }
   
   .header-content {
