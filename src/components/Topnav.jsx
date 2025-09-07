@@ -83,7 +83,7 @@ export default function Topnav({ variant = "default" }) {
             onKeyDown={(e) => e.key === 'Enter' && goHome()}
             style={{ cursor: 'pointer' }}
           >
-            <h1 className="logo">KurtainCall</h1>
+            <h1 className="logo">FestiGuard</h1>
           </div>
         )}
 
@@ -123,7 +123,7 @@ export default function Topnav({ variant = "default" }) {
         </nav>
 
         <div className="side-menu-footer">
-          <p>© 2025 KurtainCall</p>
+          <p>© 2025 FestiGuard</p>
           <p>Your Gateway to Korea's Hidden Stages</p>
         </div>
       </div>
