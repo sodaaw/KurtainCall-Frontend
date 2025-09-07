@@ -89,6 +89,17 @@ const TestDatabase = () => {
     Unaware: testResults.filter(r => r.topCharacter === 'Unaware').length
   };
 
+  // 총 테스트 수
+  const totalTests = testResults.length;
+
+  // 퍼센트 계산
+  const characterPercentages = {
+    Sentinel: totalTests > 0 ? (characterStats.Sentinel / totalTests * 100) : 0,
+    Guardian: totalTests > 0 ? (characterStats.Guardian / totalTests * 100) : 0,
+    Navigator: totalTests > 0 ? (characterStats.Navigator / totalTests * 100) : 0,
+    Unaware: totalTests > 0 ? (characterStats.Unaware / totalTests * 100) : 0
+  };
+
   const handleCharacterClick = (characterName) => {
     setSelectedCharacter(characterName);
     setFilterCharacter(characterName);
@@ -153,10 +164,37 @@ const TestDatabase = () => {
               );
             })}
           </div>
+
+          {/* Bar Graph */}
+          <div className="bar-graph-container">
+            <h3>유형별 분포</h3>
+            <div className="bar-graph">
+              {Object.entries(characterPercentages).map(([character, percentage]) => {
+                const info = characterInfo[character];
+                if (!info) return null;
+                
+                return (
+                  <div key={character} className="bar-item">
+                    <div className="bar-label">
+                      <span className="bar-emoji">{info.emoji}</span>
+                      <span className="bar-name">{info.name}</span>
+                      <span className="bar-percentage">{percentage.toFixed(1)}%</span>
+                    </div>
+                    <div className="bar-track">
+                      <div 
+                        className="bar-fill" 
+                        style={{ width: `${percentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </section>
 
         {/* 필터 옵션 */}
-        <section className="filter-section">
+        {/* <section className="filter-section">
           <h3>필터 옵션</h3>
           <div className="filter-buttons">
             <button 
@@ -175,10 +213,10 @@ const TestDatabase = () => {
               </button>
             ))}
           </div>
-        </section>
+        </section> */}
 
         {/* 테스트 결과 목록 */}
-        <section className="test-results-list">
+        {/* <section className="test-results-list">
           <h2>테스트 결과 ({filteredResults.length}개)</h2>
           {filteredResults.length === 0 ? (
             <div className="no-results">
@@ -223,7 +261,7 @@ const TestDatabase = () => {
               })}
             </div>
           )}
-        </section>
+        </section> */}
 
         {/* 선택된 캐릭터 상세 정보 모달 */}
         {selectedCharacter && (
