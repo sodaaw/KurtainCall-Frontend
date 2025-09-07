@@ -43,7 +43,7 @@
     rgba(0, 11, 88, 0.3) 70%,
     transparent 100%);
   transform: skewX(-15deg);
-  z-index: 1;
+  z-index: 0;
   animation: curtainLeft 8s ease-in-out infinite;
 }
 
@@ -60,7 +60,7 @@
     rgba(0, 11, 88, 0.3) 70%,
     transparent 100%);
   transform: skewX(15deg);
-  z-index: 1;
+  z-index: 0;
   animation: curtainRight 8s ease-in-out infinite;
 }
 
@@ -483,7 +483,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1001;
 }
 
 .character-modal {
@@ -497,6 +497,7 @@
   overflow-y: auto;
   position: relative;
   margin-top: 20px;
+  z-index: 1002;
 }
 
 .modal-header {
@@ -536,6 +537,7 @@
   border-radius: 50%;
   position: absolute;
   right: 0;
+  z-index: 1003;
 }
 
 .tst-close-btn:hover {
@@ -562,6 +564,7 @@
   font-size: 1.3rem;
   font-weight: 600;
   margin: 0 0 15px 0;
+  text-align: center;
 }
 
 .traits-list,
