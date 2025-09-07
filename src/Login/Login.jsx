@@ -20,24 +20,24 @@ export default function Login() {
           <p className="login-subtitle">FestiGuard 계정으로 로그인하세요</p>
         </div>
         
-        <div className="form-group">
-          <label htmlFor="userid" className="form-label">아이디</label>
+        <div className="login-form-group">
+          <label htmlFor="userid" className="login-form-label">아이디</label>
           <input
             id="userid"
             type="text"
-            className="form-input"
+            className="login-form-input"
             placeholder="아이디"
             value={id}
             onChange={(e) => setId(e.target.value)}
           />
         </div>
         
-        <div className="form-group">
-          <label htmlFor="userpassword" className="form-label">비밀번호</label>
+        <div className="login-form-group">
+          <label htmlFor="userpassword" className="login-form-label">비밀번호</label>
           <input
             id="userpassword"
             type="password"
-            className="form-input"
+            className="login-form-input"
             placeholder="비밀번호"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -48,11 +48,11 @@ export default function Login() {
           로그인
         </button>
         
-        <div className="signup-link">
-          <p className="signup-text">계정이 없으신가요?</p>
+        <div className="login-signup-link">
+          <p className="login-signup-text">계정이 없으신가요?</p>
           <button 
             type="button" 
-            className="signup-btn"
+            className="login-signup-btn"
             onClick={() => window.location.href = '/signup'}
           >
             회원가입
