@@ -14,7 +14,7 @@
 .main-page {
   background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
   min-height: 100vh;
-  color: #f5f5f5;
+  color: #DDF4E7;
   position: relative;
   overflow-x: hidden;
 }
@@ -281,14 +281,24 @@
   position: relative;
 } */
 
-/* 한 번만 선언 – 어디서든 동일하게 동작 */
+/* NCLNeovibes 폰트 정의 */
+@font-face {
+  font-family: 'NCLNeovibes';
+  src: url('../assets/fonts/NCLNeovibes.woff2') format('woff2'),
+       url('../assets/fonts/NCLNeovibes.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* FestiGuard 제목 */
 .hero h1 {
-  font-family: 'Swanley';
+  font-family: 'NCLNeovibes', 'Swanley', sans-serif;
   font-size: clamp(60px, 6.2vw, 84px); /* 최소 42px, 보통 6.2vw, 최대 84px */
   line-height: 1.06;
   letter-spacing: -0.01em;
   margin: 0;                  /* 음수 마진 제거 */
-  color: #FFF4B7;
+  color: #67C090;
   font-weight: 500;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
@@ -297,7 +307,7 @@
   font-size: clamp(14px, 1.6vw, 18px);
   line-height: 1.45;
   margin: 6px 0 18px;
-  color: #c5a572;
+  color: #DDF4E7;
   text-wrap: balance;                  /* 줄바꿈 밸런스(지원 브라우저에서) */
 }
 
@@ -310,7 +320,7 @@
 }
 
 .hero p {
-  color: #FFF4B7;
+  color: #DDF4E7;
   margin-bottom: 20px;
   font-size: 1rem;
   font-weight: 500;
@@ -336,12 +346,12 @@
   letter-spacing: .2px;
   background: rgba(0, 11, 88, 0.18);
   border: 1px solid rgba(255, 244, 183, 0.35);
-  color: #FFF4B7;
+  color: #DDF4E7;
   box-shadow: 0 2px 6px rgba(0,0,0,.25) inset;
 }
 
 .hero .tagline { 
-  color: #c5a572; 
+  color: #DDF4E7; 
   margin: 6px 0 18px 0; 
   font-size: 1.1rem; 
   font-weight: 500; 
