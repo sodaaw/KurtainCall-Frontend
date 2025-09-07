@@ -23,12 +23,12 @@ const MyTest = () => {
     "지역 축제·행사에 가면 안전 요원 수를 확인하게 된다.",
     "위험 징후(과밀, 소음, 압박 등)를 빨리 눈치챈다.",
     "위험한 상황에서 침착하게 행동할 자신이 있다.",
-    "사람 많은 곳에서도 '설마 사고 나겠어?'라고 대수롭지 않게 여긴다.",
+    "사람 많은 곳에서도 '설마 사고가 나겠어?'라고 대수롭지 않게 여긴다.",
     "군중 안전 문제는 개인보다 사회가 해결해야 한다고 생각한다.",
     "군중 속에서 신체 접촉이 잦아도 별로 신경 안 쓴다.",
     "비상벨·알람이 울리면 무조건 원인을 확인한다.",
     "사고 관련 뉴스를 보면 '나도 대비해야겠다'라고 생각한다.",
-    "군중 상황에서 스마트 기기로 경보를 받는다면 적극 활용할 것이다.",
+    "군중 상황에서 스마트폰 알림이나 경보를 받으면 바로 확인하고 대응할 것이다.",
     "군중 사고는 언제든 내 주변에서도 일어날 수 있다고 생각한다."
 ];
 
@@ -91,9 +91,9 @@ return (
         <div className="header-content">
         <h1 className="mytest-title">안전 유형 테스트</h1>
         <p className="test-description">잠깐의 여유 시간, 재미있는 테스트와 함께<br></br>안전 감각도 확인해보세요.</p>
-        <button className="previous-results-btn" onClick={() => navigate('/test/database')}>
+        {/* <button className="previous-results-btn" onClick={() => navigate('/test/database')}>
             이전 결과 보기
-        </button>
+        </button> */}
         </div>
     </div>
 

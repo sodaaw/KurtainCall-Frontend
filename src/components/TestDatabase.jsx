@@ -272,7 +272,7 @@ const TestDatabase = () => {
                   {characterInfo[selectedCharacter].emoji}
                 </div>
                 <h2>{characterInfo[selectedCharacter].name}</h2>
-                <button className="close-btn" onClick={handleCloseCharacter}>×</button>
+                <button className="tst-close-btn" onClick={handleCloseCharacter}>×</button>
               </div>
               
               <div className="modal-content">
