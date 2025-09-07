@@ -695,6 +695,12 @@
     z-index: 1001; /* 모바일에서 더 높은 z-index */
   }
   
+  .trait-tag,
+  .tag {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+  
   .character-modal-overlay {
     z-index: 1000; /* 모바일에서 더 높은 z-index */
   }
@@ -777,6 +783,11 @@
     max-width: 160px;
     font-size: 0.85rem;
     padding: 8px 16px;
-
+  }
+  
+  .trait-tag,
+  .tag {
+    font-size: 0.75rem;
+    padding: 5px 10px;
   }
 }
