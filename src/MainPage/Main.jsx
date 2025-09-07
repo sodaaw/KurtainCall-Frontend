@@ -43,7 +43,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (isLoading) {
     return (
       <header className="hero">
-        <h1>KurtainCall</h1>
+        <h1>FestiGuard</h1>
         <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
         <div className="loading-spinner">
           <div className="spinner-animation"></div>
@@ -56,7 +56,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (error) {
     return (
       <header className="hero">
-        <h1>KurtainCall</h1>
+        <h1>FestiGuard</h1>
         <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
         <div className="error-message">
           <div className="error-icon">⚠️</div>
@@ -70,7 +70,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (!plays || plays.length === 0) {
     return (
       <header className="hero">
-        <h1>KurtainCall</h1>
+        <h1>FestiGuard</h1>
         <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
         <div className="no-data">
           <div className="no-data-icon">📭</div>
@@ -88,7 +88,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (!current) {
     return (
       <header className="hero">
-        <h1>KurtainCall</h1>
+        <h1>FestiGuard</h1>
         <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
         <div className="no-data">
           <div className="no-data-icon">📭</div>
@@ -116,7 +116,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
       
 
       {/* 제목 */}
-      <h1>KurtainCall</h1>
+      <h1>FestiGuard</h1>
 
       {/* 태그라인 */}
       <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>

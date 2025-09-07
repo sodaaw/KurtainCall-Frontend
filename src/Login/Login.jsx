@@ -17,7 +17,7 @@ export default function Login() {
       <div className="login-form-container">
         <div className="login-header">
           <h1 className="login-title">로그인</h1>
-          <p className="login-subtitle">KurtainCall 계정으로 로그인하세요</p>
+          <p className="login-subtitle">FestiGuard 계정으로 로그인하세요</p>
         </div>
         
         <div className="form-group">
