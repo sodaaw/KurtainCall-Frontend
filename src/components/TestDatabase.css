@@ -398,8 +398,6 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
 }
 
 .character-modal {
@@ -496,11 +494,18 @@
   transition: all 0.3s ease;
 }
 
+.trait-tag {
+  background-color: #124170;
+  color: #DDF4E7;
+  box-shadow: none;
+}
+
 .trait-tag:hover,
 .tag:hover {
   background: var(--accent-color);
   color: var(--button-text);
   transform: translateY(-2px);
+  box-shadow: none;
 }
 
 /* 반응형 디자인 */
@@ -538,6 +543,7 @@
   
   .character-modal {
     margin: 20px;
+    margin-top: 60px;
     padding: 20px;
   }
 }

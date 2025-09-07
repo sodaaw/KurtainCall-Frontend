@@ -233,7 +233,7 @@ const TestDatabase = () => {
                 <div className="modal-character-emoji">
                   {characterInfo[selectedCharacter].emoji}
                 </div>
-                <h2>{characterInfo[selectedCharacter].emoji} {characterInfo[selectedCharacter].name}</h2>
+                <h2>{characterInfo[selectedCharacter].name}</h2>
                 <button className="close-btn" onClick={handleCloseCharacter}>×</button>
               </div>
               
