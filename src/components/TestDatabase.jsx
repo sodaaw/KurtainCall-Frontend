@@ -144,7 +144,7 @@ const TestDatabase = () => {
           <h2>유형별 통계</h2>
           {/* 안내 텍스트 */}
           <div className="instruction-text">
-            클릭하면 각 유형의 상세 설명 조회 가능
+            각 유형을 클릭하면 자세한 설명을 확인할 수 있어요!
           </div>
           <div className="character-stats-grid">
             {Object.entries(characterStats).map(([character, count]) => {

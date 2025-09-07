@@ -164,7 +164,7 @@
   color: var(--accent-color);
   font-size: 1.4rem;
   font-weight: 500;
-  margin: 0 0 25px 0;
+  margin: 0 0 18px 0;
   text-align: center;
   text-shadow: 0 0 15px rgba(255, 244, 183, 0.3);
 }
@@ -612,8 +612,12 @@
   }
   
   .character-stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 15px;
+  }
+  
+  .character-name {
+    font-size: 0.95rem; /* 태블릿에서도 폰트 크기 약간 줄이기 */
   }
   
   .filter-buttons {
@@ -648,6 +652,11 @@
   
   .character-stat-card {
     padding: 15px;
+    min-width: 0; /* flexbox에서 텍스트 오버플로우 허용 */
+  }
+  
+  .character-name {
+    font-size: 0.85rem; /* 모바일에서 폰트 크기 더 작게 */
   }
   
   .character-emoji {
