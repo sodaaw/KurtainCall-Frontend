@@ -90,7 +90,7 @@ return (
     <div className="mytest-header">
         <div className="header-content">
         <h1 className="mytest-title">안전 유형 테스트</h1>
-        <p className="test-description">군중 속, 나는 얼마나 안전에 민감할까?</p>
+        <p className="test-description">잠깐의 여유 시간, 재미있는 테스트와 함께<br></br>안전 감각도 확인해보세요.</p>
         <button className="previous-results-btn" onClick={() => navigate('/test/database')}>
             이전 결과 보기
         </button>
@@ -159,7 +159,7 @@ return (
         onClick={handleSubmit}
         disabled={Object.keys(answers).length !== questions.length}
         >
-        Submit
+        결과 보기
         </button>
     </div>
     </div>

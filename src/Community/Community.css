@@ -1134,17 +1134,16 @@ body {
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #8B0000, #a52a2a) !important;
-  border-color: #d4af37 !important;
-  color: #d4af37 !important;
+  background: #26667F;
+  border-color: #DDF4E7;
+  color: #DDF4E7;
   font-weight: 600;
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
 }
 
 .submit-btn:hover {
-  background: linear-gradient(135deg, #a52a2a, #8B0000) !important;
-  transform: translateY(-3px) !important;
-  box-shadow: 0 6px 25px rgba(212, 175, 55, 0.4) !important;
+  background: #DDF4E7;
+  transform: translateY(-3px);
 }
 
 /* 메인 */

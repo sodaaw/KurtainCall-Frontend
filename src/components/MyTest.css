@@ -2,10 +2,23 @@
 .mytest-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+  background-attachment: fixed; /* 배경을 고정하여 스크롤해도 유지 */
+  background-size: cover; /* 배경이 전체 영역을 덮도록 */
+  background-repeat: no-repeat; /* 배경 반복 방지 */
   color: #e0e0e0;
   position: relative;
   overflow-x: hidden;
   scroll-behavior: smooth; /* 부드러운 스크롤을 위한 기본 설정 */
+}
+
+/* 페이지 전체 배경 설정 */
+body {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
 }
 
 /* 커튼 배경 요소들 */
@@ -89,9 +102,9 @@
 
 .test-description {
   color: #e0e0e0;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   text-align: center;
-  margin: 0px 0 0px 0;
+  margin: -10px 0 10px 0;
   font-style: italic;
   opacity: 0.9;
 }
@@ -112,12 +125,11 @@
 }
 
 .previous-results-btn:hover {
-  background: linear-gradient(135deg, #FFF4B7, #fdeb85);
+  background: linear-gradient(135deg, #DDF4E7, #DDF4E7);
   color: #1a1a1a;
   transform: translateY(-2px);
   box-shadow: 0 5px 20px rgba(255, 244, 183, 0.3);
 }
-
 
 
 /* 진행률 섹션 */
@@ -315,23 +327,23 @@
 }
 
 .mytest-container .submit-btn {
-  border: 3px solid #FFD700;
-  color: #FFD700;
-  padding: 18px 40px;
+  border: 1px solid #DDF4E7;
+  color: #DDF4E7;
+  padding: 10px 30px;
   border-radius: 30px;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  margin-bottom: 20px;
 }
 
 .mytest-container .submit-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: #8B0000;
+  background: #DDF4E7;
+  color: #124170;
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
 }
 
 .mytest-container .submit-btn:disabled {
@@ -397,11 +409,11 @@
 @media (max-width: 480px) {
   .header-content h1 {
     font-size: 1.8rem;
-    margin-bottom: 10px; /* 제목과 설명 사이 간격 줄이기 */
   }
 
-  .test-description {
-    margin: 10px 0 15px 0; /* 상하 마진 줄이기 */
+  .mytest-container .test-description {
+    margin: 10px 0 15px 0 !important; /* 상하 마진 줄이기 */
+    font-size: 0.9rem !important; /* 모바일에서 폰트 크기 줄이기 */
   }
   
   .previous-results-btn {
