@@ -87,6 +87,15 @@
   flex: 1;
 }
 
+.test-description {
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 10px 0 20px 0;
+  font-style: italic;
+  opacity: 0.9;
+}
+
 .previous-results-btn {
   background: linear-gradient(135deg, #003161, #004c9e);
   border: 2px solid #FFF4B7;
@@ -314,7 +323,7 @@
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .mytest-content {
-    padding: 15px;
+    padding: 80px 15px 15px 15px; /* 상단 여백을 80px로 조정 (Topnav 높이 50px + 여유공간 30px) */
   }
   
   .header-content h1 {

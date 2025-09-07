@@ -626,7 +626,7 @@
   .results-hero {
     flex-direction: column;
     text-align: center;
-    padding: 40px 20px;
+    padding: 80px 20px 40px 20px; /* 상단 여백을 80px로 조정 (Topnav 높이 50px + 여유공간 30px) */
     gap: 30px;
     max-width: 600px;
   }

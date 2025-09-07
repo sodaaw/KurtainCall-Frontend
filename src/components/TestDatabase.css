@@ -484,7 +484,7 @@
 /* ������ ������ */
 @media (max-width: 768px) {
   .testdatabase-content {
-    padding: 15px;
+    padding: 80px 15px 15px 15px; /* 상단 여백을 80px로 조정 (Topnav 높이 50px + 여유공간 30px) */
   }
   
   .header-content {

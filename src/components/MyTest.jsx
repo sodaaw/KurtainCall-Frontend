@@ -74,7 +74,8 @@ return (
     <div className="mytest-content">
     <div className="mytest-header">
         <div className="header-content">
-        <h1 className="mytest-title">My Test</h1>
+        <h1 className="mytest-title">안전 유형 테스트</h1>
+        <p className="test-description">군중 속, 나는 얼마나 안전에 민감할까?</p>
         <button className="previous-results-btn" onClick={() => navigate('/test/database')}>
             Previous Results
         </button>
