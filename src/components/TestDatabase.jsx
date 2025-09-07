@@ -132,17 +132,22 @@ const TestDatabase = () => {
         <section className="character-statistics">
           <h2>안전 유형별 통계</h2>
           <div className="character-stats-grid">
-            {Object.entries(characterStats).map(([character, count]) => (
-              <div 
-                key={character} 
-                className={`character-stat-card ${filterCharacter === character ? 'active' : ''}`}
-                onClick={() => handleCharacterClick(character)}
-              >
-                <div className="character-emoji">{characterInfo[character].emoji}</div>
-                <div className="character-name">{characterInfo[character].name}</div>
-                <div className="character-count">{count}명</div>
-              </div>
-            ))}
+            {Object.entries(characterStats).map(([character, count]) => {
+              const info = characterInfo[character];
+              if (!info) return null; // characterInfo에 없는 캐릭터는 건너뛰기
+              
+              return (
+                <div 
+                  key={character} 
+                  className={`character-stat-card ${filterCharacter === character ? 'active' : ''}`}
+                  onClick={() => handleCharacterClick(character)}
+                >
+                  <div className="character-emoji">{info.emoji}</div>
+                  <div className="character-name">{info.name}</div>
+                  <div className="character-count">{count}명</div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -180,33 +185,38 @@ const TestDatabase = () => {
             </div>
           ) : (
             <div className="results-grid">
-              {filteredResults.map((result, index) => (
-                <div key={index} className="result-card">
-                  <div className="result-header">
-                    <div className="character-emoji-large">
-                      {characterInfo[result.topCharacter].emoji}
-                    </div>
-                    <div className="result-info">
-                      <div className="result-character">
-                        {characterInfo[result.topCharacter].name}
+              {filteredResults.map((result, index) => {
+                const info = characterInfo[result.topCharacter];
+                if (!info) return null; // characterInfo에 없는 캐릭터는 건너뛰기
+                
+                return (
+                  <div key={index} className="result-card">
+                    <div className="result-header">
+                      <div className="character-emoji-large">
+                        {info.emoji}
                       </div>
-                      <div className="result-date">
-                        {result.date} {result.time}
+                      <div className="result-info">
+                        <div className="result-character">
+                          {info.name}
+                        </div>
+                        <div className="result-date">
+                          {result.date} {result.time}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="result-scores">
+                      <div className="score-item">
+                        <span className="score-label">1위:</span>
+                        <span className="score-value">{info.name} ({(result.topScore * 100).toFixed(1)}%)</span>
+                      </div>
+                      <div className="score-item">
+                        <span className="score-label">점수:</span>
+                        <span className="score-value">{(result.topScore * 100).toFixed(1)}%</span>
                       </div>
                     </div>
                   </div>
-                  <div className="result-scores">
-                    <div className="score-item">
-                      <span className="score-label">1위:</span>
-                      <span className="score-value">{characterInfo[result.topCharacter]?.name || result.topCharacter} ({(result.topScore * 100).toFixed(1)}%)</span>
-                    </div>
-                    <div className="score-item">
-                      <span className="score-label">점수:</span>
-                      <span className="score-value">{(result.topScore * 100).toFixed(1)}%</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>
