@@ -9,6 +9,15 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'NCLNeovibes';
+  src: url('./assets/fonts/NCLNeovibes.woff2') format('woff2'),
+       url('./assets/fonts/NCLNeovibes.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   margin: 0;
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

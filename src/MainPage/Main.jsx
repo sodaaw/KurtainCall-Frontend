@@ -44,7 +44,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
     return (
       <header className="hero">
         <h1>FestiGuard</h1>
-        <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
+        <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
         <div className="loading-spinner">
           <div className="spinner-animation"></div>
           <p>데이터를 불러오는 중...</p>
@@ -57,7 +57,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
     return (
       <header className="hero">
         <h1>FestiGuard</h1>
-        <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
+        <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
         <div className="error-message">
           <div className="error-icon">⚠️</div>
           <p className="error-title">데이터를 불러올 수 없습니다</p>
@@ -71,7 +71,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
     return (
       <header className="hero">
         <h1>FestiGuard</h1>
-        <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
+        <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
@@ -89,7 +89,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
     return (
       <header className="hero">
         <h1>FestiGuard</h1>
-        <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
+        <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
@@ -119,7 +119,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
       <h1>FestiGuard</h1>
 
       {/* 태그라인 */}
-      <p className="tagline">발견의 즐거움, 로컬 공연 큐레이션.</p>
+      <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
     </header>
   );
 }

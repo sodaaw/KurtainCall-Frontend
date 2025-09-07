@@ -1,3 +1,5 @@
+/* NCLNeovibes 폰트는 index.css에서 정의됨 */
+
 /* ========================
    Topnav 기본 스타일
 ======================== */
@@ -7,7 +9,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 30px;
+  height: 50px;
   background: rgba(15, 15, 15, 0.95);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 244, 183, 0.1);
@@ -96,8 +98,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 24px;
-  height: 20px;
+  width: 20px;
+  height: 18px;
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 2px;
@@ -110,7 +112,7 @@
 .hamburger-line {
   width: 100%;
   height: 2px;
-  background: #FFF4B7;
+  background: #DDF4E7;
   border-radius: 1px;
   transition: all 0.3s ease;
   transform-origin: center;
@@ -129,21 +131,20 @@
 }
 
 /* 검색 아이콘 */
-.search-icon {
+.nav-search-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
-  color: #FFF4B7;
+  color: #DDF4E7;
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 50%;
-  background: rgba(255, 244, 183, 0.1);
 }
 
-.search-icon:hover {
-  background: rgba(255, 244, 183, 0.2);
+.nav-search-icon:hover {
+  box-shadow: 0 1px 15px rgba(183, 237, 255, 0.4);
   transform: scale(1.1);
 }
 
@@ -167,28 +168,14 @@
 }
 
 .topnav .logo-wrapper:hover .logo {
-  text-shadow: 0 6px 12px rgba(255, 244, 183, 0.8);
-}
-
-.topnav .logo-wrapper:hover .tagline {
-  text-shadow: 0 2px 6px rgba(255, 244, 183, 0.6);
+  text-shadow: 0 1px 12px #809087;
 }
 
 .topnav .logo {
-  font-family: 'Swanley', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 28px;
-  color: #FFF4B7 !important;
-  font-weight: 500;
-  text-shadow: 0 4px 8px rgba(255, 244, 183, 0.5);
-  transition: all 0.3s ease;
-}
-
-.topnav .tagline {
-  font-size: 12px;
-  color: #FFF4B7 !important;
-  margin: -3px 0 0 0;
+  font-family: 'NCLNeovibes', 'Swanley', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 30px;
+  color: #DDF4E7 !important;
   font-weight: 400;
-  opacity: 1;
   transition: all 0.3s ease;
 }
 
@@ -203,28 +190,27 @@
   gap: 20px;
 }
 
-.login-btn {
-  background: linear-gradient(135deg, #FFF4B7 0%, #c5a572 100%);
-  color: #0f0f0f;
-  border: none;
+.topnav-login-btn {
+  color: #DDF4E7;
+  background-color: black;
+  border: 1px solid black;
   border-radius: 20px;
   padding: 12px 24px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(255, 244, 183, 0.3);
   width: auto;
   min-width: fit-content;
   flex-shrink: 0;
 }
 
-.login-btn:hover {
+.topnav-login-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 244, 183, 0.4);
+  box-shadow: 0 1px 15px rgba(183, 237, 255, 0.4);
 }
 
-.login-btn:active {
+.topnav-login-btn:active {
   transform: translateY(0);
 }
 
@@ -276,7 +262,7 @@
 }
 
 .topnav .side-menu .side-menu-header h2 {
-  color: #FFF4B7 !important;
+  color: #DDF4E7 !important;
   font-size: 24px !important;
   margin: 0 !important;
   font-weight: 600 !important;
@@ -285,7 +271,7 @@
 .close-menu-btn {
   background: none;
   border: none;
-  color: #c5a572;
+  color: #DDF4E7;
   font-size: 24px;
   cursor: pointer;
   padding: 5px;
@@ -295,7 +281,7 @@
 
 .close-menu-btn:hover {
   background: rgba(255, 244, 183, 0.1);
-  color: #FFF4B7;
+  color: #DDF4E7;
 }
 
 .side-menu-nav {
@@ -315,7 +301,7 @@
 .side-menu-nav a {
   display: block;
   padding: 15px 25px;
-  color: #f5f5f5;
+  color: #DDF4E7;
   text-decoration: none;
   font-size: 16px;
   transition: all 0.3s ease;
@@ -324,7 +310,7 @@
 
 .side-menu-nav a:hover {
   background: rgba(255, 244, 183, 0.1);
-  color: #FFF4B7;
+  color: #DDF4E7;
   border-left-color: #FFF4B7;
 }
 
@@ -335,7 +321,7 @@
 }
 
 .side-menu-footer p {
-  color: #c5a572;
+  color: #DDF4E7;
   font-size: 12px;
   margin: 5px 0;
   opacity: 0.8;
@@ -352,7 +338,7 @@
   }
   
   .topnav .logo {
-    font-size: 30px;
+    font-size: 25px;
     margin-top: 20px;
   }
   
@@ -365,7 +351,7 @@
     left: -280px;
   }
   
-  .login-btn {
+  .topnav-login-btn {
     padding: 10px 20px;
     font-size: 13px;
   }
@@ -377,7 +363,7 @@
   }
   
   .topnav.logo {
-    font-size: 22px;
+    font-size: 18px;
     margin-top: 0;
   }
   
@@ -390,12 +376,12 @@
     left: -260px;
   }
   
-  .login-btn {
+  .topnav-login-btn {
     padding: 8px 16px;
     font-size: 12px;
   }
   
-  .search-icon {
+  .nav-search-icon {
     width: 35px;
     height: 35px;
   }
