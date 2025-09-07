@@ -129,12 +129,12 @@
 
 .clear-results-btn {
   background: rgba(255, 107, 107, 0.1);
-  border-color: #ff6b6b;
-  color: #ff6b6b;
+  border-color: #FFF4B7;
+  color: #FFF4B7;
 }
 
 .clear-results-btn:hover {
-  background: #ff6b6b;
+  background: #FFF4B7;
   color: var(--text-light);
 }
 

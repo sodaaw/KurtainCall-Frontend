@@ -37,6 +37,21 @@ const handleAnswer = (questionIndex, value) => {
     ...prev,
     [questionIndex]: value
     }));
+    
+    // 질문 선택 후 해당 질문이 화면 중앙에 오도록 부드럽게 스크롤
+    setTimeout(() => {
+        const questionElement = document.getElementById(`question-${questionIndex}`);
+        if (questionElement) {
+            const elementRect = questionElement.getBoundingClientRect();
+            const absoluteElementTop = elementRect.top + window.pageYOffset;
+            const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+            
+            window.scrollTo({
+                top: middle,
+                behavior: 'smooth'
+            });
+        }
+    }, 100); // 약간의 지연을 두어 애니메이션이 자연스럽게 보이도록
 };
 
 const getAnswerLabel = (value) => {
@@ -98,7 +113,7 @@ return (
     {/* 질문 섹션 */}
     <div className="questions-section">
         {questions.map((question, index) => (
-        <div key={index} className="question-card">
+        <div key={index} id={`question-${index}`} className="question-card">
             <h3 className="question-text">{question}</h3>
             
             {/* 7단계 응답 척도 */}

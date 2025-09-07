@@ -5,6 +5,7 @@
   color: #e0e0e0;
   position: relative;
   overflow-x: hidden;
+  scroll-behavior: smooth; /* 부드러운 스크롤을 위한 기본 설정 */
 }
 
 /* 커튼 배경 요소들 */
@@ -165,6 +166,7 @@
   padding: 30px;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  scroll-margin-top: 100px; /* 스크롤 시 상단 여백 확보 */
 }
 
 .question-card:hover {
@@ -265,7 +267,7 @@
 .selected-indicator {
   width: 20px;
   height: 20px;
-  background: #8B0000;
+  background: #FFF4B7;
   border-radius: 50%;
   border: 2px solid #FFD700;
 }
@@ -291,7 +293,6 @@
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #8B0000, #A52A2A);
   border: 3px solid #FFD700;
   color: #FFD700;
   padding: 18px 40px;
@@ -306,7 +307,6 @@
 
 .submit-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: #8B0000;
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
 }
