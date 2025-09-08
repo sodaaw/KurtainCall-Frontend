@@ -359,16 +359,12 @@
 
 @media (max-width: 480px) {
   .topnav {
-    padding: 0 15px;
+    padding: 0 12px;
+    height: 50px;
   }
   
-  .topnav.logo {
-    font-size: 18px;
-    margin-top: 0;
-  }
-  
-  .topnav.tagline {
-    font-size: 10px;
+  .topnav .logo {
+    font-size: 20px;
   }
   
   .side-menu {
@@ -376,13 +372,64 @@
     left: -260px;
   }
   
-  .topnav-login-btn {
-    padding: 8px 16px;
+  .login-btn {
+    padding: 8px 14px;
     font-size: 12px;
   }
   
-  .nav-search-icon {
-    width: 35px;
-    height: 35px;
+  .search-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .search-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .menu-toggle {
+    width: 20px;
+    height: 16px;
+  }
+}
+
+/* 매우 작은 화면 (390px 이하) */
+@media (max-width: 390px) {
+  .topnav {
+    padding: 0 8px;
+    height: 45px;
+  }
+  
+  .topnav .logo {
+    font-size: 18px;
+  }
+  
+  .login-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  
+  .search-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .search-icon svg {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .menu-toggle {
+    width: 18px;
+    height: 14px;
+  }
+  
+  .hamburger-line {
+    height: 1.5px;
+  }
+  
+  .side-menu {
+    width: 240px;
+    left: -240px;
   }
 }
