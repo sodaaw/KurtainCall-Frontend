@@ -2,20 +2,20 @@
 /* 기존 테마와 일치하는 다크 버건디 & 골드 테마 */
 
 :root {
-  --burgundy: #8B0000;      /* 버건디 */
-  --burgundy-light: #a52a2a; /* 밝은 버건디 */
-  --gold: #d4af37;          /* 골드 */
-  --gold-light: #c5a572;    /* 연한 골드 */
-  --dark: #0f0f0f;          /* 검정 */
+  --primary: #67C090;       /* 민트 그린 */
+  --primary-light: #7dd3a0; /* 밝은 민트 */
+  --secondary: #26667F;     /* 어두운 블루 */
+  --secondary-light: #3a7a96; /* 밝은 블루 */
+  --dark: #0a0a0a;          /* 검정 */
   --dark-gray: #1a1a1a;     /* 어두운 회색 */
-  --text: #f5f5f5;          /* 밝은 텍스트 */
-  --text-sub: #d1d5db;      /* 보조 텍스트 */
+  --text: #DDF4E7;          /* 밝은 민트 텍스트 */
+  --text-sub: #67C090;      /* 보조 텍스트 */
 }
 
 /* AI Translation 페이지 전체 컨테이너 */
 .ai-translation-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
   color: var(--text);
   position: relative;
   overflow-x: hidden;
@@ -78,29 +78,27 @@
 /* 헤더 */
 .ai-translation-header {
   text-align: center;
-  margin: 30px 0 50px 0;
+  margin: 55px 0 50px 0;
   padding: 25px;
-  background: rgba(139, 0, 0, 0.1);
   border-radius: 20px;
-  border: 2px solid var(--gold);
-  box-shadow: 0 8px 25px rgba(139, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(18, 65, 112, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .ai-translation-title {
-  color: var(--gold);
+  color: var(--text);
   font-size: 2.8rem;
-  font-weight: 800;
-  margin: 0 0 20px 0;
-  text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+  font-weight: 600;
+  margin: 0 0 5px 0;
   letter-spacing: -1px;
 }
 
 .ai-translation-subtitle {
   color: var(--text-sub);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin: 0;
   line-height: 1.6;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* 메인 번역 영역 */
@@ -111,6 +109,195 @@
   width: 100%;
 }
 
+/* === 긴급 상황 표현 영역 === */
+.emergency-expressions {
+  padding: 20px;
+  margin-bottom: 20px;
+  background: rgba(18, 65, 112, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(38, 102, 127, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.emergency-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.emergency-header h3 {
+  color: var(--text);
+  font-size: 1.4rem;
+  margin: 0;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.emergency-language-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.emergency-language-selector label {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.emergency-language-dropdown {
+  background: rgba(18, 65, 112, 0.05);
+  border: 2px solid var(--secondary);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.emergency-language-dropdown:hover {
+  border-color: var(--primary);
+  background: rgba(103, 192, 144, 0.05);
+}
+
+.emergency-language-dropdown:focus {
+  border-color: var(--primary);
+  background: rgba(103, 192, 144, 0.05);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
+}
+
+.emergency-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.emergency-btn {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  border: 2px solid var(--secondary);
+  border-radius: 12px;
+  background: rgba(18, 65, 112, 0.05);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.emergency-btn:hover {
+  border-color: var(--primary);
+  background: rgba(103, 192, 144, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(103, 192, 144, 0.3);
+}
+
+.emergency-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(103, 192, 144, 0.2);
+}
+
+.emergency-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.emergency-icon {
+  font-size: 2rem;
+  min-width: 40px;
+  text-align: center;
+}
+
+.emergency-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.emergency-korean {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.emergency-english {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-sub);
+  line-height: 1.3;
+  font-style: italic;
+}
+
+/* 카테고리별 색상 구분 */
+.emergency-help {
+  border-left: 4px solid #67C090;
+}
+
+.emergency-help:hover {
+  border-left-color: #7dd3a0;
+  background: rgba(103, 192, 144, 0.15);
+}
+
+.emergency-medical {
+  border-left: 4px solid #dc2626;
+}
+
+.emergency-medical:hover {
+  border-left-color: #ef4444;
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.emergency-location {
+  border-left: 4px solid #2563eb;
+}
+
+.emergency-location:hover {
+  border-left-color: #3b82f6;
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.emergency-danger {
+  border-left: 4px solid #dc2626;
+  animation: dangerPulse 2s ease-in-out infinite;
+}
+
+.emergency-danger:hover {
+  border-left-color: #ef4444;
+  background: rgba(220, 38, 38, 0.15);
+}
+
+.emergency-basic {
+  border-left: 4px solid #059669;
+}
+
+.emergency-basic:hover {
+  border-left-color: #10b981;
+  background: rgba(5, 150, 105, 0.1);
+}
+
+@keyframes dangerPulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  50% { 
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+}
+
 /* === 모드 선택 영역 === */
 .mode-selection {
   padding: 20px;
@@ -119,7 +306,7 @@
 }
 
 .mode-selection h3 {
-  color: #FFD700;
+  color: var(--text);
   font-size: 1.3rem;
   margin: 0 0 15px 0;
   font-weight: 700;
@@ -127,10 +314,10 @@
 }
 
 .mode-dropdown {
-  background: linear-gradient(145deg, var(--dark-gray), var(--dark));
-  border: 2px solid var(--gold);
+  background: rgba(18, 65, 112, 0.05);
+  border: 2px solid var(--secondary);
   border-radius: 12px;
-  color: #FFD700;
+  color: var(--text);
   padding: 15px 20px;
   font-size: 1rem;
   font-weight: 600;
@@ -141,13 +328,15 @@
 }
 
 .mode-dropdown:hover {
-  border-color: var(--gold-light);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  border-color: var(--primary);
+  background: rgba(103, 192, 144, 0.05);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
 }
 
 .mode-dropdown:focus {
-  border-color: var(--gold-light);
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  border-color: var(--primary);
+  background: rgba(103, 192, 144, 0.05);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
 }
 
 .mode-dropdown option {
@@ -178,17 +367,17 @@
 }
 
 .language-input label, .language-output label {
-  color: #FFD700;
+  color: var(--text);
   font-weight: 600;
   font-size: 1rem;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .language-input select, .language-output select {
-  background: linear-gradient(145deg, var(--dark-gray), var(--dark));
-  border: 2px solid var(--gold);
+  background: rgba(18, 65, 112, 0.05);
+  border: 2px solid var(--secondary);
   border-radius: 10px;
-  color: #FFD700;
+  color: var(--text);
   padding: 12px 16px;
   font-size: 0.95rem;
   font-weight: 500;
@@ -199,17 +388,19 @@
 }
 
 .language-input select:hover, .language-output select:hover {
-  border-color: var(--gold-light);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  border-color: var(--primary);
+  background: rgba(103, 192, 144, 0.05);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
 }
 
 .language-input select:focus, .language-output select:focus {
-  border-color: var(--gold-light);
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  border-color: var(--primary);
+  background: rgba(103, 192, 144, 0.05);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
 }
 
 .language-arrow {
-  color: #FFD700;
+  color: var(--primary);
   font-size: 1.5rem;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
   font-weight: bold;
@@ -237,7 +428,7 @@
 .tts-toggle input[type="checkbox"] {
   width: 20px;
   height: 20px;
-  accent-color: var(--gold);
+  accent-color: var(--primary);
   cursor: pointer;
 }
 
@@ -255,8 +446,8 @@
 }
 
 .text-input {
-  background: linear-gradient(145deg, var(--dark-gray), var(--dark));
-  border: 2px solid var(--gold);
+  background: rgba(18, 65, 112, 0.05);
+  border: 2px solid var(--secondary);
   border-radius: 12px;
   color: var(--text);
   padding: 18px;
@@ -269,12 +460,13 @@
 }
 
 .text-input:focus {
-  border-color: var(--gold-light);
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+  border-color: var(--primary);
+  background: rgba(103, 192, 144, 0.05);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
 }
 
 .text-input::placeholder {
-  color: #CCCCCC;
+  color: var(--secondary);
   opacity: 0.9;
 }
 
@@ -288,7 +480,7 @@
 }
 
 .voice-input-header h4 {
-  color: #FFD700;
+  color: var(--text);
   font-size: 1.3rem;
   margin: 0 0 10px 0;
   font-weight: 700;
@@ -321,7 +513,7 @@
 .wave {
   width: 4px;
   height: 20px;
-  background: var(--gold);
+  background: var(--primary);
   border-radius: 2px;
   animation: wave 1.2s ease-in-out infinite;
 }
@@ -340,7 +532,7 @@
 }
 
 .listening-status p {
-  color: #FFD700;
+  color: var(--primary);
   font-weight: 600;
   margin: 0;
   font-size: 1rem;
@@ -349,8 +541,8 @@
 
 /* === 버튼 스타일 === */
 .translate-btn, .tts-btn, .microphone-btn {
-  background: linear-gradient(145deg, var(--burgundy), var(--burgundy-light));
-  border: 2px solid var(--gold);
+  background: var(--primary);
+  border: 2px solid var(--primary);
   color: var(--text);
   padding: 15px 25px;
   border-radius: 12px;
@@ -358,34 +550,36 @@
   font-weight: 600;
   font-size: 1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 15px rgba(139, 0, 0, 0.3);
+  box-shadow: 0 6px 15px rgba(103, 192, 144, 0.3);
   position: relative;
   overflow: hidden;
 }
 
 .translate-btn:hover, .tts-btn:hover, .microphone-btn:hover {
-  background: linear-gradient(145deg, var(--burgundy-light), var(--burgundy));
-  border-color: var(--gold-light);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+  background: var(--secondary);
+  border-color: var(--secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(38, 102, 127, 0.4);
 }
 
 .translate-btn:active, .tts-btn:active, .microphone-btn:active {
   transform: translateY(0);
-  box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+  background: #124170;
+  border-color: #124170;
+  box-shadow: 0 4px 15px rgba(18, 65, 112, 0.3);
 }
 
 .translate-btn:disabled, .tts-btn:disabled, .microphone-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 4px 15px rgba(139, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(103, 192, 144, 0.2);
 }
 
 .microphone-btn.listening {
-  background: linear-gradient(145deg, var(--gold), var(--gold-light));
+  background: var(--primary-light);
   color: var(--dark);
-  border-color: var(--gold-light);
+  border-color: var(--primary-light);
   animation: pulse 1.5s ease-in-out infinite;
 }
 
@@ -408,7 +602,7 @@
 }
 
 .result-card h3 {
-  color: #FFD700;
+  color: var(--text);
   font-size: 1.5rem;
   margin: 0 0 20px 0;
   text-align: center;
@@ -420,13 +614,13 @@
 .intermediate-results {
   margin-bottom: 20px;
   padding: 15px;
-  background: rgba(139, 0, 0, 0.1);
+  background: rgba(18, 65, 112, 0.1);
   border-radius: 10px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid rgba(38, 102, 127, 0.3);
 }
 
 .intermediate-title {
-  color: #FFD700;
+  color: var(--primary);
   font-size: 1.2rem;
   margin: 0 0 15px 0;
   font-weight: 700;
@@ -438,13 +632,13 @@
 .stt-results {
   margin-bottom: 20px;
   padding: 15px;
-  background: rgba(139, 0, 0, 0.1);
+  background: rgba(18, 65, 112, 0.1);
   border-radius: 10px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid rgba(38, 102, 127, 0.3);
 }
 
 .stt-title {
-  color: #FFD700;
+  color: var(--primary);
   font-size: 1.2rem;
   margin: 0 0 15px 0;
   font-weight: 700;
@@ -456,7 +650,7 @@
   padding: 15px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid rgba(38, 102, 127, 0.2);
 }
 
 .stt-text {
@@ -472,11 +666,11 @@
   padding: 15px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  border-left: 3px solid var(--gold);
+  border-left: 3px solid var(--primary);
 }
 
 .step-label {
-  color: #FFD700;
+  color: var(--primary);
   font-weight: 600;
   font-size: 0.95rem;
   display: block;
@@ -497,7 +691,7 @@
 }
 
 .final-result h4 {
-  color: #FFD700;
+  color: var(--primary);
   font-size: 1.3rem;
   margin: 0 0 15px 0;
   font-weight: 600;
@@ -508,7 +702,7 @@
   padding: 15px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid rgba(38, 102, 127, 0.2);
 }
 
 .result-text {
@@ -520,7 +714,7 @@
 }
 
 .result-text.processing {
-  color: #FFD700;
+  color: var(--primary);
   font-style: italic;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
@@ -538,14 +732,14 @@
 .status-indicator {
   margin-top: 15px;
   padding: 12px;
-  background: rgba(212, 175, 55, 0.1);
+  background: rgba(103, 192, 144, 0.1);
   border-radius: 8px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid rgba(103, 192, 144, 0.3);
   text-align: center;
 }
 
 .status-text {
-  color: #FFD700;
+  color: var(--primary);
   margin: 0;
   font-weight: 600;
   font-size: 1rem;
@@ -559,8 +753,8 @@
 }
 
 .permission-btn {
-  background: linear-gradient(145deg, var(--gold), var(--gold-light));
-  color: var(--dark);
+  background: var(--primary);
+  color: var(--text);
   border: none;
   padding: 12px 20px;
   border-radius: 8px;
@@ -568,12 +762,12 @@
   font-weight: 600;
   font-size: 0.95rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 4px 15px rgba(103, 192, 144, 0.3);
 }
 
 .permission-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 6px 20px rgba(103, 192, 144, 0.4);
 }
 
 /* === 반응형 디자인 === */
@@ -584,6 +778,35 @@
   
   .ai-translation-title {
     font-size: 2.2rem;
+  }
+  
+  .emergency-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .emergency-buttons-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .emergency-btn {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+  
+  .emergency-icon {
+    font-size: 1.8rem;
+    min-width: 35px;
+  }
+  
+  .emergency-korean {
+    font-size: 0.95rem;
+  }
+  
+  .emergency-english {
+    font-size: 0.85rem;
   }
   
   .mode-dropdown {
@@ -604,6 +827,32 @@
 @media (max-width: 480px) {
   .ai-translation-title {
     font-size: 1.8rem;
+  }
+  
+  .emergency-expressions {
+    padding: 15px;
+  }
+  
+  .emergency-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .emergency-btn {
+    padding: 10px 14px;
+    gap: 10px;
+  }
+  
+  .emergency-icon {
+    font-size: 1.6rem;
+    min-width: 30px;
+  }
+  
+  .emergency-korean {
+    font-size: 0.9rem;
+  }
+  
+  .emergency-english {
+    font-size: 0.8rem;
   }
   
   .mode-dropdown {

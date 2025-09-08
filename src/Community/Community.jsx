@@ -194,9 +194,28 @@ const Community = () => {
       <Topnav onSearchClick={() => setIsSearchOpen(true)} />
       {isSearchOpen && <SearchModal onClose={() => setIsSearchOpen(false)} />}
 
-      <h2 className="community-title">오늘 본 공연, 같이 얘기해볼래?</h2>
+      {/* <h2 className="community-title">오늘 본 공연, 같이 얘기해볼래?</h2> */}
 
+      {/* Coming Soon 메시지 */}
+      <div className="coming-soon-container">
+        <div className="coming-soon-content">
+          <div className="coming-soon-icon">
+            <img src="/images/comingsoon.png" alt="Coming Soon" className="coming-soon-image" />
+          </div>
+          <h1 className="coming-soon-title">Coming Soon...</h1>
+          <p className="coming-soon-subtitle">커뮤니티 기능이 곧 출시됩니다!</p>
+          <div className="coming-soon-animation">
+            <div className="pulse-dot"></div>
+            <div className="pulse-dot"></div>
+            <div className="pulse-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* 기존 내용들 - 모두 주석처리 */}
+      {/*
       {/* 필터 탭 */}
+      {/*
       <div className="community-filters">
         <select className="filter-select">
           <option>오늘</option>
@@ -222,8 +241,10 @@ const Community = () => {
           📷 Photos
         </button>
       </div>
+      */}
 
       {/* 공유 업로드 박스 */}
+      {/*
       <section className="upload-box">
         <div className="upload-header">
           <img src="/profile.png" alt="User" className="profile-pic" />
@@ -261,6 +282,7 @@ const Community = () => {
         */}
 
         {/* 위치 미리보기 영역 */}
+        {/*
         {selectedLocation && (
           <div className="location-preview-container">
             <div className="location-preview">
@@ -297,6 +319,7 @@ const Community = () => {
             📷 Add Photo ({selectedPhotos.length}/5)
           </button>
           */}
+          {/*
           <button onClick={() => setLocationModal({ isOpen: true })}>
             📍 Add Location
           </button>
@@ -309,10 +332,13 @@ const Community = () => {
           </button>
         </div>
       </section>
+      */}
 
       {/* 커뮤니티 메인 */}
+      {/*
       <main className="community-main">
         {/* 왼쪽 피드 */}
+        {/*
         <section className="feed-left">
           {getFilteredPosts().map(post => (
             <article 
@@ -362,6 +388,7 @@ const Community = () => {
                 <p className="review-text">{post.content}</p>
                 
                 {/* 위치 정보 표시 */}
+                {/*
                 {post.location && (
                   <div className="post-location">
                     <span className="location-icon">📍</span>
@@ -415,6 +442,7 @@ const Community = () => {
         </section>
 
         {/* 오른쪽 사이드바 */}
+        {/*
         <aside className="feed-right">
           <div className="upcoming-events">
             <h4>📅 Upcoming Events</h4>
@@ -445,8 +473,10 @@ const Community = () => {
           </div>
         </aside>
       </main>
+      */}
 
       {/* 댓글 모달 */}
+      {/*
       <CommentModal
         isOpen={commentModal.isOpen}
         onClose={() => setCommentModal({ isOpen: false, postId: null, postTitle: "" })}
@@ -456,6 +486,7 @@ const Community = () => {
       />
 
       {/* 댓글 목록 모달 */}
+      {/*
       <CommentsModal
         isOpen={commentsModal.isOpen}
         onClose={() => setCommentsModal({ isOpen: false, post: null })}
@@ -464,11 +495,13 @@ const Community = () => {
       />
 
       {/* 위치 선택 모달 */}
+      {/*
       <LocationModal
         isOpen={locationModal.isOpen}
         onClose={() => setLocationModal({ isOpen: false })}
         onSelect={handleLocationSelect}
       />
+      */}
     </div>
   );
 };

@@ -1,13 +1,14 @@
-/* === Dark Burgundy & Gold Theme === */
+/* === Login Theme Colors === */
 :root {
-  --burgundy: #8B0000;      /* 버건디 */
-  --burgundy-light: #a52a2a; /* 밝은 버건디 */
-  --gold: #d4af37;          /* 골드 */
-  --gold-light: #c5a572;    /* 연한 골드 */
-  --dark: #0f0f0f;          /* 검정 */
-  --dark-gray: #1a1a1a;     /* 어두운 회색 */
-  --text: #f5f5f5;          /* 밝은 텍스트 */
-  --text-sub: #d1d5db;      /* 보조 텍스트 */
+  --primary-green: #67C090;     /* 민트 그린 */
+  --primary-green-light: #7dd3a3; /* 밝은 민트 그린 */
+  --secondary-blue: #26667F;    /* 어두운 청록색 */
+  --secondary-blue-light: #124170; /* 더 어두운 청록색 */
+  --background-blue: rgba(18, 65, 112, 0.1); /* 반투명 청색 */
+  --dark: #0a0a0a;              /* 검정 */
+  --dark-gray: #1a1a1a;         /* 어두운 회색 */
+  --text: #DDF4E7;              /* 연한 민트색 텍스트 */
+  --text-sub: #67C090;          /* 보조 텍스트 */
 }
 
 body {
@@ -21,7 +22,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--dark) 0%, var(--dark-gray) 100%);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
   position: relative;
   overflow-x: hidden;
 }
@@ -86,13 +87,13 @@ body {
   transform: translateX(-50%);
   width: 200px;
   height: 3px;
-  background: linear-gradient(90deg, var(--burgundy), var(--gold), var(--burgundy));
+  background: linear-gradient(90deg, var(--secondary-blue), var(--primary-green), var(--secondary-blue));
   border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(139, 0, 0, 0.4);
+  box-shadow: 0 2px 8px rgba(38, 102, 127, 0.4);
 }
 
 .map-header-text h2 {
-  color: var(--gold);
+  color: var(--primary-green);
   font-size: 2.5rem;
   margin-bottom: 12px;
   font-weight: 800;
@@ -101,7 +102,7 @@ body {
 }
 
 .map-header-text p {
-  color: var(--text-sub);
+  color: #DDF4E7;
   font-size: 1.1rem;
   font-weight: 500;
   margin: 0;
@@ -117,19 +118,20 @@ body {
 
 .map-filter {
   width: 300px;
-  background: linear-gradient(145deg, var(--dark-gray), var(--dark));
+  background: var(--background-blue);
   padding: 20px;
   border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  border: 2px solid var(--burgundy);
+  box-shadow: 0 8px 32px rgba(18, 65, 112, 0.2);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   position: relative;
   flex-shrink: 0;
+  backdrop-filter: blur(10px);
 }
 
 .map-filter h4 {
   margin-bottom: 20px;
   margin-top: 10px;
-  color: var(--gold);
+  color: var(--primary-green);
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -141,8 +143,8 @@ body {
   margin-bottom: 15px;
   padding: 12px 16px;
   border-radius: 12px;
-  border: 2px solid var(--burgundy);
-  background: var(--dark);
+  border: 2px solid var(--secondary-blue);
+  background: rgba(18, 65, 112, 0.05);
   color: var(--text);
   font-size: 1rem;
   transition: all 0.3s ease;
@@ -152,13 +154,13 @@ body {
 .map-filter input:focus,
 .map-filter select:focus {
   outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
-  background: var(--dark-gray);
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
+  background: rgba(103, 192, 144, 0.05);
 }
 
 .map-filter input::placeholder {
-  color: var(--text-sub);
+  color: var(--secondary-blue);
 }
 
 .filter-buttons {
@@ -169,10 +171,10 @@ body {
 
 .apply-btn, .reset-btn {
   flex: 1;
-  background: linear-gradient(145deg, var(--burgundy), var(--burgundy-light));
+  background: var(--primary-green);
   color: var(--text);
   padding: 12px 16px;
-  border: 2px solid var(--gold);
+  border: 2px solid var(--primary-green);
   border-radius: 12px;
   cursor: pointer;
   font-size: 1rem;
@@ -185,32 +187,32 @@ body {
 }
 
 .reset-btn {
-  background: linear-gradient(145deg, #666, #888);
-  border-color: #ccc;
+  background: var(--secondary-blue);
+  border-color: var(--secondary-blue);
 }
 
 .reset-btn:hover {
-  background: linear-gradient(145deg, #777, #999);
-  border-color: #ddd;
+  background: var(--secondary-blue-light);
+  border-color: var(--secondary-blue-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 20px rgba(18, 65, 112, 0.3);
 }
 
 .reset-btn:active {
   transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(18, 65, 112, 0.3);
 }
 
 .apply-btn:hover {
-  background: linear-gradient(145deg, var(--gold), var(--gold-light));
-  border-color: var(--burgundy);
+  background: var(--secondary-blue);
+  border-color: var(--secondary-blue);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
+  box-shadow: 0 8px 20px rgba(38, 102, 127, 0.4);
 }
 
 .apply-btn:active {
   transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(139, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(38, 102, 127, 0.4);
 }
 
 .apply-btn::before {
@@ -231,11 +233,11 @@ body {
 .popular-areas {
   margin-top: 10px;
   padding-top: 25px;
-  border-top: 1px solid rgba(139, 0, 0, 0.3);
+  border-top: 1px solid rgba(38, 102, 127, 0.3);
 }
 
 .popular-areas h4 {
-  color: var(--gold);
+  color: var(--primary-green);
   margin-bottom: 15px;
   font-size: 1.2rem;
   font-weight: 600;
@@ -252,7 +254,7 @@ body {
   font-size: 1rem;
   color: var(--text);
   padding: 12px 16px;
-  background: rgba(139, 0, 0, 0.1);
+  background: rgba(18, 65, 112, 0.1);
   border-radius: 8px;
   border-left: 3px solid transparent;
   transition: all 0.3s ease;
@@ -262,10 +264,10 @@ body {
 }
 
 .popular-areas li:hover {
-  background: rgba(212, 175, 55, 0.15);
-  border-left-color: var(--gold);
+  background: rgba(103, 192, 144, 0.15);
+  border-left-color: var(--primary-green);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 4px 12px rgba(103, 192, 144, 0.2);
 }
 
 .popular-areas li:active {
@@ -280,7 +282,7 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(103, 192, 144, 0.1), transparent);
   transition: left 0.5s ease;
 }
 
@@ -292,9 +294,9 @@ body {
   flex: 1;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 32px rgba(18, 65, 112, 0.2);
   max-height: 600px;
-  border: 2px solid var(--burgundy);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   position: relative;
 }
 
@@ -305,7 +307,7 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--burgundy), var(--gold), var(--burgundy));
+  background: linear-gradient(90deg, var(--secondary-blue), var(--primary-green), var(--secondary-blue));
   z-index: 1;
 }
 
@@ -331,7 +333,7 @@ body {
 }
 
 .map-loading-spinner {
-  color: var(--gold);
+  color: var(--primary-green);
   font-size: 1.2rem;
   font-weight: 600;
   text-align: center;
@@ -344,12 +346,12 @@ body {
 }
 
 .filter-results {
-  background: rgba(212, 175, 55, 0.05);
-  border-top: 2px solid var(--gold);
+  background: rgba(103, 192, 144, 0.05);
+  border-top: 2px solid var(--primary-green);
 }
 
 .filter-results h4 {
-  color: var(--gold);
+  color: var(--primary-green);
   font-size: 1.5rem;
   margin-bottom: 20px;
   text-align: center;
@@ -363,7 +365,7 @@ body {
   background: rgba(255, 255, 255, 0.02);
   border-radius: 12px;
   margin: 20px;
-  border: 1px dashed rgba(212, 175, 55, 0.3);
+  border: 1px dashed rgba(103, 192, 144, 0.3);
 }
 
 .no-filter-message p {
@@ -378,11 +380,11 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--burgundy), var(--gold), var(--burgundy));
+  background: linear-gradient(90deg, var(--secondary-blue), var(--primary-green), var(--secondary-blue));
 }
 
 .found-experiences h4 {
-  color: var(--gold);
+  color: var(--primary-green);
   margin-bottom: 25px;
   font-size: 1.8rem;
   font-weight: 700;
@@ -399,18 +401,19 @@ body {
 }
 
 .exp-card {
-  background: linear-gradient(145deg, var(--dark-gray), var(--dark));
+  background: var(--background-blue);
   padding: 20px;
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 32px rgba(18, 65, 112, 0.2);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 2px solid var(--burgundy);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
   gap: 15px;
+  backdrop-filter: blur(10px);
 }
 
 .exp-card::before {
@@ -420,14 +423,14 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--burgundy), var(--gold), var(--burgundy));
+  background: linear-gradient(90deg, var(--secondary-blue), var(--primary-green), var(--secondary-blue));
   border-radius: 16px 16px 0 0;
 }
 
 .exp-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 35px rgba(139, 0, 0, 0.5);
-  border-color: var(--gold);
+  box-shadow: 0 12px 35px rgba(38, 102, 127, 0.5);
+  border-color: var(--primary-green);
 }
 
 .exp-info {
@@ -451,17 +454,17 @@ body {
 
 .exp-rating {
   font-weight: bold;
-  color: var(--gold);
+  color: var(--primary-green);
   margin-right: 15px;
   font-size: 1.1rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .view-btn {
-  background: linear-gradient(145deg, var(--burgundy), var(--burgundy-light));
+  background: var(--primary-green);
   color: var(--text);
   padding: 8px 16px;
-  border: 2px solid var(--gold);
+  border: 2px solid var(--primary-green);
   border-radius: 12px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -475,10 +478,10 @@ body {
 }
 
 .view-btn:hover {
-  background: linear-gradient(145deg, var(--gold), var(--gold-light));
-  border-color: var(--burgundy);
+  background: var(--secondary-blue);
+  border-color: var(--secondary-blue);
   transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(139, 0, 0, 0.4);
+  box-shadow: 0 4px 15px rgba(38, 102, 127, 0.4);
 }
 
 /* 반응형 디자인 */
@@ -486,6 +489,7 @@ body {
   .map-content {
     flex-direction: column;
     gap: 20px;
+    padding: 0 24px 30px 24px;
   }
   
   .map-filter {
@@ -505,7 +509,11 @@ body {
   }
   
   .map-content {
-    padding: 0 20px 20px;
+    padding: 0 20px 20px 20px;
+  }
+  
+  .map-filter {
+    margin: 0;
   }
   
   .found-experiences {
@@ -526,8 +534,13 @@ body {
     font-size: 1rem;
   }
   
+  .map-content {
+    padding: 0 16px 20px 16px;
+  }
+  
   .map-filter {
     padding: 20px;
+    margin: 0;
   }
   
   .exp-card {
@@ -543,6 +556,30 @@ body {
   }
 }
 
+/* 매우 작은 화면 (400px 이하) */
+@media (max-width: 400px) {
+  .map-content {
+    padding: 0 12px 16px 12px;
+  }
+  
+  .map-filter {
+    padding: 16px;
+    margin: 0;
+  }
+  
+  .map-header-text {
+    padding: 40px 12px 20px 12px;
+  }
+  
+  .map-header-text h2 {
+    font-size: 1.6rem;
+  }
+  
+  .map-header-text p {
+    font-size: 0.9rem;
+  }
+}
+
 /* ========================
    연극 정보 스타일
    ======================== */
@@ -554,7 +591,7 @@ body {
 }
 
 .loading {
-  color: #B36B00;
+  color: var(--primary-green);
 }
 
 .error {
@@ -563,13 +600,13 @@ body {
 
 .category {
   font-size: 12px;
-  color: #888;
+  color: var(--text-sub);
   margin: 2px 0;
 }
 
 .genre {
   font-size: 12px;
-  color: #a52a2a;
+  color: var(--secondary-blue);
   margin: 2px 0;
 }
   
