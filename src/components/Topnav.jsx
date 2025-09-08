@@ -3,6 +3,24 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import './Topnav.css';
 import SearchModal from './SearchModal';
 
+// 메뉴 아이콘 컴포넌트 (SVG fallback 포함)
+const MenuIcon = ({ iconPath, fallbackEmoji, alt }) => {
+  const [imageError, setImageError] = useState(false);
+
+  if (imageError) {
+    return <span className="menu-icon-emoji">{fallbackEmoji}</span>;
+  }
+
+  return (
+    <img 
+      src={iconPath} 
+      alt={alt}
+      className="menu-icon-svg"
+      onError={() => setImageError(true)}
+    />
+  );
+};
+
 export default function Topnav({ variant = "default" }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -111,20 +129,100 @@ export default function Topnav({ variant = "default" }) {
         
         <nav className="side-menu-nav">
           <ul>
-            <li><a href="/" onClick={closeSideMenu}>홈</a></li>
-            <li><a href="/login" onClick={closeSideMenu}>로그인</a></li>
-            <li><a href="/genre" onClick={closeSideMenu}>장르</a></li>
-            <li><a href="/map" onClick={closeSideMenu}>지도</a></li>
-            <li><a href="/biodata" onClick={closeSideMenu}>생체데이터</a></li>
-            <li><a href="/test/my-test" onClick={closeSideMenu}>취향테스트</a></li>
-            <li><a href="/ai-translation" onClick={closeSideMenu}>AI 번역</a></li>
-            <li><a href="/community" onClick={closeSideMenu}>커뮤니티</a></li>
+            <li>
+              <a href="/" onClick={closeSideMenu} className={location.pathname === '/' ? 'active' : ''}>
+                <MenuIcon 
+                  iconPath="/icons/home.svg" 
+                  fallbackEmoji="🏠" 
+                  alt="홈"
+                />
+                <span className="menu-text">홈</span>
+                <span className="menu-arrow">›</span>
+              </a>
+            </li>
+            <li>
+              <a href="/login" onClick={closeSideMenu} className={location.pathname === '/login' ? 'active' : ''}>
+                <MenuIcon 
+                  iconPath="/icons/login.svg" 
+                  fallbackEmoji="🎵" 
+                  alt="로그인"
+                />
+                <span className="menu-text">로그인</span>
+                <span className="menu-arrow">›</span>
+              </a>
+            </li>
+            <li>
+              <a href="/genre" onClick={closeSideMenu} className={location.pathname === '/genre' ? 'active' : ''}>
+                <MenuIcon 
+                  iconPath="/icons/genre.svg" 
+                  fallbackEmoji="🎶" 
+                  alt="장르"
+                />
+                <span className="menu-text">장르</span>
+                <span className="menu-arrow">›</span>
+              </a>
+            </li>
+            <li>
+              <a href="/map" onClick={closeSideMenu} className={location.pathname === '/map' ? 'active' : ''}>
+                <MenuIcon 
+                  iconPath="/icons/map.svg" 
+                  fallbackEmoji="🗺️" 
+                  alt="지도"
+                />
+                <span className="menu-text">지도</span>
+                <span className="menu-arrow">›</span>
+              </a>
+            </li>
+            <li>
+              <a href="/biodata" onClick={closeSideMenu} className={location.pathname === '/biodata' ? 'active' : ''}>
+                <MenuIcon 
+                  iconPath="/icons/biodata.svg" 
+                  fallbackEmoji="💓" 
+                  alt="생체데이터"
+                />
+                <span className="menu-text">생체데이터</span>
+                <span className="menu-arrow">›</span>
+              </a>
+            </li>
+            <li>
+              <a href="/test/my-test" onClick={closeSideMenu} className={location.pathname === '/test/my-test' ? 'active' : ''}>
+                <MenuIcon 
+                  iconPath="/icons/test.svg" 
+                  fallbackEmoji="⭐" 
+                  alt="취향테스트"
+                />
+                <span className="menu-text">취향테스트</span>
+                <span className="menu-arrow">›</span>
+              </a>
+            </li>
+            <li>
+              <a href="/ai-translation" onClick={closeSideMenu} className={location.pathname === '/ai-translation' ? 'active' : ''}>
+                <MenuIcon 
+                  iconPath="/icons/translation.svg" 
+                  fallbackEmoji="🌐" 
+                  alt="AI 번역"
+                />
+                <span className="menu-text">AI 번역</span>
+                <span className="menu-arrow">›</span>
+              </a>
+            </li>
+            <li>
+              <a href="/community" onClick={closeSideMenu} className={location.pathname === '/community' ? 'active' : ''}>
+                <MenuIcon 
+                  iconPath="/icons/community.svg" 
+                  fallbackEmoji="💬" 
+                  alt="커뮤니티"
+                />
+                <span className="menu-text">커뮤니티</span>
+                <span className="menu-arrow">›</span>
+              </a>
+            </li>
           </ul>
         </nav>
 
         <div className="side-menu-footer">
           <p>© 2025 FestiGuard</p>
-          <p>Your Gateway to Korea's Hidden Stages</p>
+          <p>안전한 즐거움, 스마트한 보호</p>
         </div>
       </div>
 
