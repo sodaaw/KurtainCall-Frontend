@@ -24,7 +24,83 @@ const AITranslation = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   
+  // 긴급 상황 표현 상태
+  const [emergencyLanguage, setEmergencyLanguage] = useState('ko'); // 긴급 상황 언어 선택
   
+  // 긴급 상황 표현 데이터
+  const emergencyExpressions = [
+    {
+      icon: '🆘',
+      korean: '도와주세요',
+      english: 'Help me',
+      category: 'help'
+    },
+    {
+      icon: '🚑',
+      korean: '구급차를 불러주세요',
+      english: 'Call an ambulance',
+      category: 'medical'
+    },
+    {
+      icon: '📍',
+      korean: '여기서 길을 잃었어요',
+      english: 'I\'m lost here',
+      category: 'location'
+    },
+    {
+      icon: '💔',
+      korean: '숨쉬기 힘들어요',
+      english: 'I can\'t breathe',
+      category: 'medical'
+    },
+    {
+      icon: '🚨',
+      korean: '위험해요',
+      english: 'It\'s dangerous',
+      category: 'danger'
+    },
+    {
+      icon: '🏥',
+      korean: '병원에 가야 해요',
+      english: 'I need to go to hospital',
+      category: 'medical'
+    },
+    {
+      icon: '🚓',
+      korean: '경찰을 불러주세요',
+      english: 'Call the police',
+      category: 'help'
+    },
+    {
+      icon: '💧',
+      korean: '물이 필요해요',
+      english: 'I need water',
+      category: 'basic'
+    }
+  ];
+  
+  // 긴급 상황 표현 TTS 재생 함수
+  const handleEmergencyExpression = async (expression) => {
+    const text = emergencyLanguage === 'ko' ? expression.korean : expression.english;
+    const language = emergencyLanguage === 'ko' ? 'ko' : 'en';
+    
+    // 화면에 텍스트 표시
+    setTranslationResult(text);
+    
+    // TTS 재생
+    try {
+      await performTTS(text, language);
+    } catch (error) {
+      console.error('긴급 상황 TTS 재생 오류:', error);
+      // 폴백: 브라우저 내장 TTS 사용
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = language === 'ko' ? 'ko-KR' : 'en-US';
+        utterance.rate = 0.9;
+        speechSynthesis.speak(utterance);
+      }
+    }
+  };
 
   // From 언어가 변경될 때 To 언어를 자동으로 반대 언어로 설정
   React.useEffect(() => {
@@ -412,6 +488,41 @@ const AITranslation = () => {
         </div>
 
         <div className="translation-main">
+          {/* 긴급 상황 표현 버튼들 */}
+          <div className="emergency-expressions">
+            <div className="emergency-header">
+              <h3>🚨 긴급 상황 표현</h3>
+              <div className="emergency-language-selector">
+                <label>언어 선택:</label>
+                <select 
+                  value={emergencyLanguage} 
+                  onChange={(e) => setEmergencyLanguage(e.target.value)}
+                  className="emergency-language-dropdown"
+                >
+                  <option value="ko">한국어</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
+            </div>
+            
+            <div className="emergency-buttons-grid">
+              {emergencyExpressions.map((expression, index) => (
+                <button
+                  key={index}
+                  className={`emergency-btn emergency-${expression.category}`}
+                  onClick={() => handleEmergencyExpression(expression)}
+                  disabled={isSpeaking}
+                >
+                  <div className="emergency-icon">{expression.icon}</div>
+                  <div className="emergency-text">
+                    <div className="emergency-korean">{expression.korean}</div>
+                    <div className="emergency-english">{expression.english}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* 모드 선택 드롭다운 */}
           <div className="mode-selection">
             <h3>통역 모드 선택</h3>
