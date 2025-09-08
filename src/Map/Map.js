@@ -649,7 +649,7 @@ const Map = () => {
             </button>
           </div>
 
-          <div className="popular-areas">
+          {/* <div className="popular-areas">
             <h4>인기 지역</h4>
             <ul>
               {popularAreas.map((area, i) => (
@@ -664,7 +664,7 @@ const Map = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
         </aside>
 
         <div className="map-container-wrapper">

@@ -1,14 +1,13 @@
 /* ========================
-   BioData 페이지 스타일
+   BioData 페이지 전체 컨테이너
 ======================== */
-
 .biodata-page {
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+  color: #DDF4E7;
   min-height: 100vh;
-  color: #f5f5f5;
-  padding: 100px 20px 40px 20px; /* 상단 여백을 100px로 조정 */
+  padding: 0 20px 20px 20px;
   position: relative;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 /* 커튼 배경 요소들 */
@@ -56,37 +55,45 @@
   50% { transform: skewX(15deg) translateX(20px); }
 }
 
-/* 메인 컨테이너 */
+/* ========================
+   메인 컨테이너
+======================== */
 .biodata-container {
   max-width: 800px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
+  padding: 100px 0 40px 0;
 }
 
-/* 페이지 제목 */
+/* ========================
+   페이지 제목
+======================== */
 .biodata-page > h2 {
-  font-family: 'Swanley', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'NCLNeovibes', 'Swanley', sans-serif;
   font-size: clamp(30px, 5vw, 40px);
-  color: #FFF4B7;
+  color: #DDF4E7;
   text-align: center;
-  margin-bottom: -10px;
+  margin-bottom: 10px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .biodata-page > p {
   font-size: clamp(16px, 1.8vw, 20px);
-  color: #c5a572;
+  color: #67C090;
   text-align: center;
   margin-bottom: 40px;
-  font-weight: 400;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
-/* 생체 데이터 카드 */
+/* ========================
+   생체 데이터 카드
+======================== */
 .bio-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 244, 183, 0.2);
+  background: rgba(18, 65, 112, 0.1);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   border-radius: 15px;
   padding: 30px;
   margin-bottom: 30px;
@@ -94,6 +101,7 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 16px rgba(18, 65, 112, 0.2);
 }
 
 .bio-card::before {
@@ -103,20 +111,20 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #FFF4B7, #c5a572);
+  background: linear-gradient(90deg, #67C090, #26667F);
   opacity: 0.8;
 }
 
 .bio-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 244, 183, 0.4);
+  box-shadow: 0 8px 25px rgba(18, 65, 112, 0.3);
+  border-color: rgba(103, 192, 144, 0.4);
 }
 
 .bio-card h3 {
   margin-top: 10px;
   font-size: clamp(20px, 2.2vw, 24px);
-  color: #FFF4B7;
+  color: #DDF4E7;
   margin-bottom: 20px;
   font-weight: 600;
   display: flex;
@@ -126,9 +134,10 @@
 
 .bio-card p {
   font-size: clamp(16px, 1.6vw, 18px);
-  color: #f5f5f5;
+  color: #DDF4E7;
   margin-bottom: 15px;
   line-height: 1.6;
+  font-weight: 500;
 }
 
 .bio-card p:last-child {
@@ -136,31 +145,35 @@
 }
 
 .bio-card strong {
-  color: #FFF4B7;
+  color: #67C090;
   font-weight: 600;
 }
 
-/* 기분 분석 카드 */
+/* ========================
+   기분 분석 카드
+======================== */
 .bio-card.mood {
-  background: rgba(255, 244, 183, 0.08);
-  border-color: rgba(255, 244, 183, 0.3);
+  background: rgba(103, 192, 144, 0.08);
+  border-color: rgba(103, 192, 144, 0.3);
 }
 
 .bio-card.mood h3 {
-  color: #FFF4B7;
+  color: #DDF4E7;
 }
 
 .bio-card.mood strong {
-  color: #c5a572;
+  color: #67C090;
   font-size: clamp(18px, 1.8vw, 20px);
 }
 
-/* 추천 버튼 */
+/* ========================
+   추천 버튼
+======================== */
 .recommend-btn {
-  background: linear-gradient(135deg, #FFF4B7 0%, #c5a572 100%);
-  color: #0f0f0f;
-  border: none;
-  border-radius: 25px;
+  background: #67C090;
+  color: #DDF4E7;
+  border: 2px solid #67C090;
+  border-radius: 12px;
   padding: 18px 36px;
   font-size: clamp(16px, 1.8vw, 18px);
   font-weight: 600;
@@ -168,39 +181,35 @@
   transition: all 0.3s ease;
   display: block;
   margin: 40px auto 0;
-  box-shadow: 0 4px 15px rgba(255, 244, 183, 0.3);
   position: relative;
   overflow: hidden;
-}
-
-.recommend-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.5s ease;
+  letter-spacing: 0.3px;
 }
 
 .recommend-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 244, 183, 0.4);
-}
-
-.recommend-btn:hover::before {
-  left: 100%;
+  background: #26667F;
+  border-color: #26667F;
+  transform: translateY(-1px);
 }
 
 .recommend-btn:active {
   transform: translateY(0);
+  background: #124170;
+  border-color: #124170;
 }
 
-/* 반응형 디자인 */
+/* ========================
+   반응형 디자인
+======================== */
+
+/* 태블릿 */
 @media (max-width: 768px) {
   .biodata-page {
-    padding: 100px 15px 30px 15px;
+    padding: 0 16px 20px 16px;
+  }
+  
+  .biodata-container {
+    padding: 80px 0 30px 0;
   }
   
   .bio-card {
@@ -214,18 +223,93 @@
   }
 }
 
+/* 모바일 */
 @media (max-width: 480px) {
-  .biodata-page h2 {
-    font-size: 36px;
+  .biodata-page {
+    padding: 0 12px 16px 12px;
+  }
+  
+  .biodata-container {
+    padding: 60px 0 20px 0;
+  }
+  
+  .biodata-page > h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  
+  .biodata-page > p {
+    font-size: 16px;
+    margin-bottom: 30px;
   }
   
   .bio-card {
     padding: 20px;
     margin-bottom: 20px;
+    border-radius: 12px;
+  }
+  
+  .bio-card h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  
+  .bio-card p {
+    font-size: 15px;
+    margin-bottom: 12px;
   }
   
   .recommend-btn {
     padding: 14px 28px;
     font-size: 15px;
+    border-radius: 10px;
+  }
+}
+
+/* 매우 작은 화면 (390px 이하) */
+@media (max-width: 390px) {
+  .biodata-page {
+    padding: 0 8px 12px 8px;
+  }
+  
+  .biodata-container {
+    padding: 50px 0 16px 0;
+  }
+  
+  .biodata-page > h2 {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+  
+  .biodata-page > p {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  
+  .bio-card {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+  }
+  
+  .bio-card h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  
+  .bio-card p {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .bio-card strong {
+    font-size: 15px;
+  }
+  
+  .recommend-btn {
+    padding: 12px 24px;
+    font-size: 14px;
+    border-radius: 8px;
+    margin-top: 30px;
   }
 }

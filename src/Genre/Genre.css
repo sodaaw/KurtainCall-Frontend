@@ -1,13 +1,26 @@
 /* ========================
-   Genre 페이지 - Main.css 테마와 일치
+   Genre 페이지 - Login 테마와 일치
 ======================== */
+
+/* === Login Theme Colors === */
+:root {
+  --primary-green: #67C090;     /* 민트 그린 */
+  --primary-green-light: #7dd3a3; /* 밝은 민트 그린 */
+  --secondary-blue: #26667F;    /* 어두운 청록색 */
+  --secondary-blue-light: #124170; /* 더 어두운 청록색 */
+  --background-blue: rgba(18, 65, 112, 0.1); /* 반투명 청색 */
+  --dark: #0a0a0a;              /* 검정 */
+  --dark-gray: #1a1a1a;         /* 어두운 회색 */
+  --text: #DDF4E7;              /* 연한 민트색 텍스트 */
+  --text-sub: #67C090;          /* 보조 텍스트 */
+}
 
 .genre-container {
   margin-top: 50px;
   padding: 120px 20px 20px 20px; /* 상단 여백 120px로 증가 */
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); /* 검정 그라데이션 */
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #f5f5f5;
+  color: var(--text);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
@@ -69,7 +82,7 @@
 .genre-header h2 {
   font-size: 2rem;
   font-weight: 600;
-  color: #FFF4B7; /* Main.css의 금색 */
+  color: var(--primary-green);
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
@@ -77,7 +90,7 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 8px;
-  color: #FFF4B7; /* Main.css의 금색 */
+  color: var(--primary-green);
   display: flex;
   align-items: center;
   gap: 16px;
@@ -87,7 +100,7 @@
 .genre-subtitle {
   font-size: 0.75rem; /* 0.9rem에서 0.75rem으로 더 작게 */
   font-weight: 400;
-  color: #c5a572; /* Main.css의 중간 금색 */
+  color: var(--text-sub);
   opacity: 0.7; /* 0.8에서 0.7로 더 투명하게 */
   font-style: italic;
 }
@@ -96,12 +109,12 @@
   display: inline-block;
   padding: 8px 16px;
   border-radius: 20px;
-  background: linear-gradient(145deg, #003161, #004c9e); /* Main.css의 파란색 */
-  color: #f5f5f5;
+  background: var(--secondary-blue);
+  color: var(--text);
   font-size: 0.9rem;
   margin-bottom: 16px;
-  border: 1px solid #FFF4B7; /* Main.css의 금색 */
-  box-shadow: 0 4px 8px rgba(0, 49, 97, 0.3);
+  border: 1px solid var(--primary-green);
+  box-shadow: 0 4px 8px rgba(38, 102, 127, 0.3);
 }
 
 /* ===== 카테고리별 포스터 섹션 스타일 ===== */
@@ -113,10 +126,10 @@
 .section-title {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #FFF4B7; /* Main.css의 금색 */
+  color: var(--primary-green);
   text-align: center;
   margin-bottom: 20px;
-  text-shadow: 0 0 10px rgba(255, 244, 183, 0.3);
+  text-shadow: 0 0 10px rgba(103, 192, 144, 0.3);
 }
 
 .category-group {
@@ -126,10 +139,10 @@
 .category-title {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #f5f5f5;
+  color: var(--text);
   margin-bottom: 15px;
   padding-left: 10px;
-  border-left: 4px solid #FFF4B7; /* Main.css의 금색 */
+  border-left: 4px solid var(--primary-green);
   text-transform: capitalize;
 }
 
@@ -141,8 +154,8 @@
 }
 
 .category-poster-card {
-  background: rgba(26, 26, 26, 0.9);
-  border: 2px solid #003161; /* Main.css의 파란색 */
+  background: var(--background-blue);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -155,8 +168,8 @@
 
 .category-poster-card:hover {
   transform: translateY(-5px);
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  box-shadow: 0 10px 25px rgba(255, 244, 183, 0.2);
+  border-color: var(--primary-green);
+  box-shadow: 0 10px 25px rgba(103, 192, 144, 0.2);
 }
 
 .category-poster-img {
@@ -181,7 +194,7 @@
 .category-poster-title {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #f5f5f5;
+  color: var(--text);
   margin: 0 0 6px 0;
   line-height: 1.3;
   overflow: hidden;
@@ -191,7 +204,7 @@
 
 .category-poster-location {
   font-size: 0.8rem;
-  color: #c5a572; /* Main.css의 중간 금색 */
+  color: var(--text-sub);
   margin: 0 0 8px 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -201,7 +214,7 @@
 .category-poster-price {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #FFF4B7; /* Main.css의 금색 */
+  color: var(--primary-green);
   margin: 0;
 }
 
@@ -214,37 +227,38 @@
 
 .genre-search input {
   padding: 12px 16px;
-  border: 2px solid #003161; /* Main.css의 파란색 */
+  border: 2px solid var(--secondary-blue);
   border-radius: 10px;
   width: 200px;
-  background: #1a1a1a;
-  color: #f5f5f5;
+  background: rgba(18, 65, 112, 0.05);
+  color: var(--text);
   transition: all 0.3s ease;
 }
 
 .genre-search input:focus {
   outline: none;
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  box-shadow: 0 0 0 3px rgba(255, 244, 183, 0.2);
-  background: #2a2a2a;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
+  background: rgba(103, 192, 144, 0.05);
 }
 
 .genre-search button {
-  background: linear-gradient(145deg, #003161, #004c9e); /* Main.css의 파란색 */
-  color: #f5f5f5;
+  background: var(--primary-green);
+  color: var(--text);
   border: none;
   padding: 12px 16px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
-  border: 1px solid #FFF4B7; /* Main.css의 금색 */
+  border: 2px solid var(--primary-green);
   transition: all 0.3s ease;
 }
 
 .genre-search button:hover {
-  background: linear-gradient(145deg, #004c9e, #003161); /* Main.css의 파란색 */
+  background: var(--secondary-blue);
+  border-color: var(--secondary-blue);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 49, 97, 0.4);
+  box-shadow: 0 4px 12px rgba(38, 102, 127, 0.4);
 }
 
 /* ===============================
@@ -261,17 +275,18 @@
   width: 200px;
   min-width: 200px;
   height: auto;
-  background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+  background: var(--background-blue);
   border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(18, 65, 112, 0.2);
   padding: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: all 0.3s ease;
-  border: 2px solid #003161; /* Main.css의 파란색 */
+  border: 1px solid rgba(38, 102, 127, 0.3);
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 .poster-card::before {
@@ -281,13 +296,13 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #003161, #FFF4B7, #003161); /* Main.css의 색상 */
+  background: linear-gradient(90deg, var(--secondary-blue), var(--primary-green), var(--secondary-blue));
 }
 
 .poster-card:hover { 
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 15px 35px rgba(0, 49, 97, 0.3);
-  border-color: #FFF4B7; /* Main.css의 금색 */
+  box-shadow: 0 15px 35px rgba(38, 102, 127, 0.3);
+  border-color: var(--primary-green);
 }
 
 .poster-img-mine {
@@ -302,12 +317,12 @@
 .poster-title { 
   font-weight: 600; 
   font-size: 1.1rem; 
-  color: #f5f5f5;
+  color: var(--text);
 }
 
 .poster-info { 
   font-size: 0.9rem; 
-  color: #FFF4B7; /* Main.css의 금색 */ 
+  color: var(--primary-green);
   margin-top: 4px; 
 }
 
@@ -327,8 +342,8 @@
 
 .poster-section.carousel .poster-card-mine:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 15px 35px rgba(0, 49, 97, 0.3);
-  border-color: #FFF4B7; /* Main.css의 금색 */
+  box-shadow: 0 15px 35px rgba(38, 102, 127, 0.3);
+  border-color: var(--primary-green);
 }
 
 /* Grid-all */
@@ -362,17 +377,18 @@
 }
 
 .filter-wrap {
-  background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-  border: 2px solid #003161; /* Main.css의 파란색 */
+  background: var(--background-blue);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   border-radius: 20px;
   padding: 20px;
   margin: 20px 0 20px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 32px rgba(18, 65, 112, 0.2);
   position: relative;
   overflow: hidden;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  backdrop-filter: blur(10px);
 }
 
 @keyframes shimmer {
@@ -391,10 +407,10 @@
 .filter-title {
   font-weight: 700;
   font-size: 1.3rem;
-  color: #FFF4B7; /* Main.css의 금색 */
+  color: var(--primary-green);
   margin-bottom: 12px;
   text-align: center;
-  text-shadow: 0 0 15px rgba(255, 244, 183, 0.3);
+  text-shadow: 0 0 15px rgba(103, 192, 144, 0.3);
 }
 
 .filter-grid {
@@ -447,35 +463,35 @@
 .filter-search-input {
   flex: 1;
   height: 48px;
-  border: 2px solid #003161; /* Main.css의 파란색 */
+  border: 2px solid var(--secondary-blue);
   border-radius: 12px;
   padding: 0 16px;
   font-size: 15px;
-  background: #1a1a1a;
-  color: #f5f5f5;
+  background: rgba(18, 65, 112, 0.05);
+  color: var(--text);
   transition: all 0.3s ease;
   box-sizing: border-box;
 }
 
 .filter-search-input:focus {
   outline: none;
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  box-shadow: 0 0 0 3px rgba(255, 244, 183, 0.2);
-  background: #2a2a2a;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
+  background: rgba(103, 192, 144, 0.05);
 }
 
 .filter-search-input::placeholder {
-  color: #c5a572; /* Main.css의 중간 금색 */
+  color: var(--secondary-blue);
   opacity: 0.7;
 }
 
 .filter-search-btn {
   width: 48px;
   height: 48px;
-  border: 2px solid #003161; /* Main.css의 파란색 */
+  border: 2px solid var(--primary-green);
   border-radius: 12px;
-  background: linear-gradient(135deg, #003161, #004c9e); /* Main.css의 파란색 */
-  color: #f5f5f5;
+  background: var(--primary-green);
+  color: var(--text);
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -485,10 +501,10 @@
 }
 
 .filter-search-btn:hover {
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  background: linear-gradient(135deg, #004c9e, #003161); /* Main.css의 파란색 */
+  border-color: var(--secondary-blue);
+  background: var(--secondary-blue);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 49, 97, 0.3);
+  box-shadow: 0 4px 12px rgba(38, 102, 127, 0.3);
 }
 
 .filter-item { 
@@ -501,7 +517,7 @@
 
 .filter-item label { 
   font-size: 1rem; 
-  color: #FFF4B7; /* Main.css의 금색 */ 
+  color: var(--primary-green);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -522,44 +538,44 @@
   text-align: center;
   height: 48px;
   padding: 0 16px;
-  border: 2px solid #003161; /* Main.css의 파란색 */
+  border: 2px solid var(--secondary-blue);
   border-radius: 12px;
-  background: #1a1a1a;
+  background: rgba(18, 65, 112, 0.05);
   font-size: 16px;
-  color: #f5f5f5;
+  color: var(--text);
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  box-shadow: 0 0 0 4px rgba(255, 244, 183, 0.2);
-  background: #2a2a2a;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
+  background: rgba(103, 192, 144, 0.05);
   transform: translateY(-2px);
 }
 
 .filter-select:hover {
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  background: #2a2a2a;
+  border-color: var(--primary-green);
+  background: rgba(103, 192, 144, 0.05);
 }
 
 .filter-search-row {
   display: block;
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid rgba(0, 49, 97, 0.3); /* Main.css의 파란색 */
+  border-top: 1px solid rgba(38, 102, 127, 0.3);
   width: 100%;
 }
 
 .filter-search-row input {
   height: 50px;
-  border: 2px solid #003161; /* Main.css의 파란색 */
+  border: 2px solid var(--secondary-blue);
   border-radius: 12px;
   padding: 0 20px;
   font-size: 15px;
-  background: #1a1a1a;
-  color: #f5f5f5;
+  background: rgba(18, 65, 112, 0.05);
+  color: var(--text);
   transition: all 0.3s ease;
   width: 100%;
   box-sizing: border-box;
@@ -567,14 +583,14 @@
 
 .filter-search-row input:focus {
   outline: none;
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  box-shadow: 0 0 0 4px rgba(255, 244, 183, 0.2);
-  background: #2a2a2a;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
+  background: rgba(103, 192, 144, 0.05);
   transform: translateY(-2px);
 }
 
 .filter-search-row input::placeholder {
-  color: #c5a572; /* Main.css의 중간 금색 */
+  color: var(--secondary-blue);
   opacity: 0.7;
 }
 
@@ -594,21 +610,21 @@
  {
   width: 100%;
   height: 50px;
-  border: 2px solid #003161; /* Main.css의 파란색 */
+  border: 2px solid var(--secondary-blue);
   border-radius: 12px;
   padding: 0 40px 0 20px; /* 오른쪽 공간 확보 (아이콘 자리) */
   font-size: 16px;
-  background: #1a1a1a;
-  color: #f5f5f5;
+  background: rgba(18, 65, 112, 0.05);
+  color: var(--text);
   transition: all 0.3s ease;
   box-shadow: none;
  }
 
  .search-input-wrapper input:focus {
   outline: none;
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  box-shadow: 0 0 0 4px rgba(255, 244, 183, 0.2);
-  background: #2a2a2a;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.1);
+  background: rgba(103, 192, 144, 0.05);
 }
 
 .search-input-wrapper .search-icon {
@@ -618,34 +634,34 @@
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 18px;
-  color: #FFF4B7; /* Main.css의 금색 */
+  color: var(--primary-green);
   transition: color 0.2s ease;
 }
 
 .search-input-wrapper .search-icon:hover {
-  color: #fdeb85; /* Main.css의 밝은 금색 */
+  color: var(--primary-green-light);
 }
 
 .btn-primary {
   height: 50px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #003161, #004c9e); /* Main.css의 파란색 */
-  color: #f5f5f5;
+  background: var(--primary-green);
+  color: var(--text);
   font-weight: 700;
   font-size: 16px;
   cursor: pointer;
-  border: 2px solid #FFF4B7; /* Main.css의 금색 */
+  border: 2px solid var(--primary-green);
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .btn-primary:hover { 
-  background: linear-gradient(135deg, #004c9e, #003161); /* Main.css의 파란색 */
+  background: var(--secondary-blue);
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 49, 97, 0.5);
-  border-color: #fdeb85; /* Main.css의 밝은 금색 */
+  box-shadow: 0 8px 25px rgba(38, 102, 127, 0.5);
+  border-color: var(--secondary-blue);
 }
 
 /* ===============================
@@ -658,19 +674,19 @@
   margin: 15px 0 20px;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(145deg, rgba(0, 49, 97, 0.1), rgba(255, 244, 183, 0.05)); /* Main.css의 색상 */
-  border: 1px solid rgba(0, 49, 97, 0.3); /* Main.css의 파란색 */
+  background: var(--background-blue);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   border-radius: 20px;
 }
 
 .mode-btn {
-  border: 2px solid #003161; /* Main.css의 파란색 */
-  background: #1a1a1a;
+  border: 2px solid var(--secondary-blue);
+  background: var(--dark-gray);
   padding: 12px 24px;
   border-radius: 25px;
   cursor: pointer;
   font-weight: 600;
-  color: #f5f5f5;
+  color: var(--text);
   transition: all 0.3s ease;
   font-size: 15px;
   text-transform: uppercase;
@@ -679,27 +695,27 @@
 }
 
 .mode-btn.active {
-  background: linear-gradient(135deg, #003161, #004c9e); /* Main.css의 파란색 */
-  color: #f5f5f5;
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  box-shadow: 0 6px 20px rgba(0, 49, 97, 0.4);
+  background: var(--primary-green);
+  color: var(--text);
+  border-color: var(--primary-green);
+  box-shadow: 0 6px 20px rgba(103, 192, 144, 0.4);
   transform: translateY(-2px);
 }
 
 .mode-btn:hover { 
-  background: rgba(0, 49, 97, 0.3); /* Main.css의 파란색 */
-  border-color: #FFF4B7; /* Main.css의 금색 */
+  background: rgba(38, 102, 127, 0.3);
+  border-color: var(--primary-green);
   transform: translateY(-2px);
 }
 
 .mode-info {
-  color: #FFF4B7; /* Main.css의 금색 */
+  color: var(--primary-green);
   font-size: 1rem;
   font-weight: 600;
   padding: 8px 16px;
-  background: rgba(0, 49, 97, 0.2); /* Main.css의 파란색 */
+  background: rgba(18, 65, 112, 0.2);
   border-radius: 15px;
-  border: 1px solid rgba(255, 244, 183, 0.3); /* Main.css의 금색 */
+  border: 1px solid rgba(103, 192, 144, 0.3);
 }
 
 /* ===============================
@@ -714,8 +730,8 @@
   margin: 15px 0 20px;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(145deg, rgba(0, 49, 97, 0.1), rgba(255, 244, 183, 0.05)); /* Main.css의 색상 */
-  border: 1px solid rgba(0, 49, 97, 0.3); /* Main.css의 파란색 */
+  background: var(--background-blue);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   border-radius: 20px;
 }
 
@@ -723,20 +739,20 @@
   font-size: 1.4rem;
   font-weight: 700;
   margin: 0;
-  color: #FFF4B7; /* Main.css의 금색 */
+  color: var(--primary-green);
   text-transform: uppercase;
   letter-spacing: 1px;
-  text-shadow: 0 0 15px rgba(255, 244, 183, 0.3);
+  text-shadow: 0 0 15px rgba(103, 192, 144, 0.3);
 }
 
 .review-count { 
   font-size: 1rem; 
-  color: #FFF4B7; /* Main.css의 금색 */ 
+  color: var(--primary-green);
   font-weight: 600;
   padding: 8px 16px;
-  background: rgba(0, 49, 97, 0.2); /* Main.css의 파란색 */
+  background: rgba(18, 65, 112, 0.2);
   border-radius: 15px;
-  border: 1px solid rgba(255, 244, 183, 0.3); /* Main.css의 금색 */
+  border: 1px solid rgba(103, 192, 144, 0.3);
 }
 
 .review-list {
@@ -747,10 +763,10 @@
 
 /* Card */
 .review-card {
-  background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-  border: 2px solid #003161; /* Main.css의 파란색 */
+  background: var(--background-blue);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(18, 65, 112, 0.2);
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
@@ -758,6 +774,7 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 .review-card::before {
@@ -767,23 +784,23 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #003161, #FFF4B7, #003161); /* Main.css의 색상 */
+  background: linear-gradient(90deg, var(--secondary-blue), var(--primary-green), var(--secondary-blue));
 }
 
 .review-card:hover {
   transform: translateY(-8px);
-  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  box-shadow: 0 15px 35px rgba(0, 49, 97, 0.3);
+  background: rgba(103, 192, 144, 0.05);
+  border-color: var(--primary-green);
+  box-shadow: 0 15px 35px rgba(38, 102, 127, 0.3);
 }
 
 .review-card:active {
   transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0, 49, 97, 0.3);
+  box-shadow: 0 10px 20px rgba(38, 102, 127, 0.3);
 }
 
 .review-card:focus-visible {
-  outline: 2px solid #FFF4B7; /* Main.css의 금색 */
+  outline: 2px solid var(--primary-green);
   outline-offset: 3px;
   transform: translateY(-8px);
 }
@@ -812,27 +829,27 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #003161, #004c9e); /* Main.css의 파란색 */
-  border: 2px solid #FFF4B7; /* Main.css의 금색 */
+  background: var(--secondary-blue);
+  border: 2px solid var(--primary-green);
   flex-shrink: 0;
 }
 
 .review-user-meta { display: flex; flex-direction: column; gap: 2px; }
 
-.review-name { font-weight: 700; color: #f5f5f5; font-size: 1rem;}
+.review-name { font-weight: 700; color: var(--text); font-size: 1rem;}
 
 .review-badge {
   font-size: 0.75rem;
   padding: 2px 6px;
   border-radius: 6px;
-  background: rgba(0, 49, 97, 0.2); /* Main.css의 파란색 */
-  color: #FFF4B7; /* Main.css의 금색 */
-  border: 1px solid #FFF4B7; /* Main.css의 금색 */
+  background: rgba(18, 65, 112, 0.2);
+  color: var(--primary-green);
+  border: 1px solid var(--primary-green);
 }
 
-.review-sub { font-size: 0.9rem; color: #c5a572; /* Main.css의 중간 금색 */ }
+.review-sub { font-size: 0.9rem; color: var(--text-sub); }
 
-.review-rating { font-size: 0.9rem; letter-spacing: 1px; color: #FFF4B7; /* Main.css의 금색 */ margin-top:2px; align-self: flex-start;}
+.review-rating { font-size: 0.9rem; letter-spacing: 1px; color: var(--primary-green); margin-top:2px; align-self: flex-start;}
 
 /* Body */
 .review-body {
@@ -848,8 +865,8 @@
 }
 
 .review-photo {
-  background: #1a1a1a;
-  border: 2px dashed #003161; /* Main.css의 파란색 */
+  background: var(--dark-gray);
+  border: 2px dashed var(--secondary-blue);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -864,11 +881,11 @@
   border-radius: 12px;
 }
 
-.photo-placeholder { opacity: 0.6; font-size: 0.95rem; color: #c5a572; /* Main.css의 중간 금색 */ }
+.photo-placeholder { opacity: 0.6; font-size: 0.95rem; color: var(--text-sub); }
 
 .review-text {
   font-size: 0.98rem;
-  color: #d1d5db;
+  color: var(--text);
   line-height: 1.55rem;
   margin: 12px 0;
   flex-grow: 1;
@@ -889,15 +906,15 @@
   font-size: 0.85rem;
   padding: 6px 10px;
   border-radius: 20px;
-  background: rgba(0, 49, 97, 0.2); /* Main.css의 파란색 */
-  color: #FFF4B7; /* Main.css의 금색 */
-  border: 1px solid #003161; /* Main.css의 파란색 */
+  background: rgba(18, 65, 112, 0.2);
+  color: var(--primary-green);
+  border: 1px solid var(--secondary-blue);
   transition: all 0.3s ease;
 }
 
 .chip:hover {
-  background: rgba(0, 49, 97, 0.4); /* Main.css의 파란색 */
-  border-color: #FFF4B7; /* Main.css의 금색 */
+  background: rgba(18, 65, 112, 0.4);
+  border-color: var(--primary-green);
 }
 
 .review-actions { 
@@ -914,7 +931,7 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
-  color: #c5a572; /* Main.css의 중간 금색 */
+  color: var(--text-sub);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -923,8 +940,8 @@
 }
 
 .icon-btn:hover { 
-  background: rgba(0, 49, 97, 0.15); /* Main.css의 파란색 */
-  color: #f5f5f5;
+  background: rgba(18, 65, 112, 0.15);
+  color: var(--text);
   transform: translateY(-1px);
 }
 
@@ -935,7 +952,7 @@
 }
 
 .icon-btn[title="like"]:hover {
-  background: rgba(0, 49, 97, 0.2); /* Main.css의 파란색 */
+  background: rgba(18, 65, 112, 0.2);
   color: #ff6b6b;
   transform: translateY(-1px);
 }
@@ -959,7 +976,7 @@
 
 /* 댓글 버튼 특별 스타일 */
 .icon-btn[title="comment"]:hover {
-  background: rgba(0, 49, 97, 0.2); /* Main.css의 파란색 */
+  background: rgba(18, 65, 112, 0.2);
   color: #4ecdc4;
   transform: translateY(-1px);
 }
@@ -970,7 +987,7 @@
 
 /* 공유 버튼 특별 스타일 */
 .icon-btn[title="share"]:hover {
-  background: rgba(0, 49, 97, 0.2); /* Main.css의 파란색 */
+  background: rgba(18, 65, 112, 0.2);
   color: #f39c12;
   transform: translateY(-1px);
 }
@@ -1066,13 +1083,13 @@
 }
 
 .genre-tab {
-  background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-  border: 1.5px solid #003161; /* Main.css의 파란색 */
+  background: var(--background-blue);
+  border: 1.5px solid var(--secondary-blue);
   border-radius: 25px;
   padding: 15px 30px;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #f5f5f5;
+  color: var(--text);
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
@@ -1080,6 +1097,7 @@
   min-width: 160px;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 .genre-tab::before {
@@ -1089,7 +1107,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 244, 183, 0.2), transparent); /* Main.css의 금색 */
+  background: linear-gradient(90deg, transparent, rgba(103, 192, 144, 0.2), transparent);
   transition: left 0.5s ease;
 }
 
@@ -1098,16 +1116,16 @@
 }
 
 .genre-tab.active {
-  background: linear-gradient(135deg, #003161, #003f82); /* Main.css의 파란색 */
-  color: #f5f5f5;
-  border-color: #FFF4B7; /* Main.css의 금색 */
-  box-shadow: 0 8px 25px rgba(0, 49, 97, 0.4);
+  background: var(--primary-green);
+  color: var(--text);
+  border-color: var(--primary-green);
+  box-shadow: 0 8px 25px rgba(103, 192, 144, 0.4);
   transform: translateY(-3px);
 }
 
 .genre-tab:hover { 
-  background: rgba(0, 49, 97, 0.3); /* Main.css의 파란색 */
-  border-color: #FFF4B7; /* Main.css의 금색 */
+  background: rgba(38, 102, 127, 0.3);
+  border-color: var(--primary-green);
   transform: translateY(-2px);
 }
 
@@ -1115,8 +1133,8 @@
 .reviews-full-section {
   margin: 20px 0;
   padding: 20px;
-  background: linear-gradient(145deg, rgba(0, 49, 97, 0.1), rgba(255, 244, 183, 0.05)); /* Main.css의 색상 */
-  border: 1px solid rgba(0, 49, 97, 0.3); /* Main.css의 파란색 */
+  background: var(--background-blue);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   border-radius: 20px;
 }
 
@@ -1146,8 +1164,8 @@
 }
 
 .review-wrap-mini {
-  background: linear-gradient(145deg, rgba(0, 49, 97, 0.1), rgba(255, 244, 183, 0.05)); /* Main.css의 색상 */
-  border: 1px solid rgba(0, 49, 97, 0.3); /* Main.css의 파란색 */
+  background: var(--background-blue);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   border-radius: 20px;
   padding: 20px;
 }
