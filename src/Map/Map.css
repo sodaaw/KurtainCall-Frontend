@@ -102,7 +102,7 @@ body {
 }
 
 .map-header-text p {
-  color: var(--text-sub);
+  color: #DDF4E7;
   font-size: 1.1rem;
   font-weight: 500;
   margin: 0;
@@ -489,6 +489,7 @@ body {
   .map-content {
     flex-direction: column;
     gap: 20px;
+    padding: 0 24px 30px 24px;
   }
   
   .map-filter {
@@ -508,7 +509,11 @@ body {
   }
   
   .map-content {
-    padding: 0 20px 20px;
+    padding: 0 20px 20px 20px;
+  }
+  
+  .map-filter {
+    margin: 0;
   }
   
   .found-experiences {
@@ -529,8 +534,13 @@ body {
     font-size: 1rem;
   }
   
+  .map-content {
+    padding: 0 16px 20px 16px;
+  }
+  
   .map-filter {
     padding: 20px;
+    margin: 0;
   }
   
   .exp-card {
@@ -543,6 +553,30 @@ body {
     width: 100%;
     max-width: 200px;
     white-space: nowrap;
+  }
+}
+
+/* 매우 작은 화면 (400px 이하) */
+@media (max-width: 400px) {
+  .map-content {
+    padding: 0 12px 16px 12px;
+  }
+  
+  .map-filter {
+    padding: 16px;
+    margin: 0;
+  }
+  
+  .map-header-text {
+    padding: 40px 12px 20px 12px;
+  }
+  
+  .map-header-text h2 {
+    font-size: 1.6rem;
+  }
+  
+  .map-header-text p {
+    font-size: 0.9rem;
   }
 }
 
