@@ -484,7 +484,7 @@ const AITranslation = () => {
       <div className="ai-translation-content">
         <div className="ai-translation-header">
           <h1 className="ai-translation-title">AI 다국어 통역 시스템</h1>
-          <p className="ai-translation-subtitle">STT, 번역, TTS를 통합한 완벽한 통역 경험</p>
+          <p className="ai-translation-subtitle">말하기 어려운 순간, 대신 눌러주세요.</p>
         </div>
 
         <div className="translation-main">

@@ -78,11 +78,9 @@
 /* 헤더 */
 .ai-translation-header {
   text-align: center;
-  margin: 30px 0 50px 0;
+  margin: 55px 0 50px 0;
   padding: 25px;
-  background: rgba(18, 65, 112, 0.1);
   border-radius: 20px;
-  border: 1px solid rgba(38, 102, 127, 0.3);
   box-shadow: 0 8px 32px rgba(18, 65, 112, 0.2);
   backdrop-filter: blur(10px);
 }
@@ -90,18 +88,17 @@
 .ai-translation-title {
   color: var(--text);
   font-size: 2.8rem;
-  font-weight: 800;
-  margin: 0 0 20px 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+  margin: 0 0 5px 0;
   letter-spacing: -1px;
 }
 
 .ai-translation-subtitle {
   color: var(--text-sub);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin: 0;
   line-height: 1.6;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* 메인 번역 영역 */
