@@ -4,9 +4,6 @@ node_modules/
 *.pack
 .eslintcache
 
-node_modules/
-.cache/
-*.pack
-.eslintcache
-
 .env
+
+.DS_Store

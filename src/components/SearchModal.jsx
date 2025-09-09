@@ -36,7 +36,7 @@ export default function SearchModal({ onClose }) {
             onChange={(e) => setQ(e.target.value)}
             autoFocus
           />
-          <button className="search-btn" type="submit">Go</button>
+          <button className="search-search-btn" type="submit">Go</button>
         </form>
 
         {/* 실시간 키워드 */}
