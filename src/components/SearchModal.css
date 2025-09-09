@@ -17,7 +17,7 @@
 /* 모달 박스 */
 .search-modal {
   background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-  border: 2px solid #FFF4B7;
+  border: 1px solid rgba(38, 102, 127, 0.3);
   border-radius: 20px;
   padding: 24px;
   width: min(90vw, 500px);
@@ -37,7 +37,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #003161, #FFF4B7, #003161);
+  background: linear-gradient(90deg, #003161, #67C090, #003161);
   border-radius: 20px 20px 0 0;
 }
 
@@ -59,26 +59,26 @@
   top: 18px;
   right: 18px;
   border: none;
-  background: linear-gradient(145deg, #003161, #004c9e);
-  color: #f5f5f5;
+  background: #67C090;
+  color: #DDF4E7;
   font-size: 18px;
   cursor: pointer;
   width: 36px;
   height: 36px;
   border-radius: 50%;
   transition: all 0.3s ease;
-  border: 2px solid #FFF4B7;
+  border: 2px solid #67C090;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 49, 97, 0.4);
+  box-shadow: 0 4px 12px rgba(18, 65, 112, 0.3);
 }
 
 .close-btn:hover {
-  background: linear-gradient(145deg, #004c9e, #003161);
+  background: #26667F;
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 49, 97, 0.5);
-  border-color: #fdeb85;
+  box-shadow: 0 6px 16px rgba(18, 65, 112, 0.35);
+  border-color: #26667F;
 }
 
 /* 검색창 영역 */
@@ -92,10 +92,10 @@
 .search-input {
   flex: 1;
   padding: 14px 18px;
-  border: 2px solid #FFF4B7;
+  border: 2px solid #26667F;
   border-radius: 12px;
   background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-  color: #f5f5f5;
+  color: #DDF4E7;
   font-size: 15px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -103,41 +103,41 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #fdeb85;
-  box-shadow: 0 0 0 3px rgba(255, 244, 183, 0.2), 0 6px 16px rgba(0, 49, 97, 0.3);
+  border-color: #67C090;
+  box-shadow: 0 0 0 4px rgba(103, 192, 144, 0.12), 0 6px 16px rgba(18, 65, 112, 0.28);
   background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
   transform: translateY(-1px);
 }
 
 .search-input::placeholder {
-  color: #9ca3af;
+  color: rgba(255, 255, 255, 0.45);
 }
 
-.search-btn {
+.search-search-btn {
   padding: 14px 20px;
   border: none;
-  background: linear-gradient(145deg, #003161, #004c9e);
-  color: #f5f5f5;
+  background: #67C090;
+  color: #DDF4E7;
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
-  border: 2px solid #FFF4B7;
+  border: 2px solid #67C090;
   min-width: 70px;
-  box-shadow: 0 4px 12px rgba(0, 49, 97, 0.4);
+  box-shadow: 0 4px 12px rgba(18, 65, 112, 0.3);
 }
 
-.search-btn:hover {
-  background: linear-gradient(145deg, #004c9e, #003161);
+.search-search-btn:hover {
+  background: #26667F;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 49, 97, 0.5);
-  border-color: #fdeb85;
+  box-shadow: 0 6px 16px rgba(18, 65, 112, 0.35);
+  border-color: #26667F;
 }
 
 /* 실검 박스 */
 .top-search-box {
-  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-  border: 1px solid #FFF4B7;
+  background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+  border: 1px solid rgba(38, 102, 127, 0.3);
   border-radius: 16px;
   padding: 20px;
   position: relative;
@@ -152,13 +152,13 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #003161, #FFF4B7, #003161);
+  background: linear-gradient(90deg, #003161, #67C090, #003161);
 }
 
 .top-search-header {
   font-weight: 700;
   margin-bottom: 16px;
-  color: #FFF4B7;
+  color: #DDF4E7;
   font-size: 17px;
   text-align: center;
   letter-spacing: 0.5px;
@@ -175,13 +175,13 @@
   align-items: center;
   font-size: 14px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 244, 183, 0.2);
+  border-bottom: 1px solid rgba(38, 102, 127, 0.3);
   transition: all 0.3s ease;
-  color: #f5f5f5;
+  color: #DDF4E7;
 }
 
 .top-search-list li:hover {
-  background: rgba(0, 49, 97, 0.1);
+  background: rgba(0, 11, 88, 0.1);
   padding-left: 12px;
   border-radius: 8px;
   transform: translateX(4px);
@@ -194,8 +194,8 @@
 .rank {
   font-weight: 700;
   margin-right: 12px;
-  color: #FFF4B7;
-  background: rgba(0, 49, 97, 0.2);
+  color: #DDF4E7;
+  background: rgba(0, 11, 88, 0.2);
   width: 26px;
   height: 26px;
   border-radius: 50%;
@@ -203,8 +203,8 @@
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  border: 1px solid #FFF4B7;
-  box-shadow: 0 2px 8px rgba(0, 49, 97, 0.3);
+  border: 1px solid #26667F;
+  box-shadow: 0 2px 8px rgba(18, 65, 112, 0.25);
 }
 
 /* 커튼 장식 요소 */
@@ -225,9 +225,9 @@
   left: 20px;
   width: 40px;
   height: 40px;
-  background: linear-gradient(45deg, 
-    rgba(0, 49, 97, 0.1) 0%,
-    rgba(255, 244, 183, 0.1) 50%,
+  background: linear-gradient(45deg,
+    rgba(0, 11, 88, 0.1) 0%,
+    rgba(103, 192, 144, 0.1) 50%,
     transparent 100%);
   border-radius: 50%;
   animation: curtainFloat 4s ease-in-out infinite;
@@ -240,9 +240,9 @@
   right: 20px;
   width: 30px;
   height: 30px;
-  background: linear-gradient(45deg, 
-    rgba(255, 244, 183, 0.1) 0%,
-    rgba(0, 49, 97, 0.1) 50%,
+  background: linear-gradient(45deg,
+    rgba(103, 192, 144, 0.1) 0%,
+    rgba(0, 11, 88, 0.1) 50%,
     transparent 100%);
   border-radius: 50%;
   animation: curtainFloat 4s ease-in-out infinite 2s;
