@@ -12,6 +12,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
 
   const canSubmit = id.trim() && password && !loading;
@@ -28,6 +29,7 @@ export default function Login() {
     try {
       setLoading(true);
       setErrMsg('');
+      setSuccessMsg('');
       
       // 백엔드로 로그인 데이터 전송
       const res = await axios.post(`${API_BASE_URL}/api/users/login`, payload, {
@@ -36,19 +38,70 @@ export default function Login() {
       });
       
       console.log('로그인 성공:', res.data);
+      console.log('응답 데이터 타입:', typeof res.data);
+      console.log('응답 데이터 키들:', Object.keys(res.data));
       
       // 토큰이 있다면 localStorage에 저장
       if (res.data.token) {
+        console.log('토큰 저장 중...');
         localStorage.setItem('token', res.data.token);
+      } else {
+        // 토큰이 없으면 더미 토큰 저장 (백엔드에서 토큰을 제공하지 않는 경우)
+        console.log('토큰이 없음. 더미 토큰 저장...');
+        localStorage.setItem('token', 'dummy-token-' + Date.now());
       }
       
-      // 사용자 정보가 있다면 저장
+      // 사용자 정보 저장 (res.data에 직접 사용자 정보가 있는 경우)
       if (res.data.user) {
+        console.log('사용자 정보 저장 중 (res.data.user)...');
         localStorage.setItem('user', JSON.stringify(res.data.user));
+      } else if (res.data._id) {
+        console.log('사용자 정보 저장 중 (res.data 직접)...');
+        // res.data 자체가 사용자 정보인 경우
+        localStorage.setItem('user', JSON.stringify(res.data));
+      } else {
+        console.log('사용자 정보를 찾을 수 없음');
       }
       
-      alert('로그인이 완료되었습니다!');
-      navigate('/'); // 메인 페이지로 이동
+      // 성공 메시지 표시
+      setSuccessMsg('로그인이 완료되었습니다! 마이페이지로 이동합니다...');
+      setErrMsg(''); // 에러 메시지 초기화
+      
+      // 디버깅을 위한 로그 추가
+      console.log('페이지 이동 시도 중...');
+      console.log('현재 url:', window.location.href);
+      console.log('현재 경로:', window.location.pathname);
+      console.log('저장된 사용자 정보:', localStorage.getItem('user'));
+
+      console.log('navigate 함수:', typeof navigate);
+      
+      // 즉시 페이지 이동 시도 (성공 메시지는 이미 표시됨)
+      console.log('페이지 이동 시작...');
+      
+      // 방법 1: navigate 함수 시도
+      console.log('방법 1: navigate 함수 시도...');
+      navigate('/user-selection');
+
+      setTimeout(() => {
+        console.log('navigate 실행 후 URL:', window.location.href);
+        console.log('navigate 실행 후 pathname:', window.location.pathname);
+        
+        // 만약 여전히 /login에 있다면 강제 이동
+        if (window.location.pathname === '/login') {
+          console.log('navigate가 작동하지 않음. 강제 이동 시도...');
+          window.location.href = '/user-selection';
+        }
+      }, 100);
+
+      setTimeout(() => {
+      console.log('1초 후 URL 재확인:', window.location.href);
+        if (window.location.pathname === '/login') {
+          console.log('여전히 로그인 페이지에 있음. 강제 새로고침 이동...');
+          window.location.replace('/user-selection');
+        }
+      }, 1000);
+      
+      console.log('모든 이동 방법 실행 완료');
     } catch (err) {
       console.error('로그인 오류:', err);
       
@@ -82,6 +135,12 @@ export default function Login() {
           {errMsg && (
             <div className="login-error-message">
               {errMsg}
+            </div>
+          )}
+          
+          {successMsg && (
+            <div className="login-success-message">
+              {successMsg}
             </div>
           )}
           

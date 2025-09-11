@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Topnav.css';
 import SearchModal from './SearchModal';
@@ -26,9 +26,50 @@ export default function Topnav({ variant = "default" }) {
   const location = useLocation();
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
   // Main.jsx인지 확인 (홈페이지)
   const isHome = location.pathname === '/';
+
+  // 로그인 상태 확인
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem('token');
+      const userData = localStorage.getItem('user');
+      
+      if (token && userData) {
+        try {
+          setUser(JSON.parse(userData));
+          setIsLoggedIn(true);
+        } catch (error) {
+          console.error('사용자 정보 파싱 오류:', error);
+          setIsLoggedIn(false);
+          setUser(null);
+        }
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    };
+
+    checkLoginStatus();
+
+    // localStorage 변경 감지를 위한 이벤트 리스너
+    const handleStorageChange = () => {
+      checkLoginStatus();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // 컴포넌트가 마운트될 때마다 상태 확인
+    const interval = setInterval(checkLoginStatus, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
   
   const toggleSideMenu = () => {
     setIsSideMenuOpen(!isSideMenuOpen);
@@ -48,6 +89,27 @@ export default function Topnav({ variant = "default" }) {
 
   const goHome = () => {
     navigate('/');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
+  const handleLogout = () => {
+    // localStorage에서 토큰과 사용자 정보 제거
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    // 상태 업데이트
+    setIsLoggedIn(false);
+    setUser(null);
+    
+    // 메인 페이지로 리다이렉트
+    navigate('/');
+  };
+
+  const handleMyPage = () => {
+    navigate('/user-selection');
   };
 
   return (
@@ -107,13 +169,32 @@ export default function Topnav({ variant = "default" }) {
 
         {/* 오른쪽 영역 */}
         <div className="topnav-right">
-          <button 
-            className="topnav-login-btn" 
-            onClick={() => navigate('/login')}
-            aria-label="로그인"
-          >
-            로그인
-          </button>
+          {isLoggedIn ? (
+            <div className="user-menu">
+              <button 
+                className="topnav-mypage-btn" 
+                onClick={handleMyPage}
+                aria-label="마이페이지"
+              >
+                {user?.name || '마이페이지'}
+              </button>
+              <button 
+                className="topnav-logout-btn" 
+                onClick={handleLogout}
+                aria-label="로그아웃"
+              >
+                로그아웃
+              </button>
+            </div>
+          ) : (
+            <button 
+              className="topnav-login-btn" 
+              onClick={handleLogin}
+              aria-label="로그인"
+            >
+              로그인
+            </button>
+          )}
         </div>
       </header>
 
@@ -140,17 +221,31 @@ export default function Topnav({ variant = "default" }) {
                 <span className="menu-arrow">›</span>
               </a>
             </li>
-            <li>
-              <a href="/login" onClick={closeSideMenu} className={location.pathname === '/login' ? 'active' : ''}>
-                <MenuIcon 
-                  iconPath="/icons/login.svg" 
-                  fallbackEmoji="🎵" 
-                  alt="로그인"
-                />
-                <span className="menu-text">로그인</span>
-                <span className="menu-arrow">›</span>
-              </a>
-            </li>
+            {isLoggedIn ? (
+              <li>
+                <a href="/user-selection" onClick={closeSideMenu} className={location.pathname === '/user-selection' ? 'active' : ''}>
+                  <MenuIcon 
+                    iconPath="/icons/login.svg" 
+                    fallbackEmoji="👤" 
+                    alt="마이페이지"
+                  />
+                  <span className="menu-text">마이페이지</span>
+                  <span className="menu-arrow">›</span>
+                </a>
+              </li>
+            ) : (
+              <li>
+                <a href="/login" onClick={closeSideMenu} className={location.pathname === '/login' ? 'active' : ''}>
+                  <MenuIcon 
+                    iconPath="/icons/login.svg" 
+                    fallbackEmoji="🔑" 
+                    alt="로그인"
+                  />
+                  <span className="menu-text">로그인</span>
+                  <span className="menu-arrow">›</span>
+                </a>
+              </li>
+            )}
             <li>
               <a href="/genre" onClick={closeSideMenu} className={location.pathname === '/genre' ? 'active' : ''}>
                 <MenuIcon 
