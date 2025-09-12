@@ -39,12 +39,12 @@ const genreMapping = {
 
 // 검색어 변환 함수
 const translateSearchQuery = (query) => {
-  const lowerQuery = query.toLowerCase().trim();
+  const lowerQuery = query.trim();
   
   // 한글 장르가 포함된 경우 영어로 변환
   for (const [korean, english] of Object.entries(genreMapping)) {
-    if (lowerQuery.includes(korean.toLowerCase())) {
-      return lowerQuery.replace(korean.toLowerCase(), english);
+    if (lowerQuery.includes(korean)) {
+      return lowerQuery.replace(korean, english);
     }
   }
   
@@ -56,12 +56,12 @@ export const searchAPI = {
     // 한글 검색어를 영어로 변환
     const translatedQuery = translateSearchQuery(q);
     
-    // 원본과 변환된 검색어 모두 시도
-    const queries = [q, translatedQuery].filter((query, index, arr) => 
-      arr.indexOf(query) === index // 중복 제거
-    );
+    // 변환된 검색어가 원본과 다르면 변환된 것을 사용, 같으면 원본 사용
+    const finalQuery = translatedQuery !== q ? translatedQuery : q;
     
-    // 첫 번째 검색어로 검색 (백엔드 API 호출)
-    return http.get('/search', { params: { q: queries[0], limit } });
+    console.log(`검색어 변환: "${q}" → "${finalQuery}"`); // 디버깅용
+    
+    // 변환된 검색어로 검색 (백엔드 API 호출)
+    return http.get('/search', { params: { q: finalQuery, limit } });
   },
 };
