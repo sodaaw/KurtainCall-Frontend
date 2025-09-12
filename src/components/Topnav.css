@@ -214,6 +214,63 @@
   transform: translateY(0);
 }
 
+/* 사용자 메뉴 */
+.user-menu {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.topnav-mypage-btn {
+  background: rgba(103, 192, 144, 0.1);
+  color: #67C090;
+  border: 1px solid #67C090;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: auto;
+  min-width: fit-content;
+  flex-shrink: 0;
+}
+
+.topnav-mypage-btn:hover {
+  background: rgba(103, 192, 144, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 1px 15px rgba(103, 192, 144, 0.3);
+}
+
+.topnav-mypage-btn:active {
+  transform: translateY(0);
+}
+
+.topnav-logout-btn {
+  background: rgba(255, 107, 107, 0.1);
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: auto;
+  min-width: fit-content;
+  flex-shrink: 0;
+}
+
+.topnav-logout-btn:hover {
+  background: rgba(255, 107, 107, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 1px 15px rgba(255, 107, 107, 0.3);
+}
+
+.topnav-logout-btn:active {
+  transform: translateY(0);
+}
+
 /* ========================
    사이드 메뉴
 ======================== */
@@ -413,6 +470,16 @@
     padding: 10px 20px;
     font-size: 13px;
   }
+  
+  .user-menu {
+    gap: 8px;
+  }
+  
+  .topnav-mypage-btn,
+  .topnav-logout-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -430,9 +497,19 @@
     left: -260px;
   }
   
-  .login-btn {
+  .topnav-login-btn {
     padding: 8px 14px;
     font-size: 12px;
+  }
+  
+  .user-menu {
+    gap: 6px;
+  }
+  
+  .topnav-mypage-btn,
+  .topnav-logout-btn {
+    padding: 6px 10px;
+    font-size: 11px;
   }
   
   .search-icon {

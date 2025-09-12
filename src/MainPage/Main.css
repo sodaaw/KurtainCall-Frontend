@@ -22,6 +22,8 @@
 /* ========================
    로딩 및 에러 상태
 ======================== */
+
+/* 심플한 로딩 텍스트 애니메이션 */
 .loading-spinner {
   display: flex;
   flex-direction: column;
@@ -37,13 +39,38 @@
 }
 
 .loading-spinner .spinner-animation {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(255, 244, 183, 0.3);
-  border-top: 3px solid #DDF4E7;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 20px;
+}
+
+.loading-spinner .spinner-animation::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #67C090;
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+.loading-spinner .spinner-animation::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #67C090;
+  border-radius: 50%;
+  margin-left: 8px;
+  animation: loadingPulse 1.5s ease-in-out infinite 0.3s;
+}
+
+.loading-spinner .spinner-animation {
+  width: 8px;
+  height: 8px;
+  background: #67C090;
+  border-radius: 50%;
+  animation: loadingPulse 1.5s ease-in-out infinite 0.15s;
 }
 
 .loading-spinner p {
@@ -53,11 +80,27 @@
   font-weight: 500;
   margin: 0;
   text-align: center;
+  animation: loadingTextFade 2s ease-in-out infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes loadingPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes loadingTextFade {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .no-data {
@@ -1151,9 +1194,22 @@
   }
 
   .loading-spinner .spinner-animation {
-    width: 32px;
-    height: 32px;
     margin-bottom: 15px;
+  }
+  
+  .loading-spinner .spinner-animation::before,
+  .loading-spinner .spinner-animation::after,
+  .loading-spinner .spinner-animation {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .loading-spinner .spinner-animation::before {
+    margin-right: 6px;
+  }
+  
+  .loading-spinner .spinner-animation::after {
+    margin-left: 6px;
   }
 
   .loading-spinner p,
@@ -1247,9 +1303,22 @@
   }
 
   .loading-spinner .spinner-animation {
-    width: 28px;
-    height: 28px;
     margin-bottom: 12px;
+  }
+  
+  .loading-spinner .spinner-animation::before,
+  .loading-spinner .spinner-animation::after,
+  .loading-spinner .spinner-animation {
+    width: 5px;
+    height: 5px;
+  }
+  
+  .loading-spinner .spinner-animation::before {
+    margin-right: 5px;
+  }
+  
+  .loading-spinner .spinner-animation::after {
+    margin-left: 5px;
   }
 
   .loading-spinner p,
