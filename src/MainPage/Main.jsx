@@ -45,8 +45,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
       <header className="hero">
         <h1>FestiGuard</h1>
         <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
-        <div className="loading-spinner">
-          <div className="spinner-animation"></div>
+        <div className="loading-text">
           <p>데이터를 불러오는 중...</p>
         </div>
       </header>
@@ -159,8 +158,7 @@ function RecommendedShows({ plays, isLoading, error }) {
   if (isLoading) {
     return (
       <section className="recommended-section">
-        <div className="loading-spinner">
-          <div className="spinner-animation"></div>
+        <div className="loading-text">
           <p>추천 공연을 불러오는 중...</p>
         </div>
       </section>
