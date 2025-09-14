@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topnav from '../components/Topnav';
 import { playAPI } from '../services/api';
-import { festivals } from '../data/festival';
+import { festivals } from '../data/festivals';
 import './Map.css';
 
 // @ts-ignore
@@ -464,7 +464,7 @@ const Map = () => {
           <h4 style="margin:0 0 8px 0; color:#67C090; font-size:16px; font-weight:600;">${play.title || 'Untitled'}</h4>
           <div style="font-size:13px;color:#DDF4E7; margin-bottom:6px;">📍 ${play.location?.address || ''}</div>
           ${play.category ? `<div style="font-size:12px;color:#7dd3a3; margin-bottom:8px;">🎭 ${play.category}</div>` : ''}
-          <a href="${play.detailUrl || '#'}" target="_blank" style="display:inline-block;background:#67C090;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;border:none;box-shadow:0 2px 8px rgba(103, 192, 144, 0.3);">상세보기</a>
+          <a href="/festival/${play.id}" style="display:inline-block;background:#67C090;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;border:none;box-shadow:0 2px 8px rgba(103, 192, 144, 0.3);">상세보기</a>
         </div>`;
       
       const infowindow = new kakao.maps.InfoWindow({ 
