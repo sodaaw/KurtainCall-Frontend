@@ -476,7 +476,18 @@ const Map = () => {
       
       // 마커 클릭 이벤트
       kakao.maps.event.addListener(marker, 'click', () => {
+        // 기존에 열려있는 모든 인포윈도우 닫기
+        markersRef.current.forEach(m => {
+          if (m.infowindow) {
+            m.infowindow.close();
+          }
+        });
+        
+        // 현재 마커의 인포윈도우 열기
         infowindow.open(map, marker);
+        
+        // 마커에 인포윈도우 참조 저장
+        marker.infowindow = infowindow;
       });
       
       markersRef.current.push(marker);
