@@ -360,8 +360,8 @@ export default function Main() {
   // 검색 모달 제어 (주석처리)
   // const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // ✅ 날짜 선택 상태
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  // ✅ 날짜 선택 상태 (홈화면 진입 시 2025년 5월로 초기화)
+  const [selectedDate, setSelectedDate] = useState(new Date(2025, 4, 15)); // 2025년 5월 15일
   const selectedKey = fmt(selectedDate);
 
   // API 데이터 상태
