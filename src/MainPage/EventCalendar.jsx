@@ -5,12 +5,14 @@ const fmt = (d) =>
   `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 
 export default function EventCalendar({ selected, onSelect, markers = new Set() }) {
-  const [m, setM] = useState(selected.getMonth());
-  const [y, setY] = useState(selected.getFullYear());
+  // 2025년 5월로 고정
+  const [m, setM] = useState(4); // 5월 (0-based)
+  const [y, setY] = useState(2025);
 
+  // selected가 변경되어도 2025년 5월로 고정
   useEffect(() => {
-    setM(selected.getMonth());
-    setY(selected.getFullYear());
+    setM(4); // 5월
+    setY(2025);
   }, [selected]);
 
   const firstDow = new Date(y, m, 1).getDay();
@@ -20,21 +22,22 @@ export default function EventCalendar({ selected, onSelect, markers = new Set() 
   );
 
   const selKey = fmt(selected);
+  
+  // 네비게이션 버튼 비활성화 (2025년 5월 고정)
   const goto = (delta) => {
-    const d = new Date(y, m + delta, 1);
-    setY(d.getFullYear()); setM(d.getMonth());
+    // 아무것도 하지 않음 (고정된 달력)
   };
 
   return (
     <section className="cal cal-compact">
       <div className="cal-head">
-        <button type="button" onClick={() => goto(-1)} aria-label="이전 달">
+        <button type="button" disabled aria-label="이전 달 (비활성화)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
           </svg>
         </button>
         <h3>{y}.{String(m + 1).padStart(2, "0")}</h3>
-        <button type="button" onClick={() => goto(1)} aria-label="다음 달">
+        <button type="button" disabled aria-label="다음 달 (비활성화)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
           </svg>
