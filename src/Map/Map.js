@@ -265,8 +265,7 @@ const Map = () => {
           customOverlay.setMap(null);
         });
         kakao.maps.event.addListener(polygon, 'click', () => {
-          regionPolygonsRef.current.forEach((p) => p.setMap(null));
-          regionPolygonsRef.current = [];
+          // 구 테두리는 유지하고 동 레벨로만 확대
           const center = centers.find((c) => c.name === name);
           if (center)
             map.setCenter(new kakao.maps.LatLng(center.lat, center.lng));
@@ -295,8 +294,13 @@ const Map = () => {
 
       // 지역 초기화 함수
       const resetRegions = (kakao, map, dongData, seoulMap) => {
+        // 동 폴리곤 제거
         dongPolygonsRef.current.forEach((p) => p.setMap(null));
         dongPolygonsRef.current = [];
+        
+        // 구 폴리곤 다시 표시 (기존 폴리곤들을 다시 활성화)
+        regionPolygonsRef.current.forEach((p) => p.setMap(map));
+        
         infowindow.close();
         map.setLevel(9);
         map.setCenter(new kakao.maps.LatLng(37.5665, 126.9780));
