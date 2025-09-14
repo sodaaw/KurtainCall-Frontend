@@ -59,13 +59,12 @@ const FestivalDetail = () => {
       <Topnav variant="home" />
       
       <main className="festival-detail-container">
-        {/* 뒤로가기 버튼 */}
-        <button onClick={handleBackClick} className="back-button">
-          ← 뒤로가기
-        </button>
-
         {/* 축제 헤더 */}
         <header className="festival-header">
+          {/* 뒤로가기 버튼 */}
+          <button onClick={handleBackClick} className="back-button">
+            ← 뒤로가기
+          </button>
           <div className="festival-poster">
             {festival.posterUrl ? (
               <img 

@@ -161,13 +161,17 @@
   background: #67C090;
   color: white;
   border: none;
-  padding: 12px 20px;
+  padding: 10px 16px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 30px;
   box-shadow: 0 4px 12px rgba(103, 192, 144, 0.3);
+  font-size: 14px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
 }
 
 .back-button:hover {
@@ -190,6 +194,8 @@
   border-radius: 20px;
   padding: 30px;
   backdrop-filter: blur(10px);
+  position: relative;
+  margin-top: 20px;
 }
 
 .festival-poster {
@@ -435,10 +441,21 @@
 ======================== */
 
 @media (max-width: 768px) {
+  .back-button {
+    position: fixed;
+    top: 80px;
+    left: 15px;
+    z-index: 1000;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
   .festival-header {
     grid-template-columns: 1fr;
     gap: 20px;
     text-align: center;
+    margin-top: 60px;
+    padding: 20px;
   }
   
   .festival-poster {
@@ -467,12 +484,20 @@
 }
 
 @media (max-width: 480px) {
+  .back-button {
+    top: 70px;
+    left: 10px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  
   .festival-detail-container {
     padding: 15px;
   }
   
   .festival-header {
     padding: 20px;
+    margin-top: 50px;
   }
   
   .festival-description,

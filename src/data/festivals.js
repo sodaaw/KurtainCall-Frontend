@@ -17,7 +17,6 @@ export const festivals = [
     posterUrl: "", // 포스터 이미지 URL (추후 추가)
     detailUrl: "https://www.instagram.com/p/DI_btIEp6VM/?igsh=MXB1dTV5bTJsdTJyaQ==",
     description: "홍익대학교의 화려한 대동제로, 다양한 아티스트들의 공연과 함께 즐거운 축제의 시간을 선사합니다.",
-    category: "대학축제",
     isActive: true
   },
   {
@@ -38,7 +37,6 @@ export const festivals = [
     posterUrl: "",
     detailUrl: "",
     description: "국민대학교의 특별한 대동제로, 라일락의 향기와 함께하는 아름다운 축제입니다.",
-    category: "대학축제",
     isActive: true
   },
   {
@@ -59,7 +57,6 @@ export const festivals = [
     posterUrl: "",
     detailUrl: "",
     description: "숭실대학교 동아리들이 주최하는 봄축제로, 다양한 동아리 공연과 활동을 즐길 수 있습니다.",
-    category: "대학축제",
     isActive: false
   },
   {
@@ -80,7 +77,6 @@ export const festivals = [
     posterUrl: "",
     detailUrl: "",
     description: "세종대학교의 특별한 연희 축제로, 수화기를 넘어선 소통과 화합의 장을 만들어갑니다.",
-    category: "대학축제",
     isActive: true
   }
 ];

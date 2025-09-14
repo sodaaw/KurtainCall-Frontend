@@ -463,6 +463,7 @@ const Map = () => {
         <div style="padding:12px; min-width:250px; background:linear-gradient(135deg, #1a1a1a, #2a2a2a); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.3); border:1px solid #67C090;">
           <h4 style="margin:0 0 8px 0; color:#67C090; font-size:16px; font-weight:600;">${play.title || 'Untitled'}</h4>
           <div style="font-size:13px;color:#DDF4E7; margin-bottom:6px;">📍 ${play.location?.address || ''}</div>
+          ${play.date ? `<div style="font-size:12px;color:#7dd3a3; margin-bottom:6px;">📅 ${play.date}</div>` : ''}
           ${play.category ? `<div style="font-size:12px;color:#7dd3a3; margin-bottom:8px;">🎭 ${play.category}</div>` : ''}
           <a href="/festival/${play.id}" style="display:inline-block;background:#67C090;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;border:none;box-shadow:0 2px 8px rgba(103, 192, 144, 0.3);">상세보기</a>
         </div>`;
@@ -584,8 +585,8 @@ const Map = () => {
       <Topnav />
 
       <div className="map-header-text">
-        <h2>공연 지도</h2>
-        <p>공연 정보를 조회할 지역을 선택하세요.</p>
+        <h2>축제 지도</h2>
+        <p>축제 정보를 조회할 지역을 선택하세요.</p>
         {/* 디버깅용 상태 표시 */}
         {/* <div style={{fontSize: '12px', color: '#666', marginTop: '10px'}}>
           Debug: Plays: {plays?.length || 0}, Map Ready: {isMapReady ? 'Yes' : 'No'}
@@ -597,7 +598,7 @@ const Map = () => {
           <h4>검색 및 필터</h4>
           <input 
             type="text" 
-            placeholder="장소 또는 공연을 검색해 보세요" 
+            placeholder="대학교명 또는 축제를 검색해 보세요" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
@@ -707,7 +708,7 @@ const Map = () => {
       {/* 필터를 적용하지 않았을 때는 아무것도 표시하지 않음 */}
       {filteredPlays.length === 0 && (
         <div className="no-filter-message">
-          <p>검색 조건을 설정하고 "필터 적용하기"를 클릭하여 공연을 찾아보세요.</p>
+          <p>검색 조건을 설정하고 "필터 적용하기"를 클릭하여 축제를 찾아보세요.</p>
         </div>
       )}
     </div>
