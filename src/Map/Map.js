@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topnav from '../components/Topnav';
 import { playAPI } from '../services/api';
+import { festivals } from '../data/festival';
 import './Map.css';
 
 // @ts-ignore
@@ -42,24 +43,24 @@ const Map = () => {
   // 장르 목록 (Genre.jsx와 동일한 장르 사용)
   const genres = ['전체 장르', 'comedy', 'romance', 'horror', 'musical', 'drama', 'action', 'thriller'];
 
-  // 연극 데이터 가져오기
+  // 축제 데이터 가져오기
   useEffect(() => {
     const fetchPlays = async () => {
       try {
         console.log('[Map] Fetching plays data...');
         setIsLoading(true);
         setError(null);
-                 const playsData = await playAPI.getPlays();
-         console.log('[Map] Plays data received:', playsData);
-         console.log('[Map] Plays data type:', typeof playsData);
-         console.log('[Map] Plays data length:', playsData?.length);
-         if (playsData && playsData.length > 0) {
-           console.log('[Map] First play sample:', playsData[0]);
-           console.log('[Map] First play location:', playsData[0]?.location);
-           console.log('[Map] First play address:', playsData[0]?.location?.address);
-           console.log('[Map] First play coordinates:', playsData[0]?.location?.lat, playsData[0]?.location?.lng);
-         }
-        setPlays(playsData);
+                
+        console.log('[Map] Festivals data received:', festivals);
+        console.log('[Map] Festivals data type:', typeof festivals);
+        console.log('[Map] Festivals data length:', festivals?.length);
+        if (festivals && festivals.length > 0) {
+          console.log('[Map] First festival sample:', festivals[0]);
+          console.log('[Map] First festival location:', festivals[0]?.location);
+          console.log('[Map] First festival address:', festivals[0]?.location?.address);
+          console.log('[Map] First festival coordinates:', festivals[0]?.location?.lat, festivals[0]?.location?.lng);
+        }
+        setPlays(festivals);
       } catch (err) {
         console.error('Failed to fetch plays:', err);
         setError(err.message || '연극 데이터를 불러오는데 실패했습니다.');
@@ -194,10 +195,10 @@ const Map = () => {
                map,
                path,
                strokeWeight: 2,
-               strokeColor: '#5C5B5C',
-               strokeOpacity: 0.8,
-               fillColor: '#B36B00',
-               fillOpacity: 0.06,
+              strokeColor: '#26667F',
+              strokeOpacity: 0.8,
+              fillColor: '#67C090',
+              fillOpacity: 0.08,
              });
             dongPolygonsRef.current.push(polygon);
             addDongEvents(polygon, dong, kakao, map, infowindow, customOverlay);
@@ -212,14 +213,14 @@ const Map = () => {
       // 동 지역 이벤트 추가
       const addDongEvents = (polygon, dong, kakao, map, infowindow, customOverlay) => {
         kakao.maps.event.addListener(polygon, 'mouseover', (e) => {
-          polygon.setOptions({ fillColor: '#b29ddb' });
-          polygon.setOptions({fillOpacity: 0.18});
+          polygon.setOptions({ fillColor: '#7dd3a3' });
+          polygon.setOptions({fillOpacity: 0.2});
           customOverlay.setPosition(e.latLng);
           customOverlay.setMap(map);
         });
         kakao.maps.event.addListener(polygon, 'mouseout', () => {
-          polygon.setOptions({ fillColor: '#CACACB' });
-          polygon.setOptions({fillOpacity: 0.06});
+          polygon.setOptions({ fillColor: '#67C090' });
+          polygon.setOptions({fillOpacity: 0.08});
           customOverlay.setMap(null);
         });
         kakao.maps.event.addListener(polygon, 'click', (e) => {
@@ -228,7 +229,7 @@ const Map = () => {
             <div style="padding:8px; font-size:13px;">
               <strong>${dong.properties.DONG_KOR_NM}</strong><br/>
               이 지역 맛집을 보시겠어요?<br/><br/>
-              <button id="btn-goto" style="background:#B36B00;color:white;padding:4px 8px;border-radius:5px;">맛집 보기</button>
+              <button id="btn-goto" style="background:#67C090;color:white;padding:4px 8px;border-radius:5px;border:none;font-weight:600;">맛집 보기</button>
             </div>`;
           infowindow.setContent(content);
           infowindow.setPosition(e.latLng);
@@ -247,20 +248,20 @@ const Map = () => {
           map,
           path,
           strokeWeight: 2,
-          strokeColor: '#004c80',
+          strokeColor: '#26667F',
           strokeOpacity: 0.8,
-          fillColor: '#ffffff',
-          fillOpacity: 0.6,
+          fillColor: '#DDF4E7',
+          fillOpacity: 0.7,
         });
         regionPolygonsRef.current.push(polygon);
 
         kakao.maps.event.addListener(polygon, 'mouseover', (e) => {
-          polygon.setOptions({ fillColor: '#d2c7ef' });
+          polygon.setOptions({ fillColor: '#7dd3a3' });
           customOverlay.setPosition(e.latLng);
           customOverlay.setMap(map);
         });
         kakao.maps.event.addListener(polygon, 'mouseout', () => {
-          polygon.setOptions({ fillColor: '#ffffff' });
+          polygon.setOptions({ fillColor: '#DDF4E7' });
           customOverlay.setMap(null);
         });
         kakao.maps.event.addListener(polygon, 'click', () => {
@@ -287,7 +288,7 @@ const Map = () => {
         goBackButton.id = 'go-back-btn';
         goBackButton.innerText = '구 다시 선택하기';
         goBackButton.style.cssText =
-          'position:absolute;top:20px;right:40px;background:#B36B00;color:white;padding:10px 16px;border-radius:8px;z-index:100;';
+          'position:absolute;top:20px;right:40px;background:#67C090;color:white;padding:10px 16px;border-radius:8px;z-index:100;border:none;font-weight:600;box-shadow:0 4px 12px rgba(103, 192, 144, 0.3);';
         goBackButton.onclick = () => resetRegions(kakao, map, dongData, seoulMap);
         document.body.appendChild(goBackButton);
       };
@@ -459,11 +460,11 @@ const Map = () => {
       
       // 인포윈도우 내용
       const html = `
-        <div style="padding:12px; min-width:250px; background:white; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-          <h4 style="margin:0 0 8px 0; color:#333; font-size:16px;">${play.title || 'Untitled'}</h4>
-          <div style="font-size:13px;color:#666; margin-bottom:6px;">📍 ${play.location?.address || ''}</div>
-          ${play.category ? `<div style="font-size:12px;color:#888; margin-bottom:8px;">🎭 ${play.category}</div>` : ''}
-          <a href="${play.detailUrl || '#'}" target="_blank" style="display:inline-block;background:#B36B00;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;">상세보기</a>
+        <div style="padding:12px; min-width:250px; background:linear-gradient(135deg, #1a1a1a, #2a2a2a); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.3); border:1px solid #67C090;">
+          <h4 style="margin:0 0 8px 0; color:#67C090; font-size:16px; font-weight:600;">${play.title || 'Untitled'}</h4>
+          <div style="font-size:13px;color:#DDF4E7; margin-bottom:6px;">📍 ${play.location?.address || ''}</div>
+          ${play.category ? `<div style="font-size:12px;color:#7dd3a3; margin-bottom:8px;">🎭 ${play.category}</div>` : ''}
+          <a href="${play.detailUrl || '#'}" target="_blank" style="display:inline-block;background:#67C090;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;border:none;box-shadow:0 2px 8px rgba(103, 192, 144, 0.3);">상세보기</a>
         </div>`;
       
       const infowindow = new kakao.maps.InfoWindow({ 
@@ -657,7 +658,7 @@ const Map = () => {
                   key={i} 
                   onClick={() => focusOnArea(area)}
                   style={{ cursor: 'pointer', padding: '8px', borderRadius: '4px', transition: 'background-color 0.2s' }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(103, 192, 144, 0.15)'}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                 >
                   📍 {area.displayName}
