@@ -1184,10 +1184,10 @@
   gap: 4px;
 }
 
-.event-title { 
+.events-panel .event-title { 
   font-weight: 500; 
-  color: #DDF4E7; 
-  font-size: 0.8rem;
+  color: #DDF4E7 !important; 
+  font-size: 0.8rem !important;
   letter-spacing: 0.1px;
   line-height: 1.2;
 }
