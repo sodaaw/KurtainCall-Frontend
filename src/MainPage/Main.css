@@ -549,7 +549,7 @@
 }
 
 .show-meta {
-  margin-top: -10px;
+  margin-top: 20px;
   text-align: center;
 }
 
@@ -635,7 +635,7 @@
    검색 및 장르 필터
 ======================== */
 .search-genre-section {
-  margin-bottom: 30px;
+  margin-bottom: 100px;
   padding: 20px 0;
 }
 

@@ -9,21 +9,21 @@ import { playAPI } from "../services/api";
 import { festivals } from "../data/festivals"; // ✅ 축제 데이터 import
 import "./Main.css";
 
-// 카테고리 버튼 데이터 (API에서 받아올 예정)
-const DEFAULT_CATS = [
-  { 
-    label: "코미디", 
-    slug: "comedy", 
-    //icon: "😄",
-    description: "웃음과 유머"
-  },
-  { 
-    label: "뮤지컬", 
-    slug: "musical", 
-    //icon: "🎵",
-    description: "음악과 노래"
-  },
-];
+// 카테고리 버튼 데이터 - 제거됨
+// const DEFAULT_CATS = [
+//   { 
+//     label: "코미디", 
+//     slug: "comedy", 
+//     //icon: "😄",
+//     description: "웃음과 유머"
+//   },
+//   { 
+//     label: "뮤지컬", 
+//     slug: "musical", 
+//     //icon: "🎵",
+//     description: "음악과 노래"
+//   },
+// ];
 
 /* 유틸 */
 const fmt = (d) =>
@@ -295,9 +295,9 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleMoreGenres = () => {
-    navigate('/genre');
-  };
+  // const handleMoreGenres = () => {
+  //   navigate('/genre');
+  // };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -313,7 +313,7 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         <form className="search-input-wrapper" onSubmit={handleSearch}>
           <input 
             type="text" 
-            placeholder="원하는 장르 또는 작품을 검색해보세요." 
+            placeholder="축제명 또는 대학교를 검색해보세요." 
             className="search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -333,8 +333,8 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         </form>
       </div>
 
-      {/* 장르 필터 */}
-      <div className="genre-filters">
+      {/* 장르 필터 - 제거됨 */}
+      {/* <div className="genre-filters">
         {DEFAULT_CATS.map((cat) => (
           <button 
             key={cat.slug} 
@@ -347,7 +347,7 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         <button className="more-genres-btn" onClick={handleMoreGenres}>
           장르 더보기
         </button>
-      </div>
+      </div> */}
     </section>
   );
 }
@@ -355,7 +355,7 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
 /* ---------------- 메인 컴포넌트 ---------------- */
 export default function Main() {
   const navigate = useNavigate();
-  const goGenre = (slug) => navigate(`/genre?category=${slug}`);
+  // const goGenre = (slug) => navigate(`/genre?category=${slug}`);
 
   // 검색 모달 제어 (주석처리)
   // const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -449,7 +449,7 @@ export default function Main() {
           {/* 검색 및 장르 필터 */}
           <SearchAndGenre 
             onSearchClick={() => {}} 
-            onGenreClick={goGenre} 
+            // onGenreClick={goGenre} 
           />
         </section>
         
