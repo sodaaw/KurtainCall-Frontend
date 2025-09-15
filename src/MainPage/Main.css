@@ -579,6 +579,22 @@
   padding: 0;
 }
 
+.show-university {
+  font-size: 0.82rem;
+  color: #DDF4E7;      /* 금빛 포인트 컬러 유지 */
+  margin-top: 4px;     /* 제목과 간격 줄이기 */
+  text-align: center;
+  font-weight: 400;    /* 살짝 가볍게 */
+}
+
+.show-date {
+  font-size: 0.75rem;
+  color: #B8D4C1;      /* 좀 더 연한 색상 */
+  margin-top: 2px;     /* 대학교명과 간격 */
+  text-align: center;
+  font-weight: 300;    /* 더 가볍게 */
+}
+
 
 .slide-indicator {
   display: flex;
@@ -1522,6 +1538,14 @@
   
   .show-location {
     font-size: 0.75rem;
+  }
+  
+  .show-university {
+    font-size: 0.75rem;
+  }
+  
+  .show-date {
+    font-size: 0.7rem;
   }
   
   .schedule {

@@ -101,7 +101,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
-          <p className="no-data-detail">현재 등록된 공연 정보가 없습니다.</p>
+          <p className="no-data-detail">현재 등록된 축제 정보가 없습니다.</p>
         </div>
       </header>
     );
@@ -119,7 +119,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
-          <p className="no-data-detail">현재 등록된 공연 정보가 없습니다.</p>
+          <p className="no-data-detail">현재 등록된 축제 정보가 없습니다.</p>
         </div>
       </header>
     );
@@ -186,7 +186,7 @@ function RecommendedShows({ plays, isLoading, error }) {
     return (
       <section className="recommended-section">
         <div className="loading-text">
-          <p>추천 공연을 불러오는 중...</p>
+          <p>축제 정보를 불러오는 중...</p>
         </div>
       </section>
     );
@@ -197,7 +197,7 @@ function RecommendedShows({ plays, isLoading, error }) {
       <section className="recommended-section">
         <div className="no-data">
           <div className="no-data-icon">🎭</div>
-          <p className="no-data-title">추천 공연을 불러올 수 없습니다</p>
+          <p className="no-data-title">축제 정보를 불러올 수 없습니다</p>
           <p className="no-data-detail">잠시 후 다시 시도해주세요.</p>
         </div>
       </section>
@@ -255,8 +255,11 @@ function RecommendedShows({ plays, isLoading, error }) {
               )} */}
               <div className="show-meta">
                 <div className="show-title">{play.title}</div>
-                {play.location?.address && (
-                  <div className="show-location">{play.location.address}</div>
+                {play.university && (
+                  <div className="show-university">{play.university}</div>
+                )}
+                {play.date && (
+                  <div className="show-date">{play.date}</div>
                 )}
               </div>
             </div>
