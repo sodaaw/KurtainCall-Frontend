@@ -22,7 +22,8 @@ export default function EventCalendar({ selected, onSelect, markers = new Set() 
   const selKey = fmt(selected);
   const goto = (delta) => {
     const d = new Date(y, m + delta, 1);
-    setY(d.getFullYear()); setM(d.getMonth());
+    setY(d.getFullYear()); 
+    setM(d.getMonth());
   };
 
   return (

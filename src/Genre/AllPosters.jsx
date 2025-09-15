@@ -125,8 +125,17 @@ function Hero({ plays, isLoading, error }) {
             rel="noopener noreferrer"
             className="poster-link"
           >
-            <img referrerPolicy="no-referrer" src={current.posterUrl}
- alt={current.title} className="poster-img" />
+            <img 
+              referrerPolicy="no-referrer" 
+              src={current.posterUrl}
+              alt={current.title} 
+              className="poster-img"
+              onError={(e) => { 
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/images/fallback.jpg'; 
+              }}
+              loading="lazy"
+            />
           </a>
           <div className="poster-title">{current.title}</div>
           {current.location?.address && (

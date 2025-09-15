@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topnav from '../components/Topnav';
 import { playAPI } from '../services/api';
+import { festivals } from '../data/festivals';
 import './Map.css';
 
 // @ts-ignore
@@ -34,32 +35,114 @@ const Map = () => {
 
   // 검색 및 필터 상태
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('전체 카테고리');
   const [selectedGenre, setSelectedGenre] = useState('전체 장르');
-  const [selectedRegion, setSelectedRegion] = useState('전체 지역');
+  const [selectedDistrict, setSelectedDistrict] = useState('전체 구');
+  const [selectedDates, setSelectedDates] = useState([]);
   const [filteredPlays, setFilteredPlays] = useState([]);
+  
+  // 달력 관련 상태
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date(2025, 4)); // 2025년 5월 (월은 0부터 시작)
 
   // 장르 목록 (Genre.jsx와 동일한 장르 사용)
   const genres = ['전체 장르', 'comedy', 'romance', 'horror', 'musical', 'drama', 'action', 'thriller'];
 
-  // 연극 데이터 가져오기
+  // 서울 구 목록
+  const seoulDistricts = [
+    '전체 구', '강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', 
+    '금천구', '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', 
+    '성동구', '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'
+  ];
+
+  // 달력 관련 함수들
+  const parseFestivalDate = (dateStr) => {
+    if (!dateStr) return null;
+    
+    // "2025.05.14(수)~2025.05.16(금)" 형식을 파싱
+    const match = dateStr.match(/(\d{4})\.(\d{2})\.(\d{2})/);
+    if (match) {
+      const [, year, month, day] = match;
+      return new Date(year, month - 1, day); // 월은 0부터 시작
+    }
+    
+    // 다른 형식도 시도
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? null : date;
+  };
+
+  const formatDate = (date) => {
+    if (!date) return null;
+    
+    const parsedDate = typeof date === 'string' ? parseFestivalDate(date) : date;
+    if (!parsedDate || isNaN(parsedDate.getTime())) {
+      return null; // 유효하지 않은 날짜인 경우 null 반환
+    }
+    return parsedDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+  };
+
+  const isDateSelected = (date) => {
+    const dateStr = formatDate(date);
+    return dateStr ? selectedDates.includes(dateStr) : false;
+  };
+
+  const toggleDateSelection = (date) => {
+    const dateStr = formatDate(date);
+    if (!dateStr) return; // 유효하지 않은 날짜인 경우 아무것도 하지 않음
+    
+    setSelectedDates(prev => {
+      if (prev.includes(dateStr)) {
+        return prev.filter(d => d !== dateStr);
+      } else {
+        return [...prev, dateStr];
+      }
+    });
+  };
+
+  const getCalendarDays = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay());
+    
+    const days = [];
+    const currentDate = new Date(startDate);
+    
+    for (let i = 0; i < 42; i++) { // 6주 * 7일
+      days.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    return days;
+  };
+
+  const navigateMonth = (direction) => {
+    setCurrentMonth(prev => {
+      const newMonth = new Date(prev);
+      newMonth.setMonth(prev.getMonth() + direction);
+      return newMonth;
+    });
+  };
+
+  // 축제 데이터 가져오기
   useEffect(() => {
     const fetchPlays = async () => {
       try {
         console.log('[Map] Fetching plays data...');
         setIsLoading(true);
         setError(null);
-                 const playsData = await playAPI.getPlays();
-         console.log('[Map] Plays data received:', playsData);
-         console.log('[Map] Plays data type:', typeof playsData);
-         console.log('[Map] Plays data length:', playsData?.length);
-         if (playsData && playsData.length > 0) {
-           console.log('[Map] First play sample:', playsData[0]);
-           console.log('[Map] First play location:', playsData[0]?.location);
-           console.log('[Map] First play address:', playsData[0]?.location?.address);
-           console.log('[Map] First play coordinates:', playsData[0]?.location?.lat, playsData[0]?.location?.lng);
-         }
-        setPlays(playsData);
+                
+        console.log('[Map] Festivals data received:', festivals);
+        console.log('[Map] Festivals data type:', typeof festivals);
+        console.log('[Map] Festivals data length:', festivals?.length);
+        if (festivals && festivals.length > 0) {
+          console.log('[Map] First festival sample:', festivals[0]);
+          console.log('[Map] First festival location:', festivals[0]?.location);
+          console.log('[Map] First festival address:', festivals[0]?.location?.address);
+          console.log('[Map] First festival coordinates:', festivals[0]?.location?.lat, festivals[0]?.location?.lng);
+        }
+        setPlays(festivals);
       } catch (err) {
         console.error('Failed to fetch plays:', err);
         setError(err.message || '연극 데이터를 불러오는데 실패했습니다.');
@@ -194,10 +277,10 @@ const Map = () => {
                map,
                path,
                strokeWeight: 2,
-               strokeColor: '#5C5B5C',
-               strokeOpacity: 0.8,
-               fillColor: '#B36B00',
-               fillOpacity: 0.06,
+              strokeColor: '#26667F',
+              strokeOpacity: 0.8,
+              fillColor: '#67C090',
+              fillOpacity: 0.08,
              });
             dongPolygonsRef.current.push(polygon);
             addDongEvents(polygon, dong, kakao, map, infowindow, customOverlay);
@@ -212,14 +295,14 @@ const Map = () => {
       // 동 지역 이벤트 추가
       const addDongEvents = (polygon, dong, kakao, map, infowindow, customOverlay) => {
         kakao.maps.event.addListener(polygon, 'mouseover', (e) => {
-          polygon.setOptions({ fillColor: '#b29ddb' });
-          polygon.setOptions({fillOpacity: 0.18});
+          polygon.setOptions({ fillColor: '#7dd3a3' });
+          polygon.setOptions({fillOpacity: 0.2});
           customOverlay.setPosition(e.latLng);
           customOverlay.setMap(map);
         });
         kakao.maps.event.addListener(polygon, 'mouseout', () => {
-          polygon.setOptions({ fillColor: '#CACACB' });
-          polygon.setOptions({fillOpacity: 0.06});
+          polygon.setOptions({ fillColor: '#67C090' });
+          polygon.setOptions({fillOpacity: 0.08});
           customOverlay.setMap(null);
         });
         kakao.maps.event.addListener(polygon, 'click', (e) => {
@@ -228,7 +311,7 @@ const Map = () => {
             <div style="padding:8px; font-size:13px;">
               <strong>${dong.properties.DONG_KOR_NM}</strong><br/>
               이 지역 맛집을 보시겠어요?<br/><br/>
-              <button id="btn-goto" style="background:#B36B00;color:white;padding:4px 8px;border-radius:5px;">맛집 보기</button>
+              <button id="btn-goto" style="background:#67C090;color:white;padding:4px 8px;border-radius:5px;border:none;font-weight:600;">맛집 보기</button>
             </div>`;
           infowindow.setContent(content);
           infowindow.setPosition(e.latLng);
@@ -247,25 +330,24 @@ const Map = () => {
           map,
           path,
           strokeWeight: 2,
-          strokeColor: '#004c80',
+          strokeColor: '#26667F',
           strokeOpacity: 0.8,
-          fillColor: '#ffffff',
-          fillOpacity: 0.6,
+          fillColor: '#DDF4E7',
+          fillOpacity: 0.7,
         });
         regionPolygonsRef.current.push(polygon);
 
         kakao.maps.event.addListener(polygon, 'mouseover', (e) => {
-          polygon.setOptions({ fillColor: '#d2c7ef' });
+          polygon.setOptions({ fillColor: '#7dd3a3' });
           customOverlay.setPosition(e.latLng);
           customOverlay.setMap(map);
         });
         kakao.maps.event.addListener(polygon, 'mouseout', () => {
-          polygon.setOptions({ fillColor: '#ffffff' });
+          polygon.setOptions({ fillColor: '#DDF4E7' });
           customOverlay.setMap(null);
         });
         kakao.maps.event.addListener(polygon, 'click', () => {
-          regionPolygonsRef.current.forEach((p) => p.setMap(null));
-          regionPolygonsRef.current = [];
+          // 구 테두리는 유지하고 동 레벨로만 확대
           const center = centers.find((c) => c.name === name);
           if (center)
             map.setCenter(new kakao.maps.LatLng(center.lat, center.lng));
@@ -287,15 +369,20 @@ const Map = () => {
         goBackButton.id = 'go-back-btn';
         goBackButton.innerText = '구 다시 선택하기';
         goBackButton.style.cssText =
-          'position:absolute;top:20px;right:40px;background:#B36B00;color:white;padding:10px 16px;border-radius:8px;z-index:100;';
+          'position:absolute;top:20px;right:40px;background:#67C090;color:white;padding:10px 16px;border-radius:8px;z-index:100;border:none;font-weight:600;box-shadow:0 4px 12px rgba(103, 192, 144, 0.3);';
         goBackButton.onclick = () => resetRegions(kakao, map, dongData, seoulMap);
         document.body.appendChild(goBackButton);
       };
 
       // 지역 초기화 함수
       const resetRegions = (kakao, map, dongData, seoulMap) => {
+        // 동 폴리곤 제거
         dongPolygonsRef.current.forEach((p) => p.setMap(null));
         dongPolygonsRef.current = [];
+        
+        // 구 폴리곤 다시 표시 (기존 폴리곤들을 다시 활성화)
+        regionPolygonsRef.current.forEach((p) => p.setMap(map));
+        
         infowindow.close();
         map.setLevel(9);
         map.setCenter(new kakao.maps.LatLng(37.5665, 126.9780));
@@ -324,19 +411,12 @@ const Map = () => {
   const applyFilters = () => {
     let filtered = [...plays];
     
-    // 검색어로 필터링
+    // 검색어로 필터링 (대학교명 또는 축제명)
     if (searchQuery.trim()) {
       filtered = filtered.filter(play => 
         play.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         play.location?.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        play.category?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    
-    // 카테고리로 필터링
-    if (selectedCategory !== '전체 카테고리') {
-      filtered = filtered.filter(play => 
-        play.category === selectedCategory
+        play.university?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
     
@@ -355,11 +435,20 @@ const Map = () => {
       });
     }
     
-    // 지역으로 필터링 (주소에 해당 지역명이 포함된 경우)
-    if (selectedRegion !== '전체 지역') {
+    // 구로 필터링 (서울의 특정 구)
+    if (selectedDistrict !== '전체 구') {
       filtered = filtered.filter(play => 
-        play.location?.address?.includes(selectedRegion)
+        play.location?.address?.includes(selectedDistrict)
       );
+    }
+    
+    // 날짜로 필터링 (복수 선택 지원)
+    if (selectedDates.length > 0) {
+      filtered = filtered.filter(play => {
+        if (!play.date) return false;
+        const playDateStr = formatDate(play.date);
+        return playDateStr ? selectedDates.includes(playDateStr) : false;
+      });
     }
     
     setFilteredPlays(filtered);
@@ -385,9 +474,9 @@ const Map = () => {
   // 필터 초기화 함수
   const resetFilters = () => {
     setSearchQuery('');
-    setSelectedCategory('전체 카테고리');
     setSelectedGenre('전체 장르');
-    setSelectedRegion('전체 지역');
+    setSelectedDistrict('전체 구');
+    setSelectedDates([]);
     setFilteredPlays([]);
   };
 
@@ -459,11 +548,12 @@ const Map = () => {
       
       // 인포윈도우 내용
       const html = `
-        <div style="padding:12px; min-width:250px; background:white; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-          <h4 style="margin:0 0 8px 0; color:#333; font-size:16px;">${play.title || 'Untitled'}</h4>
-          <div style="font-size:13px;color:#666; margin-bottom:6px;">📍 ${play.location?.address || ''}</div>
-          ${play.category ? `<div style="font-size:12px;color:#888; margin-bottom:8px;">🎭 ${play.category}</div>` : ''}
-          <a href="${play.detailUrl || '#'}" target="_blank" style="display:inline-block;background:#B36B00;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;">상세보기</a>
+        <div style="padding:12px; min-width:250px; background:linear-gradient(135deg, #1a1a1a, #2a2a2a); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.3); border:1px solid #67C090;">
+          <h4 style="margin:0 0 8px 0; color:#67C090; font-size:16px; font-weight:600;">${play.title || 'Untitled'}</h4>
+          <div style="font-size:13px;color:#DDF4E7; margin-bottom:6px;">📍 ${play.location?.address || ''}</div>
+          ${play.date ? `<div style="font-size:12px;color:#7dd3a3; margin-bottom:6px;">📅 ${play.date}</div>` : ''}
+          ${play.category ? `<div style="font-size:12px;color:#7dd3a3; margin-bottom:8px;">🎭 ${play.category}</div>` : ''}
+          <a href="/festival/${play.id}" style="display:inline-block;background:#67C090;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;border:none;box-shadow:0 2px 8px rgba(103, 192, 144, 0.3);">상세보기</a>
         </div>`;
       
       const infowindow = new kakao.maps.InfoWindow({ 
@@ -474,7 +564,18 @@ const Map = () => {
       
       // 마커 클릭 이벤트
       kakao.maps.event.addListener(marker, 'click', () => {
+        // 기존에 열려있는 모든 인포윈도우 닫기
+        markersRef.current.forEach(m => {
+          if (m.infowindow) {
+            m.infowindow.close();
+          }
+        });
+        
+        // 현재 마커의 인포윈도우 열기
         infowindow.open(map, marker);
+        
+        // 마커에 인포윈도우 참조 저장
+        marker.infowindow = infowindow;
       });
       
       markersRef.current.push(marker);
@@ -583,8 +684,8 @@ const Map = () => {
       <Topnav />
 
       <div className="map-header-text">
-        <h2>공연 지도</h2>
-        <p>공연 정보를 조회할 지역을 선택하세요.</p>
+        <h2>축제 지도</h2>
+        <p>축제 정보를 조회할 지역을 선택하세요.</p>
         {/* 디버깅용 상태 표시 */}
         {/* <div style={{fontSize: '12px', color: '#666', marginTop: '10px'}}>
           Debug: Plays: {plays?.length || 0}, Map Ready: {isMapReady ? 'Yes' : 'No'}
@@ -593,53 +694,72 @@ const Map = () => {
 
       <div className="map-content">
         <aside className="map-filter">
-          <h4>검색 및 필터</h4>
+          <h4>대학 축제 검색</h4>
           <input 
             type="text" 
-            placeholder="장소 또는 공연을 검색해 보세요" 
+            placeholder="대학교명 또는 축제를 검색해 보세요" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
           />
           <select 
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
+            value={selectedDistrict}
+            onChange={(e) => setSelectedDistrict(e.target.value)}
           >
-            <option>전체 카테고리</option>
-            <option>뮤지컬</option>
-            <option>연극</option>
+            {seoulDistricts.map((district, index) => (
+              <option key={index} value={district}>
+                {district}
+              </option>
+            ))}
           </select>
-          <select 
-            value={selectedGenre}
-            onChange={(e) => setSelectedGenre(e.target.value)}
-          >
-            {genres.map((genre, index) => {
-              // 장르별 한글 표시명 매핑
-              const genreLabels = {
-                '전체 장르': '전체 장르',
-                'comedy': '코미디',
-                'romance': '로맨스',
-                'horror': '공포/스릴러',
-                'musical': '뮤지컬',
-                'drama': '드라마',
-                'action': '액션',
-                'thriller': '스릴러'
-              };
-              return (
-                <option key={index} value={genre}>
-                  {genreLabels[genre] || genre}
-                </option>
-              );
-            })}
-          </select>
-          <select 
-            value={selectedRegion}
-            onChange={(e) => setSelectedRegion(e.target.value)}
-          >
-            <option>전체 지역</option>
-            <option>서울</option>
-            <option>인천</option>
-          </select>
+          <div className="date-picker-container">
+            <button 
+              className="date-picker-button"
+              onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+            >
+              📅 축제 날짜 선택 {selectedDates.length > 0 && `(${selectedDates.length}개)`}
+            </button>
+            {isCalendarOpen && (
+              <div className="calendar-popup">
+                <div className="calendar-header">
+                  <button onClick={() => navigateMonth(-1)}>‹</button>
+                  <span>{currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월</span>
+                  <button onClick={() => navigateMonth(1)}>›</button>
+                </div>
+                <div className="calendar-weekdays">
+                  <div>일</div>
+                  <div>월</div>
+                  <div>화</div>
+                  <div>수</div>
+                  <div>목</div>
+                  <div>금</div>
+                  <div>토</div>
+                </div>
+                <div className="calendar-days">
+                  {getCalendarDays().map((day, index) => {
+                    const isCurrentMonth = day.getMonth() === currentMonth.getMonth();
+                    const isSelected = isDateSelected(day);
+                    const isToday = formatDate(day) === formatDate(new Date());
+                    
+                    return (
+                      <button
+                        key={index}
+                        className={`calendar-day ${!isCurrentMonth ? 'other-month' : ''} ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''}`}
+                        onClick={() => toggleDateSelection(day)}
+                        disabled={!isCurrentMonth}
+                      >
+                        {day.getDate()}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="calendar-footer">
+                  <button onClick={() => setSelectedDates([])}>선택 초기화</button>
+                  <button onClick={() => setIsCalendarOpen(false)}>완료</button>
+                </div>
+              </div>
+            )}
+          </div>
           <div className="filter-buttons">
             <button className="apply-btn" onClick={applyFilters}>
               필터 적용하기
@@ -657,7 +777,7 @@ const Map = () => {
                   key={i} 
                   onClick={() => focusOnArea(area)}
                   style={{ cursor: 'pointer', padding: '8px', borderRadius: '4px', transition: 'background-color 0.2s' }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(103, 192, 144, 0.15)'}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                 >
                   📍 {area.displayName}
@@ -706,7 +826,7 @@ const Map = () => {
       {/* 필터를 적용하지 않았을 때는 아무것도 표시하지 않음 */}
       {filteredPlays.length === 0 && (
         <div className="no-filter-message">
-          <p>검색 조건을 설정하고 "필터 적용하기"를 클릭하여 공연을 찾아보세요.</p>
+          <p>검색 조건을 설정하고 "필터 적용하기"를 클릭하여 축제를 찾아보세요.</p>
         </div>
       )}
     </div>

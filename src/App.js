@@ -23,6 +23,7 @@ import AITranslation from './components/AITranslation';
 import Review from './components/Review';
 import EventDetail from './components/EventDetail';
 import SearchResults from './components/SearchResults';
+import FestivalDetail from './FestivalDetail/FestivalDetail';
 
 
 
@@ -93,6 +94,9 @@ const router = createBrowserRouter([
   },
   {
     path: "/content/:id", element: <ContentDetail />
+  },
+  {
+    path: "/festival/:id", element: <FestivalDetail />
   },
   {
     path: "/test/my-test",

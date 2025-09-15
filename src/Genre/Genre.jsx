@@ -696,6 +696,7 @@ const Genre = () => {
                             e.currentTarget.onerror = null;
                             e.currentTarget.src = '/images/fallback.jpg'; 
                           }}
+                          loading="lazy"
                         />
                         <div className="category-poster-info">
                           <div className="category-poster-title">{play.title}</div>

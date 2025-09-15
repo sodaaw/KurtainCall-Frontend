@@ -6,6 +6,7 @@ import Topnav from "../components/Topnav";
 import EventCalendar from "./EventCalendar"; // ✅ 분리한 캘린더
 import EventPanel from "./EventPanel";       // ✅ 분리한 우측 패널
 import { playAPI } from "../services/api";
+import { festivals } from "../data/festivals"; // ✅ 축제 데이터 import
 import "./Main.css";
 
 // 카테고리 버튼 데이터 (API에서 받아올 예정)
@@ -28,6 +29,32 @@ const DEFAULT_CATS = [
 const fmt = (d) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const inRange = (day, start, end) => day >= start && day <= end;
+
+// ✅ 축제 날짜 파싱 함수
+const parseFestivalDate = (dateString) => {
+  // "2025.05.14(수)~2025.05.16(금)" 형태를 파싱
+  const match = dateString.match(/(\d{4})\.(\d{2})\.(\d{2})\([^)]+\)~(\d{4})\.(\d{2})\.(\d{2})\([^)]+\)/);
+  if (match) {
+    const [, startYear, startMonth, startDay, endYear, endMonth, endDay] = match;
+    return {
+      start: new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay)),
+      end: new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay))
+    };
+  }
+  return null;
+};
+
+// ✅ 날짜가 축제 기간에 포함되는지 확인
+const isDateInFestival = (date, festival) => {
+  const festivalDates = parseFestivalDate(festival.date);
+  if (!festivalDates) return false;
+  
+  const dateStr = fmt(date);
+  const startStr = fmt(festivalDates.start);
+  const endStr = fmt(festivalDates.end);
+  
+  return dateStr >= startStr && dateStr <= endStr;
+};
 
 /* ---------------- 상단 메인이벤트(Hero) ---------------- */
 function Hero({ plays, isLoading, error, isLoggedIn = false }) {
@@ -333,8 +360,8 @@ export default function Main() {
   // 검색 모달 제어 (주석처리)
   // const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // ✅ 날짜 선택 상태
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  // ✅ 날짜 선택 상태 (홈화면 진입 시 2025년 5월로 초기화)
+  const [selectedDate, setSelectedDate] = useState(new Date(2025, 4, 15)); // 2025년 5월 15일
   const selectedKey = fmt(selectedDate);
 
   // API 데이터 상태
@@ -363,11 +390,39 @@ export default function Main() {
     fetchPlays();
   }, []);
 
-  // ✅ 선택 날짜에 속하는 이벤트만 필터 (현재는 plays 데이터에 날짜 정보가 없으므로 빈 배열)
-  const eventsOfDay = useMemo(() => [], [selectedKey]);
+  // ✅ 선택 날짜에 속하는 축제 이벤트 필터
+  const eventsOfDay = useMemo(() => {
+    return festivals.filter(festival => {
+      const festivalDates = parseFestivalDate(festival.date);
+      if (!festivalDates) return false;
+      
+      const dateStr = fmt(selectedDate);
+      const startStr = fmt(festivalDates.start);
+      const endStr = fmt(festivalDates.end);
+      
+      return dateStr >= startStr && dateStr <= endStr;
+    });
+  }, [selectedKey]);
 
-  // ✅ 달력에 표시할 마커 (현재는 plays 데이터에 날짜 정보가 없으므로 빈 Set)
-  const markers = useMemo(() => new Set(), []);
+  // ✅ 달력에 표시할 마커 (축제가 있는 날짜들)
+  const markers = useMemo(() => {
+    const markerSet = new Set();
+    
+    festivals.forEach(festival => {
+      const festivalDates = parseFestivalDate(festival.date);
+      if (festivalDates) {
+        const current = new Date(festivalDates.start);
+        const end = new Date(festivalDates.end);
+        
+        while (current <= end) {
+          markerSet.add(fmt(current));
+          current.setDate(current.getDate() + 1);
+        }
+      }
+    });
+    
+    return markerSet;
+  }, []);
 
   return (
     <div className="main-page">

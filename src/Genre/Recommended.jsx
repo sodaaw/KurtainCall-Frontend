@@ -273,10 +273,16 @@ const Recommended = () => {
         {/* 포스터 이미지와 기본 정보 */}
         <div className="poster-main-section">
           <div className="poster-image-container">
-            <img referrerPolicy="no-referrer"
+            <img 
+              referrerPolicy="no-referrer"
               src={selectedPoster.image} 
               alt={selectedPoster.title} 
               className="poster-detail-image"
+              onError={(e) => { 
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/images/fallback.jpg'; 
+              }}
+              loading="lazy"
             />
           </div>
           
