@@ -35,13 +35,20 @@ const Map = () => {
 
   // 검색 및 필터 상태
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('전체 카테고리');
   const [selectedGenre, setSelectedGenre] = useState('전체 장르');
-  const [selectedRegion, setSelectedRegion] = useState('전체 지역');
+  const [selectedDistrict, setSelectedDistrict] = useState('전체 구');
+  const [selectedDate, setSelectedDate] = useState('');
   const [filteredPlays, setFilteredPlays] = useState([]);
 
   // 장르 목록 (Genre.jsx와 동일한 장르 사용)
   const genres = ['전체 장르', 'comedy', 'romance', 'horror', 'musical', 'drama', 'action', 'thriller'];
+
+  // 서울 구 목록
+  const seoulDistricts = [
+    '전체 구', '강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', 
+    '금천구', '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', 
+    '성동구', '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'
+  ];
 
   // 축제 데이터 가져오기
   useEffect(() => {
@@ -329,19 +336,12 @@ const Map = () => {
   const applyFilters = () => {
     let filtered = [...plays];
     
-    // 검색어로 필터링
+    // 검색어로 필터링 (대학교명 또는 축제명)
     if (searchQuery.trim()) {
       filtered = filtered.filter(play => 
         play.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         play.location?.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        play.category?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    
-    // 카테고리로 필터링
-    if (selectedCategory !== '전체 카테고리') {
-      filtered = filtered.filter(play => 
-        play.category === selectedCategory
+        play.university?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
     
@@ -360,11 +360,22 @@ const Map = () => {
       });
     }
     
-    // 지역으로 필터링 (주소에 해당 지역명이 포함된 경우)
-    if (selectedRegion !== '전체 지역') {
+    // 구로 필터링 (서울의 특정 구)
+    if (selectedDistrict !== '전체 구') {
       filtered = filtered.filter(play => 
-        play.location?.address?.includes(selectedRegion)
+        play.location?.address?.includes(selectedDistrict)
       );
+    }
+    
+    // 날짜로 필터링
+    if (selectedDate) {
+      filtered = filtered.filter(play => {
+        if (!play.date) return false;
+        // 날짜 형식에 따라 비교 (YYYY-MM-DD 형식 가정)
+        const playDate = new Date(play.date);
+        const filterDate = new Date(selectedDate);
+        return playDate.toDateString() === filterDate.toDateString();
+      });
     }
     
     setFilteredPlays(filtered);
@@ -390,9 +401,9 @@ const Map = () => {
   // 필터 초기화 함수
   const resetFilters = () => {
     setSearchQuery('');
-    setSelectedCategory('전체 카테고리');
     setSelectedGenre('전체 장르');
-    setSelectedRegion('전체 지역');
+    setSelectedDistrict('전체 구');
+    setSelectedDate('');
     setFilteredPlays([]);
   };
 
@@ -610,7 +621,7 @@ const Map = () => {
 
       <div className="map-content">
         <aside className="map-filter">
-          <h4>검색 및 필터</h4>
+          <h4>대학 축제 검색</h4>
           <input 
             type="text" 
             placeholder="대학교명 또는 축제를 검색해 보세요" 
@@ -619,44 +630,21 @@ const Map = () => {
             onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
           />
           <select 
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
+            value={selectedDistrict}
+            onChange={(e) => setSelectedDistrict(e.target.value)}
           >
-            <option>전체 카테고리</option>
-            <option>뮤지컬</option>
-            <option>연극</option>
+            {seoulDistricts.map((district, index) => (
+              <option key={index} value={district}>
+                {district}
+              </option>
+            ))}
           </select>
-          <select 
-            value={selectedGenre}
-            onChange={(e) => setSelectedGenre(e.target.value)}
-          >
-            {genres.map((genre, index) => {
-              // 장르별 한글 표시명 매핑
-              const genreLabels = {
-                '전체 장르': '전체 장르',
-                'comedy': '코미디',
-                'romance': '로맨스',
-                'horror': '공포/스릴러',
-                'musical': '뮤지컬',
-                'drama': '드라마',
-                'action': '액션',
-                'thriller': '스릴러'
-              };
-              return (
-                <option key={index} value={genre}>
-                  {genreLabels[genre] || genre}
-                </option>
-              );
-            })}
-          </select>
-          <select 
-            value={selectedRegion}
-            onChange={(e) => setSelectedRegion(e.target.value)}
-          >
-            <option>전체 지역</option>
-            <option>서울</option>
-            <option>인천</option>
-          </select>
+          <input 
+            type="date" 
+            placeholder="축제 날짜 선택"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
           <div className="filter-buttons">
             <button className="apply-btn" onClick={applyFilters}>
               필터 적용하기
