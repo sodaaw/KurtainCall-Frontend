@@ -298,6 +298,30 @@ function RecommendedShows({ plays, isLoading, error }) {
   );
 }
 
+/* ---------------- 아이돌 설문조사 배너 ---------------- */
+function IdolSurveyBanner({ onIdolSurveyClick }) {
+  return (
+    <section className="idol-survey-banner">
+      <div className="idol-survey-content">
+        <div className="idol-survey-icon">🎤</div>
+        <div className="idol-survey-text">
+          <h3>좋아하는 아이돌을 선택해보세요!</h3>
+          <p>내가 좋아하는 아이돌이 출연하는 공연을 추천해드릴게요</p>
+        </div>
+        <button 
+          className="idol-survey-btn"
+          onClick={onIdolSurveyClick}
+        >
+          선택하기
+          <svg className="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+  );
+}
+
 /* ---------------- 검색 및 장르 필터 ---------------- */
 function SearchAndGenre({ onSearchClick, onGenreClick }) {
   const navigate = useNavigate();
@@ -440,6 +464,12 @@ export default function Main() {
     return markerSet;
   }, []);
 
+  // 아이돌 설문조사 핸들러
+  const handleIdolSurveyClick = () => {
+    alert('아이돌 설문조사 기능이 곧 추가될 예정입니다! 🎤');
+    // TODO: 아이돌 선택 모달 열기
+  };
+
   return (
     <div className="main-page">
       {/* 커튼 배경 요소들 */}
@@ -453,6 +483,9 @@ export default function Main() {
       <main className="main-container">
         <section className="hero-block">
           <Hero plays={plays} isLoading={isLoading} error={error} isLoggedIn={false} />
+
+          {/* 아이돌 설문조사 배너 */}
+          <IdolSurveyBanner onIdolSurveyClick={handleIdolSurveyClick} />
 
           {/* 검색 및 장르 필터 */}
           <SearchAndGenre 
