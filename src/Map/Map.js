@@ -37,8 +37,12 @@ const Map = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('전체 장르');
   const [selectedDistrict, setSelectedDistrict] = useState('전체 구');
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDates, setSelectedDates] = useState([]);
   const [filteredPlays, setFilteredPlays] = useState([]);
+  
+  // 달력 관련 상태
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date(2025, 4)); // 2025년 5월 (월은 0부터 시작)
 
   // 장르 목록 (Genre.jsx와 동일한 장르 사용)
   const genres = ['전체 장르', 'comedy', 'romance', 'horror', 'musical', 'drama', 'action', 'thriller'];
@@ -49,6 +53,77 @@ const Map = () => {
     '금천구', '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', 
     '성동구', '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'
   ];
+
+  // 달력 관련 함수들
+  const parseFestivalDate = (dateStr) => {
+    if (!dateStr) return null;
+    
+    // "2025.05.14(수)~2025.05.16(금)" 형식을 파싱
+    const match = dateStr.match(/(\d{4})\.(\d{2})\.(\d{2})/);
+    if (match) {
+      const [, year, month, day] = match;
+      return new Date(year, month - 1, day); // 월은 0부터 시작
+    }
+    
+    // 다른 형식도 시도
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? null : date;
+  };
+
+  const formatDate = (date) => {
+    if (!date) return null;
+    
+    const parsedDate = typeof date === 'string' ? parseFestivalDate(date) : date;
+    if (!parsedDate || isNaN(parsedDate.getTime())) {
+      return null; // 유효하지 않은 날짜인 경우 null 반환
+    }
+    return parsedDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+  };
+
+  const isDateSelected = (date) => {
+    const dateStr = formatDate(date);
+    return dateStr ? selectedDates.includes(dateStr) : false;
+  };
+
+  const toggleDateSelection = (date) => {
+    const dateStr = formatDate(date);
+    if (!dateStr) return; // 유효하지 않은 날짜인 경우 아무것도 하지 않음
+    
+    setSelectedDates(prev => {
+      if (prev.includes(dateStr)) {
+        return prev.filter(d => d !== dateStr);
+      } else {
+        return [...prev, dateStr];
+      }
+    });
+  };
+
+  const getCalendarDays = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay());
+    
+    const days = [];
+    const currentDate = new Date(startDate);
+    
+    for (let i = 0; i < 42; i++) { // 6주 * 7일
+      days.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    return days;
+  };
+
+  const navigateMonth = (direction) => {
+    setCurrentMonth(prev => {
+      const newMonth = new Date(prev);
+      newMonth.setMonth(prev.getMonth() + direction);
+      return newMonth;
+    });
+  };
 
   // 축제 데이터 가져오기
   useEffect(() => {
@@ -367,14 +442,12 @@ const Map = () => {
       );
     }
     
-    // 날짜로 필터링
-    if (selectedDate) {
+    // 날짜로 필터링 (복수 선택 지원)
+    if (selectedDates.length > 0) {
       filtered = filtered.filter(play => {
         if (!play.date) return false;
-        // 날짜 형식에 따라 비교 (YYYY-MM-DD 형식 가정)
-        const playDate = new Date(play.date);
-        const filterDate = new Date(selectedDate);
-        return playDate.toDateString() === filterDate.toDateString();
+        const playDateStr = formatDate(play.date);
+        return playDateStr ? selectedDates.includes(playDateStr) : false;
       });
     }
     
@@ -403,7 +476,7 @@ const Map = () => {
     setSearchQuery('');
     setSelectedGenre('전체 장르');
     setSelectedDistrict('전체 구');
-    setSelectedDate('');
+    setSelectedDates([]);
     setFilteredPlays([]);
   };
 
@@ -639,12 +712,54 @@ const Map = () => {
               </option>
             ))}
           </select>
-          <input 
-            type="date" 
-            placeholder="축제 날짜 선택"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          />
+          <div className="date-picker-container">
+            <button 
+              className="date-picker-button"
+              onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+            >
+              📅 축제 날짜 선택 {selectedDates.length > 0 && `(${selectedDates.length}개)`}
+            </button>
+            {isCalendarOpen && (
+              <div className="calendar-popup">
+                <div className="calendar-header">
+                  <button onClick={() => navigateMonth(-1)}>‹</button>
+                  <span>{currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월</span>
+                  <button onClick={() => navigateMonth(1)}>›</button>
+                </div>
+                <div className="calendar-weekdays">
+                  <div>일</div>
+                  <div>월</div>
+                  <div>화</div>
+                  <div>수</div>
+                  <div>목</div>
+                  <div>금</div>
+                  <div>토</div>
+                </div>
+                <div className="calendar-days">
+                  {getCalendarDays().map((day, index) => {
+                    const isCurrentMonth = day.getMonth() === currentMonth.getMonth();
+                    const isSelected = isDateSelected(day);
+                    const isToday = formatDate(day) === formatDate(new Date());
+                    
+                    return (
+                      <button
+                        key={index}
+                        className={`calendar-day ${!isCurrentMonth ? 'other-month' : ''} ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''}`}
+                        onClick={() => toggleDateSelection(day)}
+                        disabled={!isCurrentMonth}
+                      >
+                        {day.getDate()}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="calendar-footer">
+                  <button onClick={() => setSelectedDates([])}>선택 초기화</button>
+                  <button onClick={() => setIsCalendarOpen(false)}>완료</button>
+                </div>
+              </div>
+            )}
+          </div>
           <div className="filter-buttons">
             <button className="apply-btn" onClick={applyFilters}>
               필터 적용하기
