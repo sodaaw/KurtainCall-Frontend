@@ -71,18 +71,24 @@ const FestivalDetail = () => {
                 src={festival.posterUrl} 
                 alt={festival.title}
                 className="poster-image"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
               />
-            ) : (
-              <div className="poster-placeholder">
-                <div className="placeholder-icon">🎭</div>
-                <p>포스터 이미지</p>
-              </div>
-            )}
+            ) : null}
+            <div 
+              className="poster-placeholder" 
+              style={{ display: festival.posterUrl ? 'none' : 'flex' }}
+            >
+              <div className="placeholder-icon">🎪</div>
+              <p>포스터 이미지</p>
+            </div>
           </div>
           
           <div className="festival-info">
             <div className="festival-badge">
-              <span className="category-badge">{festival.category}</span>
+              <span className="category-badge">대학 축제</span>
               <span className={`status-badge ${festival.isActive ? 'active' : 'inactive'}`}>
                 {festival.isActive ? '진행중' : '종료'}
               </span>

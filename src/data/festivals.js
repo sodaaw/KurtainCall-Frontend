@@ -14,7 +14,7 @@ export const festivals = [
       day2: "심아일랜드, 메이딘, 이승윤", 
       day3: "잔나비, YB, 에스파, 싸이"
     },
-    posterUrl: "/images/festivals/hongik_2025.jpg",
+    posterUrl: "/images/hongik_2025.png",
     detailUrl: "https://www.instagram.com/p/DI_btIEp6VM/?igsh=MXB1dTV5bTJsdTJyaQ==",
     description: "홍익대학교의 화려한 대동제로, 다양한 아티스트들의 공연과 함께 즐거운 축제의 시간을 선사합니다.",
     isActive: true
@@ -34,7 +34,7 @@ export const festivals = [
       day2: "하하, 자이언티, 리센느",
       day3: "???"
     },
-    posterUrl: "/images/festivals/kukmin_2025.jpg",
+    posterUrl: "/images/kukmin_2025.png",
     detailUrl: "",
     description: "국민대학교의 특별한 대동제로, 라일락의 향기와 함께하는 아름다운 축제입니다.",
     isActive: true
@@ -54,7 +54,7 @@ export const festivals = [
       day2: "잔나비, NCT WISH",
       day3: "백예린, i-dle(아이들)"
     },
-    posterUrl: "/images/festivals/sung_2025.jpg",
+    posterUrl: "/images/sung_2025.png",
     detailUrl: "",
     description: "숭실대학교 동아리들이 주최하는 봄축제로, 다양한 동아리 공연과 활동을 즐길 수 있습니다.",
     isActive: false
@@ -74,7 +74,7 @@ export const festivals = [
       day2: "스컬&하하, 키스오브라이프, 지코",
       day3: "나상현씨밴드, Apink, HIGHLIGHT"
     },
-    posterUrl: "",
+    posterUrl: "/images/sejong_2025.png",
     detailUrl: "",
     description: "세종대학교의 특별한 연희 축제로, 수화기를 넘어선 소통과 화합의 장을 만들어갑니다.",
     isActive: true
@@ -94,7 +94,7 @@ export const festivals = [
       day2: "카더가든, 빈지노, NCT DREAM, 크러쉬",
       day3: "키스오브라이프, 다이나믹 듀오, 씨엔블루, 윤하"
     },
-    posterUrl: "/images/festivals/dongguk_2025.png",
+    posterUrl: "/images/dongguk_2025.png",
     detailUrl: "",
     description: "동국대학교의 봄 대동제로, 다양한 아티스트와 함께하는 열정적인 무위열반의 순간.",
     isActive: true
@@ -114,7 +114,7 @@ export const festivals = [
       day2: "wave to earth, 다이나믹 듀오, 백예린, 에스파",
       day3: "있지, 싸이, YB"
     },
-    posterUrl: "/images/festivals/kunkuk_2025.png",
+    posterUrl: "/images/kunkuk_2025.png",
     detailUrl: "",
     description: "일감호와 함께하는 건국대학교의 대표 축제, The Wave.",
     isActive: false
@@ -134,7 +134,7 @@ export const festivals = [
       day2: "여동생, QWER",
       day3: "윤하, 투어스"
     },
-    posterUrl: "/images/festivals/uos_2025.png",
+    posterUrl: "/images/uos_2025.png",
     detailUrl: "",
     description: "서울시립대학교의 대동제, SUNBURST.",
     isActive: true
@@ -153,7 +153,7 @@ export const festivals = [
       day1: "BTOB, 선미, YB",
       day2: "윤하, TransFixion, 백예린"
     },
-    posterUrl: "/images/festivals/hufs_2025.png",
+    posterUrl: "/images/hufs_2025.png",
     detailUrl: "",
     description: "한국외대의 QUINQUATRIA 축제, Euphoria.",
     isActive: true
@@ -172,7 +172,7 @@ export const festivals = [
       day1: "로이킴, Kiikii",
       day2: "루시, 엔플라잉, 빈지노, 백예린, 폴킴, TWS, ITZY"
     },
-    posterUrl: "/images/festivals/kh_2025.jpg",
+    posterUrl: "/images/kh_2025.png",
     detailUrl: "",
     description: "경희대학교의 청춘을 주제로 한 MASTERPEACE 대동제.",
     isActive: false
@@ -191,7 +191,7 @@ export const festivals = [
       day1: "KiiKii, 안신애, YB",
       day2: "아이브, 키스오브라이프, 잔나비, 싸이"
     },
-    posterUrl: "/images/festivals/skku_2025.png",
+    posterUrl: "/images/skku_2025.png",
     detailUrl: "",
     description: "성균관대학교 인문사회과학캠퍼스의 대동제.",
     isActive: true
@@ -211,7 +211,7 @@ export const festivals = [
       day2: "에일리, 볼빨간사춘기, 싸이",
       day3: "미야오, (여자)아이들, 잔나비"
     },
-    posterUrl: "/images/festivals/hanyang_2025.png",
+    posterUrl: "/images/hanyang_2025.png",
     detailUrl: "",
     description: "한양대학교의 대표 축제, RACHIOS.",
     isActive: true
@@ -231,7 +231,7 @@ export const festivals = [
       day2: "행주, 창모, 나상현씨밴드, 스테이씨",
       day3: "다이나믹듀오, YB, NCT DREAM"
     },
-    posterUrl: "/images/festivals/cau_2025.png",
+    posterUrl: "/images/cau_2025.png",
     detailUrl: "",
     description: "푸른 바람을 타고 항해를 시작하는 중앙대학교의 LUCAUS 축제.",
     isActive: true
@@ -250,7 +250,7 @@ export const festivals = [
       day4: "인어미닛, 메이딘, 한승우, 아일릿, 크러쉬",
       day5: "예은, TNX, 힛지스, 리센느, 싸이"
     },
-    posterUrl: "/images/festivals/sogang_2025.png",
+    posterUrl: "/images/sogang_2025.png",
     detailUrl: "",
     description: "서강대학교의 열정적인 RED:volution 대동제.",
     isActive: true
@@ -270,7 +270,7 @@ export const festivals = [
       day2: "리센느, IFEYE, BTOB, 권진아, TXT, 빈지노",
       day3: "유니스, 우디, 아일릿, MEOVV, IVE, 대성"
     },
-    posterUrl: "/images/festivals/koreauniv_2025.png",
+    posterUrl: "/images/koreauniv_2025.png",
     detailUrl: "",
     description: "고려대학교의 석탑대동제, KUDYSSEY.",
     isActive: true
@@ -286,7 +286,7 @@ export const festivals = [
     },
     date: "2025.05.27(화)~2025.05.30(금)",
     performers: {},
-    posterUrl: "/images/festivals/yonsei_2025.png",
+    posterUrl: "/images/yonsei_2025.png",
     detailUrl: "",
     description: "연세대학교 개교 140주년 기념 무악대동제.",
     isActive: true
@@ -304,7 +304,7 @@ export const festivals = [
     performers: {
       day3: "Billlie(빌리), LUCY, 다이나믹 듀오"
     },
-    posterUrl: "/images/festivals/snu_2025.png",
+    posterUrl: "/images/snu_2025.png",
     detailUrl: "",
     description: "서울대학교의 봄 축제, Spring-kle.",
     isActive: true
