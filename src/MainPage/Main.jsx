@@ -9,21 +9,21 @@ import { playAPI } from "../services/api";
 import { festivals } from "../data/festivals"; // ✅ 축제 데이터 import
 import "./Main.css";
 
-// 카테고리 버튼 데이터 (API에서 받아올 예정)
-const DEFAULT_CATS = [
-  { 
-    label: "코미디", 
-    slug: "comedy", 
-    //icon: "😄",
-    description: "웃음과 유머"
-  },
-  { 
-    label: "뮤지컬", 
-    slug: "musical", 
-    //icon: "🎵",
-    description: "음악과 노래"
-  },
-];
+// 카테고리 버튼 데이터 - 제거됨
+// const DEFAULT_CATS = [
+//   { 
+//     label: "코미디", 
+//     slug: "comedy", 
+//     //icon: "😄",
+//     description: "웃음과 유머"
+//   },
+//   { 
+//     label: "뮤지컬", 
+//     slug: "musical", 
+//     //icon: "🎵",
+//     description: "음악과 노래"
+//   },
+// ];
 
 /* 유틸 */
 const fmt = (d) =>
@@ -101,7 +101,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
-          <p className="no-data-detail">현재 등록된 공연 정보가 없습니다.</p>
+          <p className="no-data-detail">현재 등록된 축제 정보가 없습니다.</p>
         </div>
       </header>
     );
@@ -119,7 +119,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
-          <p className="no-data-detail">현재 등록된 공연 정보가 없습니다.</p>
+          <p className="no-data-detail">현재 등록된 축제 정보가 없습니다.</p>
         </div>
       </header>
     );
@@ -186,7 +186,7 @@ function RecommendedShows({ plays, isLoading, error }) {
     return (
       <section className="recommended-section">
         <div className="loading-text">
-          <p>추천 공연을 불러오는 중...</p>
+          <p>축제 정보를 불러오는 중...</p>
         </div>
       </section>
     );
@@ -197,7 +197,7 @@ function RecommendedShows({ plays, isLoading, error }) {
       <section className="recommended-section">
         <div className="no-data">
           <div className="no-data-icon">🎭</div>
-          <p className="no-data-title">추천 공연을 불러올 수 없습니다</p>
+          <p className="no-data-title">축제 정보를 불러올 수 없습니다</p>
           <p className="no-data-detail">잠시 후 다시 시도해주세요.</p>
         </div>
       </section>
@@ -255,8 +255,11 @@ function RecommendedShows({ plays, isLoading, error }) {
               )} */}
               <div className="show-meta">
                 <div className="show-title">{play.title}</div>
-                {play.location?.address && (
-                  <div className="show-location">{play.location.address}</div>
+                {play.university && (
+                  <div className="show-university">{play.university}</div>
+                )}
+                {play.date && (
+                  <div className="show-date">{play.date}</div>
                 )}
               </div>
             </div>
@@ -295,9 +298,9 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleMoreGenres = () => {
-    navigate('/genre');
-  };
+  // const handleMoreGenres = () => {
+  //   navigate('/genre');
+  // };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -313,7 +316,7 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         <form className="search-input-wrapper" onSubmit={handleSearch}>
           <input 
             type="text" 
-            placeholder="원하는 장르 또는 작품을 검색해보세요." 
+            placeholder="축제명 또는 대학교를 검색해보세요." 
             className="search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -333,8 +336,8 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         </form>
       </div>
 
-      {/* 장르 필터 */}
-      <div className="genre-filters">
+      {/* 장르 필터 - 제거됨 */}
+      {/* <div className="genre-filters">
         {DEFAULT_CATS.map((cat) => (
           <button 
             key={cat.slug} 
@@ -347,7 +350,7 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         <button className="more-genres-btn" onClick={handleMoreGenres}>
           장르 더보기
         </button>
-      </div>
+      </div> */}
     </section>
   );
 }
@@ -355,7 +358,7 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
 /* ---------------- 메인 컴포넌트 ---------------- */
 export default function Main() {
   const navigate = useNavigate();
-  const goGenre = (slug) => navigate(`/genre?category=${slug}`);
+  // const goGenre = (slug) => navigate(`/genre?category=${slug}`);
 
   // 검색 모달 제어 (주석처리)
   // const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -449,7 +452,7 @@ export default function Main() {
           {/* 검색 및 장르 필터 */}
           <SearchAndGenre 
             onSearchClick={() => {}} 
-            onGenreClick={goGenre} 
+            // onGenreClick={goGenre} 
           />
         </section>
         
