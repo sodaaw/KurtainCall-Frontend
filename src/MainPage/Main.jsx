@@ -369,25 +369,33 @@ export default function Main() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 데이터 로딩
+  // 데이터 로딩 - 축제 데이터 사용
   useEffect(() => {
-    const fetchPlays = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
+    try {
+      setIsLoading(true);
+      setError(null);
 
-        const playsData = await playAPI.getPlays();
-        setPlays(playsData);
-      } catch (err) {
-        console.error('Failed to fetch plays:', err);
-        setError(err.message || '연극 데이터를 불러오는데 실패했습니다.');
-        setPlays([]); // 빈 배열로 설정
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPlays();
+      // 축제 데이터를 plays 형식으로 변환
+      const festivalData = festivals.map(festival => ({
+        id: festival.id,
+        title: festival.title,
+        posterUrl: festival.posterUrl,
+        location: festival.location,
+        detailUrl: festival.detailUrl,
+        description: festival.description,
+        university: festival.university,
+        date: festival.date,
+        performers: festival.performers
+      }));
+      
+      setPlays(festivalData);
+    } catch (err) {
+      console.error('Failed to load festival data:', err);
+      setError(err.message || '축제 데이터를 불러오는데 실패했습니다.');
+      setPlays([]); // 빈 배열로 설정
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   // ✅ 선택 날짜에 속하는 축제 이벤트 필터

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './Recommended.css'; 
 import Topnav from '../components/Topnav';
+import { festivals } from '../data/festivals';
 import axios from 'axios';
 
 const Recommended = () => {
@@ -62,38 +63,21 @@ const Recommended = () => {
           }
         }
         
-        if (playsData) {
-          setPlays(playsData);
-          setLoading(false);
-        } else {
-          // API 실패 시 더미 데이터 사용
-          const dummyPlays = [
-            {
-              title: '웃음의 학교',
-              category: 'comedy',
-              area: '서울 종로구 대학로10길 11',
-              price: '20,000원',
-              stars: 4.8
-            },
-            {
-              title: '개그맨의 밤',
-              category: 'comedy',
-              area: '서울 마포구 홍대로 123',
-              price: '25,000원',
-              stars: 4.5
-            },
-            {
-              title: '즉흥 연기',
-              category: 'comedy',
-              area: '서울 강남구 강남대로 456',
-              price: '30,000원',
-              stars: 4.7
-            }
-          ];
-          
-          setPlays(dummyPlays);
-          setLoading(false);
-        }
+        // 축제 데이터 사용
+        const festivalPlays = festivals.map(festival => ({
+          id: festival.id,
+          title: festival.title,
+          category: '축제',
+          area: festival.location.address,
+          price: '무료',
+          stars: 4.5 + Math.random() * 0.5,
+          university: festival.university,
+          performers: festival.performers,
+          description: festival.description
+        }));
+        
+        setPlays(festivalPlays);
+        setLoading(false);
       } catch (error) {
         console.error('연극 데이터 로드 실패:', error);
         setLoading(false);

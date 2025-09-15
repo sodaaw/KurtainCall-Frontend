@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import './Genre.css';
 import Topnav from '../components/Topnav';
+import { festivals } from '../data/festivals';
 import axios from 'axios';
 
 // === 샘플 리뷰 (기존과 동일) =========================================
@@ -173,12 +174,11 @@ const Genre = () => {
   const [current, setCurrent] = useState(0);
   const [reviews, setReviews] = useState(SAMPLE_REVIEWS);
 
-  // === 필터 상태 (요청대로 4종) =========================
+  // === 필터 상태 (가격 제외) =========================
   const [filters, setFilters] = useState({
     ratingSort: 'none', // 'high' | 'low'
     viewsSort: 'none',  // 'desc'
     deadlineSort: 'none', // 'urgent' | 'normal'
-    priceSort: 'none',  // 'low' | 'high'
     q: '',
   });
 
@@ -204,253 +204,51 @@ const Genre = () => {
     }
   };
 
-  // API 호출 - 여러 엔드포인트 시도
+  // 축제 데이터 로드
   useEffect(() => {
-    const fetchPlays = async () => {
-      try {
-        // 여러 가능한 API 엔드포인트 시도
-        const possibleEndpoints = [
-          '/api/play',
-          '/api/plays', 
-          '/api/theater',
-          '/api/shows',
-          '/api/movies' // 기존에 작동했던 엔드포인트
-        ];
+    try {
+      setLoading(true);
+      
+      // 축제 데이터를 장르별로 분류하여 plays 형식으로 변환
+      const festivalPlays = festivals.map(festival => {
+        // 축제 이름에서 장르 추출 (대학 축제는 모두 'festival'로 분류)
+        let category = 'festival';
         
-        let playsData = null;
+        // 축제 제목에서 장르 키워드 추출
+        const title = festival.title.toLowerCase();
+        if (title.includes('뮤지컬') || title.includes('musical')) {
+          category = 'musical';
+        } else if (title.includes('코미디') || title.includes('comedy')) {
+          category = 'comedy';
+        } else if (title.includes('로맨스') || title.includes('romance')) {
+          category = 'romance';
+        } else if (title.includes('공포') || title.includes('horror')) {
+          category = 'horror';
+        }
         
-        for (const endpoint of possibleEndpoints) {
-          try {
-            console.log(`API 엔드포인트 시도: ${endpoint}`);
-            const response = await axios.get(`https://re-local.onrender.com${endpoint}`);
-            
-            if (response.data && response.data.items) {
-              playsData = response.data.items;
-              console.log(`성공: ${endpoint}에서 데이터 로드됨`);
-              break;
-            } else if (response.data && Array.isArray(response.data)) {
-              playsData = response.data;
-              console.log(`성공: ${endpoint}에서 배열 데이터 로드됨`);
-              break;
-            }
-          } catch (endpointError) {
-            console.log(`${endpoint} 실패:`, endpointError.message);
-            continue;
-          }
-        }
-
-        if (playsData) {
-          // API 응답 데이터 로깅 (디버깅용)
-          console.log('API 원본 데이터 샘플:', playsData[0]);
-          
-          // API 데이터를 올바른 형식으로 변환
-          const formattedPlays = playsData.map(item => {
-            // 가격 정보 매핑 - 여러 가능한 필드명 시도
-            let price = item.price || item.ticketPrice || item.ticket_price || item.cost || item.fee;
-            
-            // 가격이 숫자가 아니거나 0이면 기본값 사용
-            if (!price || isNaN(price) || price <= 0) {
-              price = 15000; // 더 현실적인 기본 가격
-            }
-            
-            return {
-              id: item.id || item.movie_id || Math.random(),
-              title: item.title || item.name || '제목 없음',
-              category: item.category || item.genre || '카테고리 없음',
-              location: item.area || item.location || item.venue || '장소 없음',
-              image: item.posterUrl || item.image || '/images/fallback.jpg',
-              price: price,
-              rating: item.stars || item.rating || 0,
-              views: item.views || 0,
-              deadline: item.end_date || '마감일 없음'
-            };
-          });
-          
-          console.log('변환된 데이터 샘플:', formattedPlays[0]);
-          
-          setPlays(formattedPlays);
-          setLoading(false);
-        } else {
-          // 모든 API 시도 실패 시 확장된 더미 데이터 사용
-          console.log('모든 API 엔드포인트 실패, 확장된 더미 데이터 사용');
-          const allDummyPlays = [
-            {
-              id: 1,
-              title: '뱀프 X 헌터',
-              category: 'comedy',
-              location: '서울 종로구 동숭길 94, JS...',
-              image: '/images/event1.jpg',
-              price: 20000,
-              rating: 4.8,
-              views: 150,
-              deadline: '2025-08-25'
-            },
-            {
-              id: 2,
-              title: '죽여주는 이야기',
-              category: 'comedy',
-              location: '서울 마포구 홍대로 123',
-              image: '/images/event2.jpg',
-              price: 25000,
-              rating: 4.5,
-              views: 120,
-              deadline: '2025-08-30'
-            },
-            {
-              id: 3,
-              title: '과속스캔들',
-              category: 'comedy',
-              location: '서울 강남구 강남대로 456',
-              image: '/images/event3.jpg',
-              price: 30000,
-              rating: 4.7,
-              views: 180,
-              deadline: '2025-09-05'
-            },
-            {
-              id: 4,
-              title: '라면',
-              category: 'comedy',
-              location: '서울 서초구 서초대로 789',
-              image: '/images/event4.jpg',
-              price: 18000,
-              rating: 4.3,
-              views: 90,
-              deadline: '2025-09-10'
-            },
-            {
-              id: 5,
-              title: '2호선 세입자',
-              category: 'comedy',
-              location: '서울 중구 세종대로 123',
-              image: '/images/event5.jpg',
-              price: 35000,
-              rating: 4.9,
-              views: 200,
-              deadline: '2025-08-27'
-            },
-            {
-              id: 6,
-              title: '너의 목소리가 들려',
-              category: 'comedy',
-              location: '서울 종로구 대학로 456',
-              image: '/images/event1.jpg',
-              price: 28000,
-              rating: 4.6,
-              views: 160,
-              deadline: '2025-09-02'
-            },
-            {
-              id: 7,
-              title: '한뼘사이',
-              category: 'romance',
-              location: '서울 강남구 테헤란로 789',
-              image: '/images/event2.jpg',
-              price: 40000,
-              rating: 4.8,
-              views: 180,
-              deadline: '2025-09-07'
-            },
-            {
-              id: 8,
-              title: '사내연애 보고서',
-              category: 'romance',
-              location: '서울 마포구 와우산로 321',
-              image: '/images/event3.jpg',
-              price: 32000,
-              rating: 4.4,
-              views: 140,
-              deadline: '2025-09-12'
-            },
-            {
-              id: 9,
-              title: '핫식스',
-              category: 'romance',
-              location: '서울 강남구 논현로 123',
-              image: '/images/event4.jpg',
-              price: 22000,
-              rating: 4.2,
-              views: 110,
-              deadline: '2025-08-28'
-            },
-            {
-              id: 10,
-              title: '김종욱 찾기',
-              category: 'romance',
-              location: '서울 서초구 강남대로 456',
-              image: '/images/event5.jpg',
-              price: 28000,
-              rating: 4.5,
-              views: 130,
-              deadline: '2025-09-01'
-            },
-            {
-              id: 11,
-              title: '나의 PS 파트너',
-              category: 'romance',
-              location: '서울 중구 을지로 789',
-              image: '/images/event1.jpg',
-              price: 45000,
-              rating: 4.9,
-              views: 220,
-              deadline: '2025-09-15'
-            },
-            {
-              id: 12,
-              title: '공포의 밤',
-              category: 'horror',
-              location: '서울 종로구 인사동길 123',
-              image: '/images/event2.jpg',
-              price: 50000,
-              rating: 4.7,
-              views: 190,
-              deadline: '2025-09-20'
-            },
-            {
-              id: 13,
-              title: '스릴러 극장',
-              category: 'thriller',
-              location: '서울 강남구 테헤란로 456',
-              image: '/images/event3.jpg',
-              price: 38000,
-              rating: 4.6,
-              views: 170,
-              deadline: '2025-09-25'
-            },
-            {
-              id: 14,
-              title: '뮤지컬 나이트',
-              category: 'musical',
-              location: '서울 중구 을지로 789',
-              image: '/images/event4.jpg',
-              price: 45000,
-              rating: 4.9,
-              views: 220,
-              deadline: '2025-09-15'
-            },
-            {
-              id: 15,
-              title: '오페라 하우스',
-              category: 'musical',
-              location: '서울 종로구 인사동길 123',
-              image: '/images/event5.jpg',
-              price: 50000,
-              rating: 4.7,
-              views: 190,
-              deadline: '2025-09-20'
-            }
-          ];
-          
-          setPlays(allDummyPlays);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error('연극 데이터 로드 실패:', error);
-        setLoading(false);
-      }
-    };
-    
-    fetchPlays();
+        return {
+          id: festival.id,
+          title: festival.title,
+          category: category,
+          location: festival.location.address,
+          image: festival.posterUrl,
+          price: 0, // 축제는 무료
+          rating: 4.5 + Math.random() * 0.5, // 4.5-5.0 사이의 랜덤 평점
+          views: Math.floor(Math.random() * 200) + 50, // 50-250 사이의 랜덤 조회수
+          deadline: festival.date,
+          university: festival.university,
+          performers: festival.performers,
+          description: festival.description
+        };
+      });
+      
+      console.log('축제 데이터 로드됨:', festivalPlays.length, '개');
+      setPlays(festivalPlays);
+      setLoading(false);
+    } catch (error) {
+      console.error('축제 데이터 로드 실패:', error);
+      setLoading(false);
+    }
   }, []);
 
   // (1) 카테고리 1차 필터
@@ -507,12 +305,6 @@ const Genre = () => {
       });
     }
 
-    // 정렬: 가격순
-    if (filters.priceSort === 'low') {
-      arr.sort((a, b) => (a?.price ?? 0) - (b?.price ?? 0));
-    } else if (filters.priceSort === 'high') {
-      arr.sort((a, b) => (b?.price ?? 0) - (a?.price ?? 0));
-    }
 
     return arr;
   }, [baseList, filters]);
@@ -568,7 +360,6 @@ const Genre = () => {
       ratingSort: 'none', 
       viewsSort: 'none', 
       deadlineSort: 'none',
-      priceSort: 'none',
       q: '' 
     });
   };
@@ -620,7 +411,7 @@ const Genre = () => {
       </h2> */}
 
       {/* ===== 탭 네비게이션 추가 ===== */}
-      <div className="genre-tabs">
+      {/* <div className="genre-tabs">
         <button
           className={`genre-tab ${activeTab === 'posters' ? 'active' : ''}`}
           onClick={() => setActiveTab('posters')}
@@ -633,13 +424,13 @@ const Genre = () => {
         >
           💬 리뷰 보기
         </button>
-      </div>
+      </div> */}
 
       {/* ===== 탭별 컨텐츠 ===== */}
       {activeTab === 'posters' && (
         <>
           {/* ===== 장르별 필터링 버튼들 ===== */}
-          <div className="genre-filter-buttons">
+          {/* <div className="genre-filter-buttons">
             <button
               className={`genre-filter-btn ${selectedGenre === null ? 'active' : ''}`}
               onClick={() => handleGenreChange(null)}
@@ -670,7 +461,13 @@ const Genre = () => {
             >
               뮤지컬
             </button>
-          </div>
+            <button
+              className={`genre-filter-btn ${selectedGenre === 'festival' ? 'active' : ''}`}
+              onClick={() => handleGenreChange('festival'.toLowerCase())}
+            >
+              대학축제
+            </button>
+          </div> */}
 
           {/* ===== 장르별 포스터 섹션 ===== */}
           {len === 0 ? (
@@ -706,7 +503,6 @@ const Genre = () => {
                               : play.location?.address || '장소 정보 없음'
                             }
                           </div>
-                          <div className="category-poster-price">₩{play.price?.toLocaleString()}</div>
                         </div>
                       </div>
                     ))}
@@ -789,19 +585,6 @@ const Genre = () => {
                   </select>
                 </div>
 
-                {/* 낮은가격순 */}
-                <div className="filter-item">
-                  <label>Price</label>
-                  <select
-                    className="filter-select"
-                    value={filters.priceSort}
-                    onChange={onChange('priceSort')}
-                  >
-                    <option value="none">정렬 없음</option>
-                    <option value="low">낮은 가격</option>
-                    <option value="high">High Price</option>
-                  </select>
-                </div>
               </div>
 
               {/* 검색창은 유지 */}
@@ -891,19 +674,6 @@ const Genre = () => {
                 </select>
               </div>
 
-              {/* 낮은가격순 */}
-              <div className="filter-item">
-                <label>Price</label>
-                <select
-                  className="filter-select"
-                  value={filters.priceSort}
-                  onChange={onChange('priceSort')}
-                >
-                  <option value="none">정렬 없음</option>
-                  <option value="low">낮은 가격</option>
-                  <option value="high">High Price</option>
-                </select>
-              </div>
             </div>
 
             {/* 검색창은 유지 */}

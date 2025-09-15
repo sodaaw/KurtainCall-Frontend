@@ -251,9 +251,9 @@ export default function Topnav({ variant = "default" }) {
                 <MenuIcon 
                   iconPath="/icons/genre.svg" 
                   fallbackEmoji="🎶" 
-                  alt="장르"
+                  alt="전체 축제"
                 />
-                <span className="menu-text">장르</span>
+                <span className="menu-text">전체 축제</span>
                 <span className="menu-arrow">›</span>
               </a>
             </li>
