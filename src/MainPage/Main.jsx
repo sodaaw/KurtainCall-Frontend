@@ -152,9 +152,15 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
 
 /* ---------------- 추천 공연 슬라이드 ---------------- */
 function RecommendedShows({ plays, isLoading, error }) {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const total = plays?.length || 0;
+
+  const handlePosterClick = (play) => {
+    // 축제 상세페이지로 이동
+    navigate(`/festival/${play.id}`);
+  };
 
   useEffect(() => {
     if (total <= 3) return;
@@ -218,11 +224,10 @@ function RecommendedShows({ plays, isLoading, error }) {
         >
           {plays.map((play, index) => (
             <div key={play.id || index} className="show-card">
-              <a 
-                href={play.detailUrl || "https://www.interpark.com"} 
-                target="_blank" 
-                rel="noopener noreferrer"
+              <div 
                 className="show-link"
+                onClick={() => handlePosterClick(play)}
+                style={{ cursor: 'pointer' }}
               >
                 {/* <img 
                   referrerPolicy="no-referrer" 
@@ -248,7 +253,7 @@ function RecommendedShows({ plays, isLoading, error }) {
                     loading="lazy"
                   />
                 </div>
-              </a>
+              </div>
               {/* <div className="show-title">{play.title}</div>
               {play.location?.address && (
                 <div className="show-location">{play.location.address}</div>
