@@ -30,6 +30,8 @@ export default function Topnav({ variant = "default" }) {
   const [user, setUser] = useState(null);
   const [deviceId, setDeviceId] = useState(null);
   const [isDeviceLoggedIn, setIsDeviceLoggedIn] = useState(false);
+  const [isDeviceInputExpanded, setIsDeviceInputExpanded] = useState(false);
+  const [deviceInputValue, setDeviceInputValue] = useState('');
 
   // Main.jsx인지 확인 (홈페이지)
   const isHome = location.pathname === '/';
@@ -130,6 +132,8 @@ export default function Topnav({ variant = "default" }) {
       // 로그아웃 처리
       setIsDeviceLoggedIn(false);
       setDeviceId(null);
+      setIsDeviceInputExpanded(false);
+      setDeviceInputValue('');
       localStorage.removeItem('deviceId');
       return;
     }
@@ -143,11 +147,39 @@ export default function Topnav({ variant = "default" }) {
       // 로그인 성공 처리
       setIsDeviceLoggedIn(true);
       setDeviceId(deviceNumber);
+      setIsDeviceInputExpanded(false);
+      setDeviceInputValue('');
       localStorage.setItem('deviceId', deviceNumber);
       
       console.log('기기번호 로그인 성공:', deviceNumber);
     } catch (err) {
       throw err;
+    }
+  };
+
+  // 기기입력 버튼 클릭 핸들러
+  const handleDeviceInputClick = () => {
+    setIsDeviceInputExpanded(true);
+  };
+
+  // 기기번호 입력 핸들러
+  const handleDeviceInputChange = (e) => {
+    setDeviceInputValue(e.target.value);
+  };
+
+  // 기기번호 입력 완료 핸들러
+  const handleDeviceInputSubmit = (e) => {
+    e.preventDefault();
+    if (deviceInputValue.trim()) {
+      handleDeviceSubmit(deviceInputValue.trim());
+    }
+  };
+
+  // ESC 키로 입력 취소
+  const handleDeviceInputKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      setIsDeviceInputExpanded(false);
+      setDeviceInputValue('');
     }
   };
 
@@ -222,19 +254,44 @@ export default function Topnav({ variant = "default" }) {
               </button>
             </div>
           ) : (
-            <button 
-              className="device-input-compact"
-              onClick={() => {
-                const deviceNumber = prompt('기기번호를 입력하세요:');
-                if (deviceNumber) {
-                  handleDeviceSubmit(deviceNumber);
-                }
-              }}
-              aria-label="기기번호 입력"
-            >
-              <img src="/icons/vest.png" alt="device" className="device-icon-small" />
-              기기입력
-            </button>
+            <div className={`device-input-container ${isDeviceInputExpanded ? 'expanded' : ''}`}>
+              {isDeviceInputExpanded ? (
+                <form onSubmit={handleDeviceInputSubmit} className="device-input-form-compact">
+                  <img src="/icons/vest.png" alt="device" className="device-icon-small" />
+                  <input
+                    type="text"
+                    placeholder="기기번호를 입력하세요"
+                    value={deviceInputValue}
+                    onChange={handleDeviceInputChange}
+                    onKeyDown={handleDeviceInputKeyDown}
+                    className="device-input-field"
+                    autoFocus
+                  />
+                  <button type="submit" className="device-submit-compact">
+                    ✓
+                  </button>
+                  <button 
+                    type="button" 
+                    className="device-cancel-compact"
+                    onClick={() => {
+                      setIsDeviceInputExpanded(false);
+                      setDeviceInputValue('');
+                    }}
+                  >
+                    ×
+                  </button>
+                </form>
+              ) : (
+                <button 
+                  className="device-input-compact"
+                  onClick={handleDeviceInputClick}
+                  aria-label="기기번호 입력"
+                >
+                  <img src="/icons/vest.png" alt="device" className="device-icon-small" />
+                  기기입력
+                </button>
+              )}
+            </div>
           )}
 
           {/* 로그인/로그아웃 버튼 주석처리
