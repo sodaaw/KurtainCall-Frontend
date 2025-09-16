@@ -9,21 +9,21 @@ import { playAPI } from "../services/api";
 import { festivals } from "../data/festivals"; // ✅ 축제 데이터 import
 import "./Main.css";
 
-// 카테고리 버튼 데이터 - 제거됨
-// const DEFAULT_CATS = [
-//   { 
-//     label: "코미디", 
-//     slug: "comedy", 
-//     //icon: "😄",
-//     description: "웃음과 유머"
-//   },
-//   { 
-//     label: "뮤지컬", 
-//     slug: "musical", 
-//     //icon: "🎵",
-//     description: "음악과 노래"
-//   },
-// ];
+// 카테고리 버튼 데이터
+const DEFAULT_CATS = [
+  { 
+    label: "코미디", 
+    slug: "comedy", 
+    //icon: "😄",
+    description: "웃음과 유머"
+  },
+  { 
+    label: "뮤지컬", 
+    slug: "musical", 
+    //icon: "🎵",
+    description: "음악과 노래"
+  },
+];
 
 /* 유틸 */
 const fmt = (d) =>
@@ -152,9 +152,15 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
 
 /* ---------------- 추천 공연 슬라이드 ---------------- */
 function RecommendedShows({ plays, isLoading, error }) {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const total = plays?.length || 0;
+
+  const handlePosterClick = (play) => {
+    // 축제 상세페이지로 이동
+    navigate(`/festival/${play.id}`);
+  };
 
   useEffect(() => {
     if (total <= 3) return;
@@ -218,11 +224,10 @@ function RecommendedShows({ plays, isLoading, error }) {
         >
           {plays.map((play, index) => (
             <div key={play.id || index} className="show-card">
-              <a 
-                href={play.detailUrl || "https://www.interpark.com"} 
-                target="_blank" 
-                rel="noopener noreferrer"
+              <div 
                 className="show-link"
+                onClick={() => handlePosterClick(play)}
+                style={{ cursor: 'pointer' }}
               >
                 {/* <img 
                   referrerPolicy="no-referrer" 
@@ -248,7 +253,7 @@ function RecommendedShows({ plays, isLoading, error }) {
                     loading="lazy"
                   />
                 </div>
-              </a>
+              </div>
               {/* <div className="show-title">{play.title}</div>
               {play.location?.address && (
                 <div className="show-location">{play.location.address}</div>
@@ -358,10 +363,11 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
 /* ---------------- 메인 컴포넌트 ---------------- */
 export default function Main() {
   const navigate = useNavigate();
-  // const goGenre = (slug) => navigate(`/genre?category=${slug}`);
+  const goGenre = (slug) => navigate(`/genre?category=${slug}`);
 
   // 검색 모달 제어 (주석처리)
   // const [isSearchOpen, setIsSearchOpen] = useState(false);
+
 
   // ✅ 날짜 선택 상태 (홈화면 진입 시 2025년 5월로 초기화)
   const [selectedDate, setSelectedDate] = useState(new Date(2025, 4, 15)); // 2025년 5월 15일
@@ -371,6 +377,7 @@ export default function Main() {
   const [plays, setPlays] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
 
   // 데이터 로딩 - 축제 데이터 사용
   useEffect(() => {
@@ -449,10 +456,11 @@ export default function Main() {
         <section className="hero-block">
           <Hero plays={plays} isLoading={isLoading} error={error} isLoggedIn={false} />
 
+
           {/* 검색 및 장르 필터 */}
           <SearchAndGenre 
             onSearchClick={() => {}} 
-            // onGenreClick={goGenre} 
+            onGenreClick={goGenre} 
           />
         </section>
         

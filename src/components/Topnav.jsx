@@ -28,6 +28,8 @@ export default function Topnav({ variant = "default" }) {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [deviceId, setDeviceId] = useState(null);
+  const [isDeviceLoggedIn, setIsDeviceLoggedIn] = useState(false);
 
   // Main.jsx인지 확인 (홈페이지)
   const isHome = location.pathname === '/';
@@ -37,6 +39,7 @@ export default function Topnav({ variant = "default" }) {
     const checkLoginStatus = () => {
       const token = localStorage.getItem('token');
       const userData = localStorage.getItem('user');
+      const savedDeviceId = localStorage.getItem('deviceId');
       
       if (token && userData) {
         try {
@@ -50,6 +53,15 @@ export default function Topnav({ variant = "default" }) {
       } else {
         setIsLoggedIn(false);
         setUser(null);
+      }
+
+      // 기기번호 상태 확인
+      if (savedDeviceId) {
+        setDeviceId(savedDeviceId);
+        setIsDeviceLoggedIn(true);
+      } else {
+        setDeviceId(null);
+        setIsDeviceLoggedIn(false);
       }
     };
 
@@ -112,6 +124,33 @@ export default function Topnav({ variant = "default" }) {
     navigate('/user-selection');
   };
 
+  // 기기번호 처리 함수
+  const handleDeviceSubmit = async (deviceNumber) => {
+    if (!deviceNumber) {
+      // 로그아웃 처리
+      setIsDeviceLoggedIn(false);
+      setDeviceId(null);
+      localStorage.removeItem('deviceId');
+      return;
+    }
+
+    try {
+      // 기기번호 검증 (시연용 - 12345만 허용)
+      if (deviceNumber !== '12345') {
+        throw new Error('올바르지 않은 기기번호입니다');
+      }
+
+      // 로그인 성공 처리
+      setIsDeviceLoggedIn(true);
+      setDeviceId(deviceNumber);
+      localStorage.setItem('deviceId', deviceNumber);
+      
+      console.log('기기번호 로그인 성공:', deviceNumber);
+    } catch (err) {
+      throw err;
+    }
+  };
+
   return (
     <>
       <header className={`topnav ${isHome ? 'is-home' : ''}`}>
@@ -169,6 +208,35 @@ export default function Topnav({ variant = "default" }) {
 
         {/* 오른쪽 영역 */}
         <div className="topnav-right">
+          {/* 기기입력 버튼 */}
+          {isDeviceLoggedIn ? (
+            <div className="device-status-compact">
+              <img src="/icons/vest.png" alt="device" className="device-icon-small" />
+              <span className="device-id-compact">{deviceId}</span>
+              <button 
+                className="device-logout-compact"
+                onClick={() => handleDeviceSubmit(null)}
+                title="기기 연결 해제"
+              >
+                ×
+              </button>
+            </div>
+          ) : (
+            <button 
+              className="device-input-compact"
+              onClick={() => {
+                const deviceNumber = prompt('기기번호를 입력하세요:');
+                if (deviceNumber) {
+                  handleDeviceSubmit(deviceNumber);
+                }
+              }}
+              aria-label="기기번호 입력"
+            >
+              <img src="/icons/vest.png" alt="device" className="device-icon-small" />
+              기기입력
+            </button>
+          )}
+
           {isLoggedIn ? (
             <div className="user-menu">
               <button 
