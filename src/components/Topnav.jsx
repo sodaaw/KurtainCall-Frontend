@@ -237,6 +237,7 @@ export default function Topnav({ variant = "default" }) {
             </button>
           )}
 
+          {/* 로그인/로그아웃 버튼 주석처리
           {isLoggedIn ? (
             <div className="user-menu">
               <button 
@@ -263,6 +264,7 @@ export default function Topnav({ variant = "default" }) {
               로그인
             </button>
           )}
+          */}
         </div>
       </header>
 
