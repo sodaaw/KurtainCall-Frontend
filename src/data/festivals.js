@@ -16,7 +16,7 @@ export const festivals = [
     },
     posterUrl: "/images/hongik_2025.png",
     detailUrl: "https://www.instagram.com/p/DI_btIEp6VM/?igsh=MXB1dTV5bTJsdTJyaQ==",
-    description: "홍익대학교의 화려한 대동제로, 다양한 아티스트들의 공연과 함께 즐거운 축제의 시간을 선사합니다.",
+    description: "홍익대학교의 화려한 대동제로, 다양한 아티스트들의 공연과 함께 즐거운 연극의 시간을 선사합니다.",
     isActive: true
   },
   {
@@ -36,12 +36,12 @@ export const festivals = [
     },
     posterUrl: "/images/kukmin_2025.png",
     detailUrl: "",
-    description: "국민대학교의 특별한 대동제로, 라일락의 향기와 함께하는 아름다운 축제입니다.",
+    description: "국민대학교의 특별한 대동제로, 라일락의 향기와 함께하는 아름다운 연극입니다.",
     isActive: true
   },
   {
     id: 3,
-    title: "2025 숭실대학교 동아리 봄축제 '위량제'",
+    title: "2025 숭실대학교 동아리 봄연극 '위량제'",
     university: "숭실대학교",
     location: {
       address: "서울 동작구 상도로 369 숭실대학교",
@@ -56,7 +56,7 @@ export const festivals = [
     },
     posterUrl: "/images/sung_2025.png",
     detailUrl: "",
-    description: "숭실대학교 동아리들이 주최하는 봄축제로, 다양한 동아리 공연과 활동을 즐길 수 있습니다.",
+    description: "숭실대학교 동아리들이 주최하는 봄연극으로, 다양한 동아리 공연과 활동을 즐길 수 있습니다.",
     isActive: false
   },
   {
@@ -76,7 +76,7 @@ export const festivals = [
     },
     posterUrl: "/images/sejong_2025.png",
     detailUrl: "",
-    description: "세종대학교의 특별한 연희 축제로, 수화기를 넘어선 소통과 화합의 장을 만들어갑니다.",
+    description: "세종대학교의 특별한 연희 연극으로, 수화기를 넘어선 소통과 화합의 장을 만들어갑니다.",
     isActive: true
   },
   {
@@ -116,7 +116,7 @@ export const festivals = [
     },
     posterUrl: "/images/kunkuk_2025.png",
     detailUrl: "",
-    description: "일감호와 함께하는 건국대학교의 대표 축제, The Wave.",
+    description: "일감호와 함께하는 건국대학교의 대표 연극, The Wave.",
     isActive: false
   },
   {
@@ -155,7 +155,7 @@ export const festivals = [
     },
     posterUrl: "/images/hufs_2025.png",
     detailUrl: "",
-    description: "한국외대의 QUINQUATRIA 축제, Euphoria.",
+    description: "한국외대의 QUINQUATRIA 연극, Euphoria.",
     isActive: true
   },
   {
@@ -213,7 +213,7 @@ export const festivals = [
     },
     posterUrl: "/images/hanyang_2025.png",
     detailUrl: "",
-    description: "한양대학교의 대표 축제, RACHIOS.",
+    description: "한양대학교의 대표 연극, RACHIOS.",
     isActive: true
   },
   {
@@ -233,7 +233,7 @@ export const festivals = [
     },
     posterUrl: "/images/cau_2025.png",
     detailUrl: "",
-    description: "푸른 바람을 타고 항해를 시작하는 중앙대학교의 LUCAUS 축제.",
+    description: "푸른 바람을 타고 항해를 시작하는 중앙대학교의 LUCAUS 연극.",
     isActive: true
   },
   {
@@ -306,7 +306,7 @@ export const festivals = [
     },
     posterUrl: "/images/snu_2025.png",
     detailUrl: "",
-    description: "서울대학교의 봄 축제, Spring-kle.",
+    description: "서울대학교의 봄 연극, Spring-kle.",
     isActive: true
   }
 ];

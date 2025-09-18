@@ -29,7 +29,7 @@ const FestivalDetail = () => {
         <div className="loading-container">
           <div className="loading-spinner">
             <div className="spinner-animation"></div>
-            <p>축제 정보를 불러오는 중...</p>
+            <p>연극 정보를 불러오는 중...</p>
           </div>
         </div>
       </div>
@@ -43,8 +43,8 @@ const FestivalDetail = () => {
         <div className="error-container">
           <div className="error-message">
             <div className="error-icon">⚠️</div>
-            <h2>축제 정보를 찾을 수 없습니다</h2>
-            <p>요청하신 축제 정보가 존재하지 않습니다.</p>
+            <h2>연극 정보를 찾을 수 없습니다</h2>
+            <p>요청하신 연극 정보가 존재하지 않습니다.</p>
             <button onClick={handleBackClick} className="back-btn">
               ← 뒤로가기
             </button>
@@ -59,7 +59,7 @@ const FestivalDetail = () => {
       <Topnav variant="home" />
       
       <main className="festival-detail-container">
-        {/* 축제 헤더 */}
+        {/* 연극 헤더 */}
         <header className="festival-header">
           {/* 뒤로가기 버튼 */}
           <button onClick={handleBackClick} className="back-button">
@@ -110,9 +110,9 @@ const FestivalDetail = () => {
           </div>
         </header>
 
-        {/* 축제 설명 */}
+        {/* 연극 설명 */}
         <section className="festival-description">
-          <h3>축제 소개</h3>
+          <h3>연극 소개</h3>
           <p>{festival.description}</p>
         </section>
 

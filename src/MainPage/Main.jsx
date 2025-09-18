@@ -6,7 +6,7 @@ import Topnav from "../components/Topnav";
 import EventCalendar from "./EventCalendar"; // ✅ 분리한 캘린더
 import EventPanel from "./EventPanel";       // ✅ 분리한 우측 패널
 import { playAPI } from "../services/api";
-import { festivals } from "../data/festivals"; // ✅ 축제 데이터 import
+import { festivals } from "../data/festivals"; // ✅ 연극 데이터 import
 import "./Main.css";
 
 // 카테고리 버튼 데이터
@@ -30,7 +30,7 @@ const fmt = (d) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const inRange = (day, start, end) => day >= start && day <= end;
 
-// ✅ 축제 날짜 파싱 함수
+// ✅ 연극 날짜 파싱 함수
 const parseFestivalDate = (dateString) => {
   // "2025.05.14(수)~2025.05.16(금)" 형태를 파싱
   const match = dateString.match(/(\d{4})\.(\d{2})\.(\d{2})\([^)]+\)~(\d{4})\.(\d{2})\.(\d{2})\([^)]+\)/);
@@ -44,7 +44,7 @@ const parseFestivalDate = (dateString) => {
   return null;
 };
 
-// ✅ 날짜가 축제 기간에 포함되는지 확인
+// ✅ 날짜가 연극 기간에 포함되는지 확인
 const isDateInFestival = (date, festival) => {
   const festivalDates = parseFestivalDate(festival.date);
   if (!festivalDates) return false;
@@ -70,8 +70,8 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (isLoading) {
     return (
       <header className="hero">
-        <h1>FestiGuard</h1>
-        <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
+        <h1>CulturaLink</h1>
+        <p className="tagline">당신 곁의 문화, 지금 함께하세요</p>
         <div className="loading-text">
           <p>데이터를 불러오는 중...</p>
         </div>
@@ -82,8 +82,8 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (error) {
     return (
       <header className="hero">
-        <h1>FestiGuard</h1>
-        <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
+        <h1>CulturaLink</h1>
+        <p className="tagline">당신 곁의 문화, 지금 함께하세요</p>
         <div className="error-message">
           <div className="error-icon">⚠️</div>
           <p className="error-title">데이터를 불러올 수 없습니다</p>
@@ -96,8 +96,8 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (!plays || plays.length === 0) {
     return (
       <header className="hero">
-        <h1>FestiGuard</h1>
-        <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
+        <h1>CulturaLink</h1>
+        <p className="tagline">당신 곁의 문화, 지금 함께하세요</p>
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
@@ -114,8 +114,8 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
   if (!current) {
     return (
       <header className="hero">
-        <h1>FestiGuard</h1>
-        <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
+        <h1>CulturaLink</h1>
+        <p className="tagline">당신 곁의 문화, 지금 함께하세요</p>
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
@@ -142,10 +142,10 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
       
 
       {/* 제목 */}
-      <h1>FestiGuard</h1>
+      <h1>CulturaLink</h1>
 
       {/* 태그라인 */}
-      <p className="tagline">축제의 즐거움, 안전하게 즐기세요.</p>
+      <p className="tagline">당신 곁의 문화, 지금 함께하세요</p>
     </header>
   );
 }
@@ -408,7 +408,7 @@ export default function Main() {
     }
   }, []);
 
-  // ✅ 선택 날짜에 속하는 축제 이벤트 필터
+  // ✅ 선택 날짜에 속하는 연극 이벤트 필터
   const eventsOfDay = useMemo(() => {
     return festivals.filter(festival => {
       const festivalDates = parseFestivalDate(festival.date);
@@ -422,7 +422,7 @@ export default function Main() {
     });
   }, [selectedKey]);
 
-  // ✅ 달력에 표시할 마커 (축제가 있는 날짜들)
+  // ✅ 달력에 표시할 마커 (연극이 있는 날짜들)
   const markers = useMemo(() => {
     const markerSet = new Set();
     
