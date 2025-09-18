@@ -28,6 +28,10 @@ export default function Topnav({ variant = "default" }) {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [deviceId, setDeviceId] = useState(null);
+  const [isDeviceLoggedIn, setIsDeviceLoggedIn] = useState(false);
+  const [isDeviceInputExpanded, setIsDeviceInputExpanded] = useState(false);
+  const [deviceInputValue, setDeviceInputValue] = useState('');
 
   // Main.jsx인지 확인 (홈페이지)
   const isHome = location.pathname === '/';
@@ -37,6 +41,7 @@ export default function Topnav({ variant = "default" }) {
     const checkLoginStatus = () => {
       const token = localStorage.getItem('token');
       const userData = localStorage.getItem('user');
+      const savedDeviceId = localStorage.getItem('deviceId');
       
       if (token && userData) {
         try {
@@ -50,6 +55,15 @@ export default function Topnav({ variant = "default" }) {
       } else {
         setIsLoggedIn(false);
         setUser(null);
+      }
+
+      // 기기번호 상태 확인
+      if (savedDeviceId) {
+        setDeviceId(savedDeviceId);
+        setIsDeviceLoggedIn(true);
+      } else {
+        setDeviceId(null);
+        setIsDeviceLoggedIn(false);
       }
     };
 
@@ -112,6 +126,63 @@ export default function Topnav({ variant = "default" }) {
     navigate('/user-selection');
   };
 
+  // 기기번호 처리 함수
+  const handleDeviceSubmit = async (deviceNumber) => {
+    if (!deviceNumber) {
+      // 로그아웃 처리
+      setIsDeviceLoggedIn(false);
+      setDeviceId(null);
+      setIsDeviceInputExpanded(false);
+      setDeviceInputValue('');
+      localStorage.removeItem('deviceId');
+      return;
+    }
+
+    try {
+      // 기기번호 검증 (시연용 - 12345만 허용)
+      if (deviceNumber !== '12345') {
+        throw new Error('올바르지 않은 기기번호입니다');
+      }
+
+      // 로그인 성공 처리
+      setIsDeviceLoggedIn(true);
+      setDeviceId(deviceNumber);
+      setIsDeviceInputExpanded(false);
+      setDeviceInputValue('');
+      localStorage.setItem('deviceId', deviceNumber);
+      
+      console.log('기기번호 로그인 성공:', deviceNumber);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  // 기기입력 버튼 클릭 핸들러
+  const handleDeviceInputClick = () => {
+    setIsDeviceInputExpanded(true);
+  };
+
+  // 기기번호 입력 핸들러
+  const handleDeviceInputChange = (e) => {
+    setDeviceInputValue(e.target.value);
+  };
+
+  // 기기번호 입력 완료 핸들러
+  const handleDeviceInputSubmit = (e) => {
+    e.preventDefault();
+    if (deviceInputValue.trim()) {
+      handleDeviceSubmit(deviceInputValue.trim());
+    }
+  };
+
+  // ESC 키로 입력 취소
+  const handleDeviceInputKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      setIsDeviceInputExpanded(false);
+      setDeviceInputValue('');
+    }
+  };
+
   return (
     <>
       <header className={`topnav ${isHome ? 'is-home' : ''}`}>
@@ -169,6 +240,61 @@ export default function Topnav({ variant = "default" }) {
 
         {/* 오른쪽 영역 */}
         <div className="topnav-right">
+          {/* 기기입력 버튼 */}
+          {isDeviceLoggedIn ? (
+            <div className="device-status-compact">
+              <img src="/icons/vest.png" alt="device" className="device-icon-small" />
+              <span className="device-id-compact">{deviceId}</span>
+              <button 
+                className="device-logout-compact"
+                onClick={() => handleDeviceSubmit(null)}
+                title="기기 연결 해제"
+              >
+                ×
+              </button>
+            </div>
+          ) : (
+            <div className={`device-input-container ${isDeviceInputExpanded ? 'expanded' : ''}`}>
+              {isDeviceInputExpanded ? (
+                <form onSubmit={handleDeviceInputSubmit} className="device-input-form-compact">
+                  <img src="/icons/vest.png" alt="device" className="device-icon-small" />
+                  <input
+                    type="text"
+                    placeholder="기기번호를 입력하세요"
+                    value={deviceInputValue}
+                    onChange={handleDeviceInputChange}
+                    onKeyDown={handleDeviceInputKeyDown}
+                    className="device-input-field"
+                    autoFocus
+                  />
+                  <button type="submit" className="device-submit-compact">
+                    ✓
+                  </button>
+                  <button 
+                    type="button" 
+                    className="device-cancel-compact"
+                    onClick={() => {
+                      setIsDeviceInputExpanded(false);
+                      setDeviceInputValue('');
+                    }}
+                  >
+                    ×
+                  </button>
+                </form>
+              ) : (
+                <button 
+                  className="device-input-compact"
+                  onClick={handleDeviceInputClick}
+                  aria-label="기기번호 입력"
+                >
+                  <img src="/icons/vest.png" alt="device" className="device-icon-small" />
+                  기기입력
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* 로그인/로그아웃 버튼 주석처리
           {isLoggedIn ? (
             <div className="user-menu">
               <button 
@@ -195,6 +321,7 @@ export default function Topnav({ variant = "default" }) {
               로그인
             </button>
           )}
+          */}
         </div>
       </header>
 
@@ -251,9 +378,9 @@ export default function Topnav({ variant = "default" }) {
                 <MenuIcon 
                   iconPath="/icons/genre.svg" 
                   fallbackEmoji="🎶" 
-                  alt="장르"
+                  alt="전체 축제"
                 />
-                <span className="menu-text">장르</span>
+                <span className="menu-text">전체 축제</span>
                 <span className="menu-arrow">›</span>
               </a>
             </li>

@@ -443,6 +443,164 @@
 }
 
 /* ========================
+   기기입력 컴팩트 버튼
+======================== */
+.device-input-container {
+  margin-right: 12px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.device-input-compact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(103, 192, 144, 0.1);
+  border: 1px solid rgba(103, 192, 144, 0.3);
+  color: #67C090;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.device-input-compact:hover {
+  background: rgba(103, 192, 144, 0.2);
+  border-color: rgba(103, 192, 144, 0.5);
+  transform: translateY(-1px);
+}
+
+/* 확장된 입력 폼 */
+.device-input-form-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(103, 192, 144, 0.15);
+  border: 1px solid rgba(103, 192, 144, 0.4);
+  padding: 6px 12px;
+  border-radius: 20px;
+  animation: expandInput 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 200px;
+}
+
+.device-input-field {
+  background: none;
+  border: none;
+  outline: none;
+  color: #67C090;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 0;
+  flex: 1;
+  min-width: 120px;
+}
+
+.device-input-field::placeholder {
+  color: rgba(103, 192, 144, 0.6);
+}
+
+.device-submit-compact,
+.device-cancel-compact {
+  background: none;
+  border: none;
+  color: #67C090;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.device-submit-compact {
+  background: rgba(103, 192, 144, 0.2);
+}
+
+.device-submit-compact:hover {
+  background: rgba(103, 192, 144, 0.3);
+  transform: scale(1.1);
+}
+
+.device-cancel-compact {
+  color: #ff6b6b;
+}
+
+.device-cancel-compact:hover {
+  background: rgba(255, 107, 107, 0.2);
+  transform: scale(1.1);
+}
+
+/* 애니메이션 */
+@keyframes expandInput {
+  from {
+    width: 0;
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    width: auto;
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+.device-status-compact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(103, 192, 144, 0.15);
+  border: 1px solid rgba(103, 192, 144, 0.4);
+  color: #67C090;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 12px;
+}
+
+.device-icon-small {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.device-id-compact {
+  font-weight: 600;
+  color: #67C090;
+}
+
+.device-logout-compact {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.device-logout-compact:hover {
+  background: rgba(255, 107, 107, 0.2);
+  transform: scale(1.1);
+}
+
+/* ========================
    반응형 디자인
 ======================== */
 

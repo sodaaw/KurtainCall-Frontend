@@ -1,7 +1,8 @@
-// src/pages/SearchResults.jsx
+// src/components/SearchResults.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { searchAPI } from "../services/search";
+import { festivals } from "../data/festivals";
 import './SearchResults.css';
 
 const API_BASE = 'https://re-local.onrender.com';
@@ -19,42 +20,39 @@ export default function SearchResults() {
     setLoading(true);
     setError("");
     
-    // 백엔드 검색 시도
-    searchAPI.search(q, 30)
-      .then(({ data }) => {
-        const backendResults = data.items || data.results || [];
-        setItems(backendResults);
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log('백엔드 검색 실패, 로컬 검색 시도:', e.message);
-        
-        // 백엔드 검색 실패 시 로컬 검색 시도
-        // 전체 연극 데이터를 가져와서 로컬에서 필터링
-        fetch('https://re-local.onrender.com/api/play')
-          .then(res => res.json())
-          .then(data => {
-            const allPlays = Array.isArray(data) ? data : (data?.items || []);
-            const filteredPlays = allPlays.filter(play => {
-              const searchTerm = q.toLowerCase();
-              return (
-                play.title?.toLowerCase().includes(searchTerm) ||
-                play.category?.toLowerCase().includes(searchTerm) ||
-                play.location?.address?.toLowerCase().includes(searchTerm) ||
-                play.location?.areaName?.toLowerCase().includes(searchTerm)
-              );
-            });
-            setItems(filteredPlays);
-            setLoading(false);
-          })
-          .catch(localError => {
-            console.error('로컬 검색도 실패:', localError);
-            const msg = e?.response?.data?.message || e?.message || "검색 중 오류가 발생했습니다.";
-            setError(msg);
-            setItems([]);
-            setLoading(false);
-          });
+    try {
+      // 축제 데이터에서 검색
+      const searchTerm = q.toLowerCase();
+      const filteredFestivals = festivals.filter(festival => {
+        return (
+          festival.title?.toLowerCase().includes(searchTerm) ||
+          festival.university?.toLowerCase().includes(searchTerm) ||
+          festival.location?.address?.toLowerCase().includes(searchTerm) ||
+          festival.description?.toLowerCase().includes(searchTerm)
+        );
       });
+      
+      // 축제 데이터를 검색 결과 형식으로 변환
+      const searchResults = filteredFestivals.map(festival => ({
+        id: festival.id,
+        title: festival.title,
+        posterUrl: festival.posterUrl,
+        detailUrl: festival.detailUrl,
+        category: '축제',
+        location: {
+          address: festival.location.address,
+          areaName: festival.university
+        }
+      }));
+      
+      setItems(searchResults);
+      setLoading(false);
+    } catch (error) {
+      console.error('축제 검색 실패:', error);
+      setError("검색 중 오류가 발생했습니다.");
+      setItems([]);
+      setLoading(false);
+    }
   }, [q]);
 
   // 하이라이트(간단)

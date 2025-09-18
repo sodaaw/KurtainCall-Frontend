@@ -9,7 +9,7 @@ import { playAPI } from "../services/api";
 import { festivals } from "../data/festivals"; // ✅ 연극 데이터 import
 import "./Main.css";
 
-// 카테고리 버튼 데이터 (API에서 받아올 예정)
+// 카테고리 버튼 데이터
 const DEFAULT_CATS = [
   { 
     label: "코미디", 
@@ -101,7 +101,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
-          <p className="no-data-detail">현재 등록된 공연 정보가 없습니다.</p>
+          <p className="no-data-detail">현재 등록된 축제 정보가 없습니다.</p>
         </div>
       </header>
     );
@@ -119,7 +119,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
-          <p className="no-data-detail">현재 등록된 공연 정보가 없습니다.</p>
+          <p className="no-data-detail">현재 등록된 축제 정보가 없습니다.</p>
         </div>
       </header>
     );
@@ -152,9 +152,15 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
 
 /* ---------------- 추천 공연 슬라이드 ---------------- */
 function RecommendedShows({ plays, isLoading, error }) {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const total = plays?.length || 0;
+
+  const handlePosterClick = (play) => {
+    // 축제 상세페이지로 이동
+    navigate(`/festival/${play.id}`);
+  };
 
   useEffect(() => {
     if (total <= 3) return;
@@ -186,7 +192,7 @@ function RecommendedShows({ plays, isLoading, error }) {
     return (
       <section className="recommended-section">
         <div className="loading-text">
-          <p>추천 공연을 불러오는 중...</p>
+          <p>축제 정보를 불러오는 중...</p>
         </div>
       </section>
     );
@@ -197,7 +203,7 @@ function RecommendedShows({ plays, isLoading, error }) {
       <section className="recommended-section">
         <div className="no-data">
           <div className="no-data-icon">🎭</div>
-          <p className="no-data-title">추천 공연을 불러올 수 없습니다</p>
+          <p className="no-data-title">축제 정보를 불러올 수 없습니다</p>
           <p className="no-data-detail">잠시 후 다시 시도해주세요.</p>
         </div>
       </section>
@@ -218,11 +224,10 @@ function RecommendedShows({ plays, isLoading, error }) {
         >
           {plays.map((play, index) => (
             <div key={play.id || index} className="show-card">
-              <a 
-                href={play.detailUrl || "https://www.interpark.com"} 
-                target="_blank" 
-                rel="noopener noreferrer"
+              <div 
                 className="show-link"
+                onClick={() => handlePosterClick(play)}
+                style={{ cursor: 'pointer' }}
               >
                 {/* <img 
                   referrerPolicy="no-referrer" 
@@ -248,15 +253,18 @@ function RecommendedShows({ plays, isLoading, error }) {
                     loading="lazy"
                   />
                 </div>
-              </a>
+              </div>
               {/* <div className="show-title">{play.title}</div>
               {play.location?.address && (
                 <div className="show-location">{play.location.address}</div>
               )} */}
               <div className="show-meta">
                 <div className="show-title">{play.title}</div>
-                {play.location?.address && (
-                  <div className="show-location">{play.location.address}</div>
+                {play.university && (
+                  <div className="show-university">{play.university}</div>
+                )}
+                {play.date && (
+                  <div className="show-date">{play.date}</div>
                 )}
               </div>
             </div>
@@ -295,9 +303,9 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleMoreGenres = () => {
-    navigate('/genre');
-  };
+  // const handleMoreGenres = () => {
+  //   navigate('/genre');
+  // };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -313,7 +321,7 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         <form className="search-input-wrapper" onSubmit={handleSearch}>
           <input 
             type="text" 
-            placeholder="원하는 장르 또는 작품을 검색해보세요." 
+            placeholder="축제명 또는 대학교를 검색해보세요." 
             className="search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -333,8 +341,8 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         </form>
       </div>
 
-      {/* 장르 필터 */}
-      <div className="genre-filters">
+      {/* 장르 필터 - 제거됨 */}
+      {/* <div className="genre-filters">
         {DEFAULT_CATS.map((cat) => (
           <button 
             key={cat.slug} 
@@ -347,7 +355,7 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         <button className="more-genres-btn" onClick={handleMoreGenres}>
           장르 더보기
         </button>
-      </div>
+      </div> */}
     </section>
   );
 }
@@ -360,6 +368,7 @@ export default function Main() {
   // 검색 모달 제어 (주석처리)
   // const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+
   // ✅ 날짜 선택 상태 (홈화면 진입 시 2025년 5월로 초기화)
   const [selectedDate, setSelectedDate] = useState(new Date(2025, 4, 15)); // 2025년 5월 15일
   const selectedKey = fmt(selectedDate);
@@ -369,25 +378,34 @@ export default function Main() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 데이터 로딩
+
+  // 데이터 로딩 - 축제 데이터 사용
   useEffect(() => {
-    const fetchPlays = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
+    try {
+      setIsLoading(true);
+      setError(null);
 
-        const playsData = await playAPI.getPlays();
-        setPlays(playsData);
-      } catch (err) {
-        console.error('Failed to fetch plays:', err);
-        setError(err.message || '연극 데이터를 불러오는데 실패했습니다.');
-        setPlays([]); // 빈 배열로 설정
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPlays();
+      // 축제 데이터를 plays 형식으로 변환
+      const festivalData = festivals.map(festival => ({
+        id: festival.id,
+        title: festival.title,
+        posterUrl: festival.posterUrl,
+        location: festival.location,
+        detailUrl: festival.detailUrl,
+        description: festival.description,
+        university: festival.university,
+        date: festival.date,
+        performers: festival.performers
+      }));
+      
+      setPlays(festivalData);
+    } catch (err) {
+      console.error('Failed to load festival data:', err);
+      setError(err.message || '축제 데이터를 불러오는데 실패했습니다.');
+      setPlays([]); // 빈 배열로 설정
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   // ✅ 선택 날짜에 속하는 연극 이벤트 필터
@@ -437,6 +455,7 @@ export default function Main() {
       <main className="main-container">
         <section className="hero-block">
           <Hero plays={plays} isLoading={isLoading} error={error} isLoggedIn={false} />
+
 
           {/* 검색 및 장르 필터 */}
           <SearchAndGenre 
