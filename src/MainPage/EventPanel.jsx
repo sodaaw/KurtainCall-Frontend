@@ -8,7 +8,7 @@ export default function EventPanel({ date, events }) {
   const weekday = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][date.getDay()];
 
   const handleEventClick = (festival) => {
-    // 축제 상세 정보 페이지로 이동 (또는 외부 링크)
+    // 연극 상세 정보 페이지로 이동 (또는 외부 링크)
     if (festival.detailUrl) {
       window.open(festival.detailUrl, '_blank', 'noopener,noreferrer');
     } else {
@@ -33,7 +33,7 @@ export default function EventPanel({ date, events }) {
 
       <ul className="event-list">
         {events.length === 0 && (
-          <li className="event-empty">해당 날짜의 축제가 없습니다.</li>
+          <li className="event-empty">해당 날짜의 연극이 없습니다.</li>
         )}
         {events.map((festival) => (
           <li 

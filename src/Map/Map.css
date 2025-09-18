@@ -581,7 +581,7 @@ body {
 }
 
 /* ========================
-   연극 정보 스타일
+   문화시설 정보 스타일
    ======================== */
 
 .loading, .error, .no-data {
@@ -608,5 +608,68 @@ body {
   font-size: 12px;
   color: var(--secondary-blue);
   margin: 2px 0;
+}
+
+/* 문화시설 유형별 스타일 */
+.culture-type {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  margin: 2px 0;
+}
+
+.culture-type.theater {
+  background: rgba(103, 192, 144, 0.2);
+  color: var(--primary-green);
+  border: 1px solid var(--primary-green);
+}
+
+.culture-type.museum {
+  background: rgba(38, 102, 127, 0.2);
+  color: var(--secondary-blue);
+  border: 1px solid var(--secondary-blue);
+}
+
+.culture-type.gallery {
+  background: rgba(125, 211, 163, 0.2);
+  color: var(--primary-green-light);
+  border: 1px solid var(--primary-green-light);
+}
+
+.culture-type.exhibition {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid #ffc107;
+}
+
+.culture-type.concert {
+  background: rgba(156, 39, 176, 0.2);
+  color: #9c27b0;
+  border: 1px solid #9c27b0;
+}
+
+/* 운영시간 스타일 */
+.hours {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 문화시설 카드 호버 효과 개선 */
+.exp-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(103, 192, 144, 0.15);
+  border-color: var(--primary-green);
+}
+
+/* 문화시설 아이콘 스타일 */
+.culture-icon {
+  font-size: 16px;
+  margin-right: 6px;
 }
   

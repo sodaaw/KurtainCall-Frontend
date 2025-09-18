@@ -163,7 +163,7 @@ export default function Topnav({ variant = "default" }) {
             onKeyDown={(e) => e.key === 'Enter' && goHome()}
             style={{ cursor: 'pointer' }}
           >
-            <h1 className="logo">FestiGuard</h1>
+            <h1 className="logo">CulturaLink</h1>
           </div>
         )}
 
@@ -316,7 +316,7 @@ export default function Topnav({ variant = "default" }) {
         </nav>
 
         <div className="side-menu-footer">
-          <p>© 2025 FestiGuard</p>
+          <p>© 2025 CulturaLink</p>
           <p>안전한 즐거움, 스마트한 보호</p>
         </div>
       </div>
