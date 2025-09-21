@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import './Genre.css';
 import Topnav from '../components/Topnav';
+import RecommendedPlaces from '../components/RecommendedPlaces';
 import { festivals } from '../data/festivals';
 import axios from 'axios';
 
@@ -511,6 +512,13 @@ const Genre = () => {
               ))}
             </div>
           )}
+
+          {/* ✅ 추천 장소 섹션 (장르별) */}
+          <RecommendedPlaces 
+            genre={selectedGenre}
+            title={`📍 ${selectedGenre ? selectedGenre + ' 관련 추천 장소' : '근처 추천 장소'}`}
+            limit={8}
+          />
         </>
       )}
 

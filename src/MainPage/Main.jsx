@@ -5,6 +5,7 @@ import Topnav from "../components/Topnav";
 // import SearchModal from "../components/SearchModal";
 import EventCalendar from "./EventCalendar"; // ✅ 분리한 캘린더
 import EventPanel from "./EventPanel";       // ✅ 분리한 우측 패널
+import RecommendedPlaces from "../components/RecommendedPlaces"; // ✅ 추천 장소 컴포넌트
 import { playAPI } from "../services/api";
 import { festivals } from "../data/festivals"; // ✅ 연극 데이터 import
 import "./Main.css";
@@ -466,6 +467,12 @@ export default function Main() {
         
         {/* 추천 공연 슬라이드 */}
         <RecommendedShows plays={plays} isLoading={isLoading} error={error} />
+
+        {/* ✅ 추천 장소 섹션 */}
+        <RecommendedPlaces 
+          title="📍 내 주변 문화시설" 
+          limit={6}
+        />
 
         {/* ✅ 좌: 캘린더 / 우: 이벤트 패널 */}
         <section className="schedule">
