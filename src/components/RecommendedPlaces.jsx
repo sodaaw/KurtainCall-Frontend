@@ -93,12 +93,22 @@ const RecommendedPlaces = ({ genre = null, limit = 6, title = "📍 근처 추�
     );
   }
 
+  const handlePlaceClick = (place) => {
+    if (place.url) {
+      window.open(place.url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <section className="recommended-places-section">
       <h3 className="places-section-title">{title}</h3>
       <div className="places-grid">
         {places.map((place) => (
-          <div key={place.id} className="place-card">
+          <div 
+            key={place.id} 
+            className="place-card"
+            onClick={() => handlePlaceClick(place)}
+          >
             <div className="place-image-container">
               <img
                 src={place.imageUrl}
@@ -137,17 +147,6 @@ const RecommendedPlaces = ({ genre = null, limit = 6, title = "📍 근처 추�
               <div className="place-category">
                 <span className="category-text">{place.category}</span>
               </div>
-            </div>
-            
-            <div className="place-actions">
-              <a
-                href={place.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="place-link-btn"
-              >
-                상세보기
-              </a>
             </div>
           </div>
         ))}

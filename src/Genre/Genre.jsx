@@ -470,54 +470,11 @@ const Genre = () => {
             </button>
           </div> */}
 
-          {/* ===== 장르별 포스터 섹션 ===== */}
-          {len === 0 ? (
-            <div style={{ opacity: 0.7, padding: '24px 0' }}>조건에 맞는 결과가 없습니다.</div>
-          ) : (
-            <div className="category-posters-section">
-              {Object.entries(groupedPlays).map(([genre, genrePlays]) => (
-                <div key={genre} className="category-group">
-                  <h4 className="category-title">{genre}</h4>
-                  <div className="poster-grid">
-                    {genrePlays.map((play) => (
-                      <div 
-                        key={play.id} 
-                        className="category-poster-card"
-                        onClick={() => navigate('/genre/recommended', { state: { selectedPoster: play } })}
-                      >
-                        <img
-                          referrerPolicy="no-referrer"
-                          src={play.image}
-                          alt={play.title}
-                          className="category-poster-img"
-                          onError={(e) => { 
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = '/images/fallback.jpg'; 
-                          }}
-                          loading="lazy"
-                        />
-                        <div className="category-poster-info">
-                          <div className="category-poster-title">{play.title}</div>
-                          <div className="category-poster-location">
-                            {typeof play.location === 'string' 
-                              ? play.location 
-                              : play.location?.address || '장소 정보 없음'
-                            }
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* ✅ 추천 장소 섹션 (장르별) */}
+          {/* ✅ 추천 장소 섹션 (기존 축제 포스터 대체) */}
           <RecommendedPlaces 
             genre={selectedGenre}
             title={`📍 ${selectedGenre ? selectedGenre + ' 관련 추천 장소' : '근처 추천 장소'}`}
-            limit={8}
+            limit={10}
           />
         </>
       )}

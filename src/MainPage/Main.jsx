@@ -465,13 +465,10 @@ export default function Main() {
           />
         </section>
         
-        {/* 추천 공연 슬라이드 */}
-        <RecommendedShows plays={plays} isLoading={isLoading} error={error} />
-
-        {/* ✅ 추천 장소 섹션 */}
+        {/* ✅ 추천 장소 섹션 (기존 대학축제 슬라이드 대체) */}
         <RecommendedPlaces 
           title="📍 내 주변 문화시설" 
-          limit={6}
+          limit={8}
         />
 
         {/* ✅ 좌: 캘린더 / 우: 이벤트 패널 */}

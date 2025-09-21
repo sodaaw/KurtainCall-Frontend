@@ -117,47 +117,53 @@
   margin: 0;
 }
 
-/* 장소 그리드 */
+/* 장소 그리드 - 기존 축제 카드와 동일한 스타일 */
 .places-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  justify-content: center;
 }
 
-/* 장소 카드 */
+/* 장소 카드 - 기존 축제 카드와 동일한 스타일 */
 .place-card {
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  flex: 0 0 calc(20% - 16px);
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
   transition: all 0.3s ease;
-  border: 1px solid #f0f0f0;
+  cursor: pointer;
+  min-width: 200px;
+  max-width: 250px;
 }
 
 .place-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-6px) scale(1.02);
 }
 
-/* 장소 이미지 */
+/* 장소 이미지 - 기존 포스터와 동일한 스타일 */
 .place-image-container {
-  position: relative;
   width: 100%;
-  height: 180px;
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
   overflow: hidden;
+  position: relative;
 }
 
 .place-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.3s ease;
+  background: #f8f9fa;
 }
 
 .place-card:hover .place-image {
-  transform: scale(1.05);
+  transform: scale(1.03);
+  filter: brightness(1.02);
 }
 
 .place-category-badge {
@@ -172,39 +178,42 @@
   backdrop-filter: blur(10px);
 }
 
-/* 장소 정보 */
+/* 장소 정보 - 기존 축제 카드와 동일한 스타일 */
 .place-info {
-  padding: 20px;
+  padding: 12px 0 0 0;
 }
 
 .place-name {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
   color: #2a2a2a;
-  margin: 0 0 8px 0;
+  margin: 0 0 6px 0;
   line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-align: center;
 }
 
 .place-address {
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
-  margin: 0 0 16px 0;
-  line-height: 1.4;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-align: center;
 }
 
 .place-meta {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 12px;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
 .place-rating {
@@ -214,17 +223,17 @@
 }
 
 .rating-stars {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .rating-value {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   color: #2a2a2a;
 }
 
 .review-count {
-  font-size: 12px;
+  font-size: 11px;
   color: #999;
 }
 
@@ -235,58 +244,43 @@
 }
 
 .distance-icon {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .distance-value {
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
   font-weight: 500;
 }
 
 .place-category {
-  margin-bottom: 16px;
+  text-align: center;
+  margin-bottom: 12px;
 }
 
 .category-text {
-  background: #f8f9fa;
-  color: #666;
+  background: rgba(103, 192, 144, 0.1);
+  color: #67C090;
   padding: 4px 8px;
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
+  display: inline-block;
 }
 
-/* 액션 버튼 */
+/* 액션 버튼 제거 - 카드 클릭으로 대체 */
 .place-actions {
-  padding: 0 20px 20px 20px;
+  display: none;
 }
 
-.place-link-btn {
-  display: block;
-  width: 100%;
-  background: linear-gradient(135deg, #67C090, #7dd3a3);
-  color: white;
-  text-align: center;
-  padding: 12px 16px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
+/* 반응형 디자인 - 기존 축제 카드와 동일 */
+@media (max-width: 1200px) {
+  .place-card {
+    flex: 0 0 calc(25% - 15px);
+    min-width: 180px;
+  }
 }
 
-.place-link-btn:hover {
-  background: linear-gradient(135deg, #5aa67a, #6bc491);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(103, 192, 144, 0.3);
-  text-decoration: none;
-  color: white;
-}
-
-/* 반응형 디자인 */
 @media (max-width: 768px) {
   .recommended-places-section {
     padding: 0 16px;
@@ -297,52 +291,49 @@
     margin-bottom: 20px;
   }
   
-  .places-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  
-  .place-image-container {
-    height: 160px;
-  }
-  
-  .place-info {
-    padding: 16px;
+  .place-card {
+    flex: 0 0 calc(33.333% - 10px);
+    min-width: 160px;
   }
   
   .place-name {
-    font-size: 16px;
+    font-size: 14px;
+  }
+  
+  .place-address {
+    font-size: 12px;
   }
   
   .place-meta {
-    flex-direction: column;
-    align-items: flex-start;
     gap: 8px;
   }
   
-  .place-distance {
-    align-self: flex-end;
+  .rating-value,
+  .distance-value {
+    font-size: 11px;
+  }
+  
+  .category-text {
+    font-size: 10px;
   }
 }
 
 @media (max-width: 480px) {
-  .places-grid {
-    grid-template-columns: 1fr;
-  }
-  
   .place-card {
-    margin: 0 8px;
+    flex: 0 0 calc(50% - 5px);
+    min-width: 140px;
   }
   
-  .place-image-container {
-    height: 140px;
+  .place-name {
+    font-size: 13px;
   }
   
-  .place-info {
-    padding: 12px;
+  .place-address {
+    font-size: 11px;
   }
   
-  .place-actions {
-    padding: 0 12px 12px 12px;
+  .place-meta {
+    flex-direction: column;
+    gap: 4px;
   }
 }
