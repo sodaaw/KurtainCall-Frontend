@@ -1,121 +1,46 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Topnav from '../components/Topnav';
 import './Login.css';
 
-// 백엔드 API URL 설정
-const API_BASE_URL = 'https://re-local.onrender.com';
-
 export default function Login() {
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
+  const [deviceNumber, setDeviceNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
 
-  const canSubmit = id.trim() && password && !loading;
+  const canSubmit = deviceNumber.trim() && !loading;
 
-  const handleLogin = async (e) => {
+  const handleDeviceSubmit = async (e) => {
     e.preventDefault();
     if (!canSubmit) return;
-
-    const payload = {
-      userid: id.trim(),
-      password,
-    };
 
     try {
       setLoading(true);
       setErrMsg('');
       setSuccessMsg('');
       
-      // 백엔드로 로그인 데이터 전송
-      const res = await axios.post(`${API_BASE_URL}/api/users/login`, payload, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: false,
-      });
-      
-      console.log('로그인 성공:', res.data);
-      console.log('응답 데이터 타입:', typeof res.data);
-      console.log('응답 데이터 키들:', Object.keys(res.data));
-      
-      // 토큰이 있다면 localStorage에 저장
-      if (res.data.token) {
-        console.log('토큰 저장 중...');
-        localStorage.setItem('token', res.data.token);
-      } else {
-        // 토큰이 없으면 더미 토큰 저장 (백엔드에서 토큰을 제공하지 않는 경우)
-        console.log('토큰이 없음. 더미 토큰 저장...');
-        localStorage.setItem('token', 'dummy-token-' + Date.now());
+      // 기기번호 검증 (시연용 - 12345만 허용)
+      if (deviceNumber.trim() !== '12345') {
+        throw new Error('올바르지 않은 기기번호입니다. 올바른 기기번호를 입력해주세요.');
       }
-      
-      // 사용자 정보 저장 (res.data에 직접 사용자 정보가 있는 경우)
-      if (res.data.user) {
-        console.log('사용자 정보 저장 중 (res.data.user)...');
-        localStorage.setItem('user', JSON.stringify(res.data.user));
-      } else if (res.data._id) {
-        console.log('사용자 정보 저장 중 (res.data 직접)...');
-        // res.data 자체가 사용자 정보인 경우
-        localStorage.setItem('user', JSON.stringify(res.data));
-      } else {
-        console.log('사용자 정보를 찾을 수 없음');
-      }
+
+      // 기기번호 저장
+      localStorage.setItem('deviceId', deviceNumber.trim());
       
       // 성공 메시지 표시
-      setSuccessMsg('로그인이 완료되었습니다! 마이페이지로 이동합니다...');
-      setErrMsg(''); // 에러 메시지 초기화
+      setSuccessMsg('기기번호가 성공적으로 등록되었습니다! 메인 페이지로 이동합니다...');
+      setErrMsg('');
       
-      // 디버깅을 위한 로그 추가
-      console.log('페이지 이동 시도 중...');
-      console.log('현재 url:', window.location.href);
-      console.log('현재 경로:', window.location.pathname);
-      console.log('저장된 사용자 정보:', localStorage.getItem('user'));
-
-      console.log('navigate 함수:', typeof navigate);
-      
-      // 즉시 페이지 이동 시도 (성공 메시지는 이미 표시됨)
-      console.log('페이지 이동 시작...');
-      
-      // 방법 1: navigate 함수 시도
-      console.log('방법 1: navigate 함수 시도...');
-      navigate('/user-selection');
-
+      // 메인 페이지로 이동
       setTimeout(() => {
-        console.log('navigate 실행 후 URL:', window.location.href);
-        console.log('navigate 실행 후 pathname:', window.location.pathname);
-        
-        // 만약 여전히 /login에 있다면 강제 이동
-        if (window.location.pathname === '/login') {
-          console.log('navigate가 작동하지 않음. 강제 이동 시도...');
-          window.location.href = '/user-selection';
-        }
-      }, 100);
-
-      setTimeout(() => {
-      console.log('1초 후 URL 재확인:', window.location.href);
-        if (window.location.pathname === '/login') {
-          console.log('여전히 로그인 페이지에 있음. 강제 새로고침 이동...');
-          window.location.replace('/user-selection');
-        }
-      }, 1000);
+        navigate('/');
+      }, 1500);
       
-      console.log('모든 이동 방법 실행 완료');
     } catch (err) {
-      console.error('로그인 오류:', err);
-      
-      // 더 자세한 오류 메시지 표시
-      if (err.response) {
-        // 서버에서 응답이 왔지만 오류인 경우
-        setErrMsg(err.response.data?.message || `로그인 실패: ${err.response.status}`);
-      } else if (err.request) {
-        // 서버에 요청이 전송되지 않은 경우 (연결 문제)
-        setErrMsg('서버에 연결할 수 없습니다. 백엔드가 실행 중인지 확인해주세요.');
-      } else {
-        // 기타 오류
-        setErrMsg('로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
-      }
+      console.error('기기번호 등록 오류:', err);
+      setErrMsg(err.message || '기기번호 등록 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
     } finally {
       setLoading(false);
     }
@@ -127,11 +52,11 @@ export default function Login() {
       
       <div className="login-form-container">
         <div className="login-header">
-          <h1 className="login-title">로그인</h1>
-          <p className="login-subtitle">FestiGuard 계정으로 로그인하세요</p>
+          <h1 className="login-title">기기번호 입력</h1>
+          <p className="login-subtitle">부여받은 기기번호 5자리를 입력해주세요</p>
         </div>
         
-        <form className="login-form" onSubmit={handleLogin}>
+        <form className="login-form" onSubmit={handleDeviceSubmit}>
           {errMsg && (
             <div className="login-error-message">
               {errMsg}
@@ -145,45 +70,27 @@ export default function Login() {
           )}
           
           <div className="login-form-group">
-            <label htmlFor="userid" className="login-form-label">아이디</label>
+            <label htmlFor="deviceNumber" className="login-form-label">기기번호</label>
             <input
-              id="userid"
+              id="deviceNumber"
               type="text"
               className="login-form-input"
-              placeholder="아이디"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-              autoComplete="username"
-            />
-          </div>
-          
-          <div className="login-form-group">
-            <label htmlFor="userpassword" className="login-form-label">비밀번호</label>
-            <input
-              id="userpassword"
-              type="password"
-              className="login-form-input"
-              placeholder="비밀번호"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
+              placeholder="12345"
+              value={deviceNumber}
+              onChange={(e) => setDeviceNumber(e.target.value)}
+              maxLength={5}
+              autoComplete="off"
             />
           </div>
           
           <button type="submit" className="login-btn" disabled={!canSubmit}>
-            {loading ? '로그인 중...' : '로그인'}
+            {loading ? '등록 중...' : '기기번호 등록'}
           </button>
         </form>
         
         <div className="login-signup-link">
-          <p className="login-signup-text">계정이 없으신가요?</p>
-          <button 
-            type="button" 
-            className="login-signup-btn"
-            onClick={() => navigate('/signup')}
-          >
-            회원가입
-          </button>
+          <p className="login-signup-text">기기번호를 잊으셨나요?</p>
+          <p className="login-signup-help">관리자에게 문의하시거나 기기번호를 다시 확인해주세요.</p>
         </div>
       </div>
     </div>

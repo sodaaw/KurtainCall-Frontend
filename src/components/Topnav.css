@@ -161,6 +161,7 @@
   transition: all 0.3s ease;
   padding: 10px;
   border-radius: 8px;
+  z-index: 5;
 }
 
 .logo-wrapper:hover {
@@ -638,6 +639,49 @@
     padding: 8px 12px;
     font-size: 12px;
   }
+  
+  /* 모바일에서 기기입력 버튼 레이아웃 개선 */
+  .topnav-right {
+    position: relative;
+    z-index: 10;
+    min-width: 0;
+    flex-shrink: 1;
+    max-width: 40%;
+  }
+  
+  .device-input-container {
+    margin-right: 0;
+    max-width: 120px;
+    position: relative;
+    z-index: 15;
+  }
+  
+  /* 모바일에서 로고 영역 조정 */
+  .logo-wrapper {
+    max-width: 60%;
+    z-index: 5;
+  }
+  
+  .device-input-compact {
+    font-size: 11px;
+    padding: 4px 8px;
+    gap: 4px;
+  }
+  
+  .device-input-form-compact {
+    min-width: 150px;
+    padding: 4px 8px;
+  }
+  
+  .device-input-field {
+    font-size: 11px;
+    min-width: 80px;
+  }
+  
+  .device-icon-small {
+    width: 14px;
+    height: 14px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -684,6 +728,32 @@
     width: 20px;
     height: 16px;
   }
+  
+  /* 더 작은 화면에서 기기입력 버튼 최적화 */
+  .device-input-container {
+    max-width: 100px;
+  }
+  
+  .device-input-compact {
+    font-size: 10px;
+    padding: 3px 6px;
+    gap: 3px;
+  }
+  
+  .device-input-form-compact {
+    min-width: 120px;
+    padding: 3px 6px;
+  }
+  
+  .device-input-field {
+    font-size: 10px;
+    min-width: 60px;
+  }
+  
+  .device-icon-small {
+    width: 12px;
+    height: 12px;
+  }
 }
 
 /* 매우 작은 화면 (390px 이하) */
@@ -724,5 +794,38 @@
   .side-menu {
     width: 240px;
     left: -240px;
+  }
+  
+  /* 매우 작은 화면에서 기기입력 버튼 최적화 */
+  .device-input-container {
+    max-width: 80px;
+  }
+  
+  .device-input-compact {
+    font-size: 9px;
+    padding: 2px 4px;
+    gap: 2px;
+  }
+  
+  .device-input-form-compact {
+    min-width: 100px;
+    padding: 2px 4px;
+  }
+  
+  .device-input-field {
+    font-size: 9px;
+    min-width: 50px;
+  }
+  
+  .device-icon-small {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .device-submit-compact,
+  .device-cancel-compact {
+    width: 14px;
+    height: 14px;
+    font-size: 12px;
   }
 }

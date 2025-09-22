@@ -241,6 +241,15 @@
   box-shadow: 0 4px 12px rgba(103, 192, 144, 0.3);
 }
 
+.login-signup-help {
+  color: #67C090;
+  font-size: 0.85rem;
+  margin: 8px 0 0 0;
+  font-weight: 400;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
 /* ========================
    반응형 디자인
 ======================== */
