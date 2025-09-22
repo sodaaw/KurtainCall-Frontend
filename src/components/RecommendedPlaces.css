@@ -144,38 +144,36 @@
   transform: translateY(-6px) scale(1.02);
 }
 
-/* 장소 이미지 - 기존 포스터와 동일한 스타일 */
-.place-image-container {
+/* 이모티콘 컨테이너 - 기존 포스터와 동일한 스타일 */
+.place-emoji-container {
   width: 100%;
   aspect-ratio: 3 / 4;
   border-radius: 12px;
   overflow: hidden;
   position: relative;
+  background: linear-gradient(135deg, #67C090, #7dd3a3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
-.place-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transition: transform 0.3s ease;
-  background: #f8f9fa;
+.place-emoji {
+  font-size: 80px;
+  text-align: center;
+  line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  transition: all 0.3s ease;
 }
 
-.place-card:hover .place-image {
-  transform: scale(1.03);
-  filter: brightness(1.02);
+.place-card:hover .place-emoji-container {
+  background: linear-gradient(135deg, #5aa67a, #6bc491);
+  transform: scale(1.02);
 }
 
-.place-category-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(103, 192, 144, 0.9);
-  color: white;
-  padding: 6px 10px;
-  border-radius: 20px;
-  font-size: 16px;
-  backdrop-filter: blur(10px);
+.place-card:hover .place-emoji {
+  transform: scale(1.1);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
 }
 
 /* 장소 정보 - 기존 축제 카드와 동일한 스타일 */
@@ -186,7 +184,7 @@
 .place-name {
   font-size: 16px;
   font-weight: 600;
-  color: #2a2a2a;
+  color: #DDF4E7;
   margin: 0 0 6px 0;
   line-height: 1.3;
   display: -webkit-box;
@@ -198,7 +196,7 @@
 
 .place-address {
   font-size: 13px;
-  color: #666;
+  color: #898989;
   margin: 0 0 8px 0;
   line-height: 1.3;
   display: -webkit-box;
@@ -316,6 +314,10 @@
   .category-text {
     font-size: 10px;
   }
+
+  .place-emoji {
+    font-size: 60px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -335,5 +337,9 @@
   .place-meta {
     flex-direction: column;
     gap: 4px;
+  }
+
+  .place-emoji {
+    font-size: 50px;
   }
 }

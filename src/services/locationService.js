@@ -1,9 +1,12 @@
 // GPS 위치 기반 추천 장소 서비스
+import photoService from './photoService';
+
 class LocationService {
   constructor() {
     // 카카오 개발자 센터의 REST API 키 사용
     this.kakaoApiKey = 'e7abf7f4973d0c8697effa3139a25e04';
     this.userLocation = null;
+    this.photoService = photoService;
   }
 
   // 사용자 위치 가져오기 (GPS)
@@ -90,7 +93,7 @@ class LocationService {
     }
   }
 
-  // 카카오맵 데이터를 앱에서 사용할 형식으로 변환
+  // 카카오맵 데이터를 앱에서 사용할 형식으로 변환 (빠른 버전)
   transformKakaoData(kakaoDocuments) {
     return kakaoDocuments.map(place => ({
       id: place.id,
@@ -110,8 +113,8 @@ class LocationService {
         parseFloat(place.y), 
         parseFloat(place.x)
       ),
-      // 장소 사진 URL (카카오맵에서는 제공하지 않으므로 기본 이미지 사용)
-      imageUrl: this.getPlaceImageUrl(place.category_name, place.place_name)
+      // 이모티콘 기반 표시를 위해 imageUrl 제거
+      imageUrl: null
     }));
   }
 
@@ -133,29 +136,6 @@ class LocationService {
     return deg * (Math.PI/180);
   }
 
-  // 장소 카테고리별 기본 이미지 URL 생성
-  getPlaceImageUrl(category, placeName) {
-    // 카테고리별 기본 이미지 매핑
-    const categoryImages = {
-      '문화시설': '/images/musical.jpg',
-      '관광명소': '/images/fallback.jpg',
-      '카페': '/images/fallback.jpg',
-      '음식점': '/images/fallback.jpg',
-      '쇼핑': '/images/fallback.jpg',
-      '주유소': '/images/fallback.jpg',
-      '지하철역': '/images/fallback.jpg'
-    };
-
-    // 카테고리에서 기본 이미지 찾기
-    for (const [key, imageUrl] of Object.entries(categoryImages)) {
-      if (category.includes(key)) {
-        return imageUrl;
-      }
-    }
-
-    // 기본 이미지
-    return '/images/fallback.jpg';
-  }
 
   // 추천 장소 가져오기 (문화시설 위주)
   async getRecommendedPlaces(limit = 10) {

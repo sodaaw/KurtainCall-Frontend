@@ -51,6 +51,10 @@ const RecommendedPlaces = ({ genre = null, limit = 6, title = "📍 근처 추�
     if (category.includes('음식')) return '🍽️';
     if (category.includes('공원')) return '🌳';
     if (category.includes('쇼핑')) return '🛍️';
+    if (category.includes('문화')) return '🎪';
+    if (category.includes('관광')) return '🗺️';
+    if (category.includes('아트')) return '🎨';
+    if (category.includes('센터')) return '🏢';
     return '📍';
   };
 
@@ -109,17 +113,8 @@ const RecommendedPlaces = ({ genre = null, limit = 6, title = "📍 근처 추�
             className="place-card"
             onClick={() => handlePlaceClick(place)}
           >
-            <div className="place-image-container">
-              <img
-                src={place.imageUrl}
-                alt={place.name}
-                className="place-image"
-                onError={(e) => {
-                  e.target.src = '/images/fallback.jpg';
-                }}
-                loading="lazy"
-              />
-              <div className="place-category-badge">
+            <div className="place-emoji-container">
+              <div className="place-emoji">
                 {getCategoryIcon(place.category)}
               </div>
             </div>
