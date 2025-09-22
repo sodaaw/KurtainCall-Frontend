@@ -74,6 +74,7 @@
   font-size: clamp(30px, 5vw, 40px);
   color: #DDF4E7;
   text-align: center;
+  margin-top: 100px;
   margin-bottom: 10px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   font-weight: 600;
@@ -180,7 +181,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   display: block;
-  margin: 40px auto 0;
+  margin: 20px auto 0;
   position: relative;
   overflow: hidden;
   letter-spacing: 0.3px;

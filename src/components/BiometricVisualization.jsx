@@ -70,7 +70,7 @@ const BiometricVisualization = ({ data }) => {
       <div className="biometric-header">
         <h3>📊 실시간 생체 데이터</h3>
         <div className="timestamp">
-          <span className="status-indicator status-ok"></span>
+          {/* <span className="status-indicator status-ok"></span> */}
           {new Date(biometricData.timestamp).toLocaleString('ko-KR')}
         </div>
       </div>
