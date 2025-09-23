@@ -204,6 +204,89 @@
   border-color: #124170;
 }
 
+/* 로그인 상태 컨테이너 */
+.login-status-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.login-status-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(103, 192, 144, 0.1);
+  border: 2px solid rgba(103, 192, 144, 0.3);
+  border-radius: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.device-status-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(103, 192, 144, 0.2);
+  border-radius: 12px;
+}
+
+.device-status-icon img {
+  width: 32px;
+  height: 32px;
+  filter: brightness(0) saturate(100%) invert(67%) sepia(15%) saturate(1000%) hue-rotate(120deg) brightness(95%) contrast(85%);
+}
+
+.device-status-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.device-status-label {
+  color: #67C090;
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.device-status-id {
+  color: #DDF4E7;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.logout-btn {
+  background: #dc3545;
+  border-color: #dc3545;
+  color: #DDF4E7;
+  width: 100%;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+}
+
+.logout-btn:hover {
+  background: #c82333;
+  border-color: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.logout-btn:active {
+  transform: translateY(0);
+  background: #a71e2a;
+  border-color: #a71e2a;
+}
+
 /* 회원가입 링크 */
 .login-signup-link {
   text-align: center;
@@ -288,6 +371,26 @@
     padding: 8px 16px;
     font-size: 0.95rem;
   }
+  
+  .login-status-info {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .device-status-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .device-status-icon img {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .logout-btn {
+    padding: 14px 28px;
+    font-size: 1rem;
+  }
 }
 
 /* 모바일 */
@@ -348,6 +451,34 @@
     padding: 8px 16px;
     font-size: 0.9rem;
   }
+  
+  .login-status-info {
+    padding: 14px;
+    gap: 10px;
+  }
+  
+  .device-status-icon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .device-status-icon img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .device-status-label {
+    font-size: 0.85rem;
+  }
+  
+  .device-status-id {
+    font-size: 1.1rem;
+  }
+  
+  .logout-btn {
+    padding: 12px 24px;
+    font-size: 0.95rem;
+  }
 }
 
 /* 매우 작은 화면 (390px 이하) */
@@ -407,5 +538,33 @@
   .login-signup-btn {
     padding: 6px 12px;
     font-size: 0.8rem;
+  }
+  
+  .login-status-info {
+    padding: 12px;
+    gap: 8px;
+  }
+  
+  .device-status-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .device-status-icon img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .device-status-label {
+    font-size: 0.8rem;
+  }
+  
+  .device-status-id {
+    font-size: 1rem;
+  }
+  
+  .logout-btn {
+    padding: 10px 18px;
+    font-size: 0.85rem;
   }
 }

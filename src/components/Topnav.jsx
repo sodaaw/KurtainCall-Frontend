@@ -368,7 +368,7 @@ export default function Topnav({ variant = "default" }) {
                     fallbackEmoji="🔑" 
                     alt="로그인"
                   />
-                  <span className="menu-text">로그인</span>
+                  <span className="menu-text">기기 입력</span>
                   <span className="menu-arrow">›</span>
                 </a>
               </li>
@@ -380,7 +380,7 @@ export default function Topnav({ variant = "default" }) {
                   fallbackEmoji="🎶" 
                   alt="전체 축제"
                 />
-                <span className="menu-text">전체 축제</span>
+                <span className="menu-text">추천 장소</span>
                 <span className="menu-arrow">›</span>
               </a>
             </li>
