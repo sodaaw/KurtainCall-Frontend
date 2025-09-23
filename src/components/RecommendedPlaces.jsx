@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import locationService from '../services/locationService';
+import photoService from '../services/photoService';
+import KakaoImage from './KakaoImage';
 import './RecommendedPlaces.css';
 
 const RecommendedPlaces = ({ genre = null, limit = 6, title = "📍 근처 추천 장소" }) => {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [imageUrls, setImageUrls] = useState({});
 
   useEffect(() => {
     loadRecommendedPlaces();
@@ -27,6 +30,27 @@ const RecommendedPlaces = ({ genre = null, limit = 6, title = "📍 근처 추�
       }
 
       setPlaces(recommendedPlaces);
+      
+      // 각 장소에 대해 카카오맵 이미지 크롤링 시도
+      const imagePromises = recommendedPlaces.map(async (place) => {
+        try {
+          const imageUrl = await photoService.getPlacePhoto(place.name, place.address, place.category);
+          return { placeId: place.id, imageUrl };
+        } catch (error) {
+          console.log('이미지 크롤링 실패:', place.name, error);
+          return { placeId: place.id, imageUrl: null };
+        }
+      });
+      
+      const imageResults = await Promise.all(imagePromises);
+      const imageMap = {};
+      imageResults.forEach(({ placeId, imageUrl }) => {
+        if (imageUrl) {
+          imageMap[placeId] = imageUrl;
+        }
+      });
+      
+      setImageUrls(imageMap);
     } catch (err) {
       console.error('추천 장소 로드 실패:', err);
       setError('추천 장소를 불러올 수 없습니다.');
@@ -113,10 +137,23 @@ const RecommendedPlaces = ({ genre = null, limit = 6, title = "📍 근처 추�
             className="place-card"
             onClick={() => handlePlaceClick(place)}
           >
-            <div className="place-emoji-container">
-              <div className="place-emoji">
-                {getCategoryIcon(place.category)}
-              </div>
+            {/* 카카오맵 크롤링 이미지 또는 이모지 */}
+            <div className="place-image-container">
+              {imageUrls[place.id] ? (
+                <KakaoImage
+                  imageUrl={imageUrls[place.id]}
+                  width="100%"
+                  height="120px"
+                  alt={place.name}
+                  className="place-image"
+                />
+              ) : (
+                <div className="place-emoji-container">
+                  <div className="place-emoji">
+                    {getCategoryIcon(place.category)}
+                  </div>
+                </div>
+              )}
             </div>
             
             <div className="place-info">

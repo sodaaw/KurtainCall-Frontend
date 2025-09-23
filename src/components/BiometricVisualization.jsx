@@ -162,7 +162,6 @@ const BiometricVisualization = ({ data }) => {
         <div className="status-summary">
           <h4>전체 상태</h4>
           <div className="status-badge status-good">
-            <span className="status-icon">✅</span>
             <span>양호</span>
           </div>
         </div>

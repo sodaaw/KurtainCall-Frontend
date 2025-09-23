@@ -402,23 +402,33 @@ class PhotoService {
         console.log('❌ 크롤링 이미지 실패:', error);
       }
 
-      // 1. 카카오맵 크롤링 시도 (실제 장소 이미지)
+      // 1. 카카오맵 크롤링 시도 (CORS 문제로 비활성화)
+      // try {
+      //   imageUrl = await this.getPhotoFromKakaoMap(placeName, placeAddress);
+      //   if (imageUrl) {
+      //     // 이미지 유효성 검증
+      //     const isValid = await this.validateImageUrl(imageUrl);
+      //     if (isValid) {
+      //       console.log('✅ 카카오맵 이미지 성공:', placeName, imageUrl);
+      //       this.cache.set(cacheKey, imageUrl);
+      //       return imageUrl;
+      //     }
+      //   }
+      // } catch (error) {
+      //   console.log('❌ 카카오맵 크롤링 실패:', error);
+      // }
+
+      // 1. Lorem Picsum 시도 (카테고리별 랜덤 이미지) - 가장 안정적
       try {
-        imageUrl = await this.getPhotoFromKakaoMap(placeName, placeAddress);
-        if (imageUrl) {
-          // 이미지 유효성 검증
-          const isValid = await this.validateImageUrl(imageUrl);
-          if (isValid) {
-            console.log('✅ 카카오맵 이미지 성공:', placeName, imageUrl);
-            this.cache.set(cacheKey, imageUrl);
-            return imageUrl;
-          }
-        }
+        imageUrl = this.getRandomImageFromLoremPicsum(category);
+        console.log('✅ Lorem Picsum 이미지 사용:', placeName, imageUrl);
+        this.cache.set(cacheKey, imageUrl);
+        return imageUrl;
       } catch (error) {
-        console.log('❌ 카카오맵 크롤링 실패:', error);
+        console.log('Lorem Picsum 실패:', error);
       }
 
-      // 2. Pixabay API 시도 (무료)
+      // 2. Pixabay API 시도 (무료, 제한 있음)
       try {
         imageUrl = await this.getPhotoFromPixabay(placeName, category);
         if (imageUrl) {
@@ -432,18 +442,6 @@ class PhotoService {
         }
       } catch (error) {
         console.log('❌ Pixabay API 실패:', error);
-      }
-
-      // 2. Lorem Picsum 시도 (카테고리별 랜덤 이미지)
-      try {
-        imageUrl = this.getRandomImageFromLoremPicsum(category);
-        const isValid = await this.validateImageUrl(imageUrl);
-        if (isValid) {
-          this.cache.set(cacheKey, imageUrl);
-          return imageUrl;
-        }
-      } catch (error) {
-        console.log('Lorem Picsum 실패:', error);
       }
 
       // 3. 구글 플레이스 API 시도 (API 키가 있는 경우)

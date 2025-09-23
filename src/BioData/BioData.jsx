@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Topnav from "../components/Topnav";
 import BiometricVisualization from "../components/BiometricVisualization";
+import BiometricAnalysis from "../components/BiometricAnalysis";
 import "./BioData.css";
 
 export default function BioData() {
@@ -40,6 +41,11 @@ export default function BioData() {
       {/* 새로운 생체데이터 시각화 컴포넌트 */}
       {biometricData && (
         <BiometricVisualization data={biometricData} />
+      )}
+
+      {/* 생체데이터 분석 결과 */}
+      {biometricData && (
+        <BiometricAnalysis data={biometricData} />
       )}
 
       <button className="recommend-btn">
