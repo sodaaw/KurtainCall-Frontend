@@ -449,7 +449,6 @@
 .device-input-container {
   margin-right: 12px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
 }
 
 .device-input-compact {
@@ -485,6 +484,7 @@
   border-radius: 20px;
   animation: expandInput 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 200px;
+  margin-left: auto; /* 오른쪽 정렬을 위한 기본 설정 */
 }
 
 .device-input-field {
@@ -605,88 +605,14 @@
    반응형 디자인
 ======================== */
 
-@media (max-width: 768px) {
-  .topnav {
-    padding: 0 20px;
-    height: 50px;
-  }
-  
-  .topnav .logo {
-    font-size: 25px;
-    margin-top: 20px;
-  }
-  
-  .tagline {
-    font-size: 11px;
-  }
-  
-  .side-menu {
-    width: 280px;
-    left: -280px;
-  }
-  
-  .topnav-login-btn {
-    padding: 10px 20px;
-    font-size: 13px;
-  }
-  
-  .user-menu {
-    gap: 8px;
-  }
-  
-  .topnav-mypage-btn,
-  .topnav-logout-btn {
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-  
-  /* 모바일에서 기기입력 버튼 레이아웃 개선 */
-  .topnav-right {
-    position: relative;
-    z-index: 10;
-    min-width: 0;
-    flex-shrink: 1;
-    max-width: 40%;
-  }
-  
-  .device-input-container {
-    margin-right: 0;
-    max-width: 120px;
-    position: relative;
-    z-index: 15;
-  }
-  
-  /* 모바일에서 로고 영역 조정 */
-  .logo-wrapper {
-    max-width: 60%;
-    z-index: 5;
-  }
-  
-  .device-input-compact {
-    font-size: 11px;
-    padding: 4px 8px;
-    gap: 4px;
-  }
-  
-  .device-input-form-compact {
-    min-width: 150px;
-    padding: 4px 8px;
-  }
-  
-  .device-input-field {
-    font-size: 11px;
-    min-width: 80px;
-  }
-  
-  .device-icon-small {
-    width: 14px;
-    height: 14px;
-  }
-}
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+  .device-input-field::placeholder {
+    color: transparent;  /* 👈 모바일에서 placeholder 숨기기 */
+  }
+
   .topnav {
-    padding: 0 12px;
+    padding: 0 8px; /* 패딩 더 줄임 */
     height: 50px;
   }
   
@@ -729,37 +655,61 @@
     height: 16px;
   }
   
-  /* 더 작은 화면에서 기기입력 버튼 최적화 */
+  /* 기기입력 버튼 최적화 - 통합 및 수정 */
+  .topnav-right {
+    position: relative;
+    z-index: 10;
+    min-width: 0;
+    flex-shrink: 1;
+    max-width: 100%; /* 더 넓은 공간 확보 */
+    flex: 1;
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center;
+    padding-right: 8px; /* 오른쪽 패딩 추가 */
+  }
+  
   .device-input-container {
-    max-width: 100px;
+    max-width: 80px !important; /* 너비 증가 */
+    margin-left: auto !important; /* auto 무효화 */
+    margin-right: 40px !important; /* 오른쪽 여백 적절히 설정 */
+    flex-shrink: 0; /* 축소 방지 */
+    position: relative;
+    z-index: 15;
   }
   
   .device-input-compact {
-    font-size: 10px;
-    padding: 3px 6px;
-    gap: 3px;
+    font-size: 10px; /* 적절한 크기로 조정 */
+    padding: 4px 6px; /* 패딩 적절히 설정 */
+    gap: 2px; /* 간격 적절히 설정 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    min-width: 40px; /* 최소 너비 설정 */
   }
   
   .device-input-form-compact {
-    min-width: 120px;
-    padding: 3px 6px;
+    min-width: 120px;   /* 적절한 너비로 조정 */
+    padding: 4px 6px;   /* 패딩 적절히 설정 */
+    margin-left: 0 !important; /* auto 무효화 */
+    margin-right: 8px !important; /* 오른쪽 여백 적절히 설정 */
+    max-width: 100%; /* 최대 너비 제한 */
   }
   
   .device-input-field {
-    font-size: 10px;
-    min-width: 60px;
+    font-size: 10px; /* 적절한 크기로 조정 */
+    min-width: 60px; /* 적절한 너비로 조정 */
+    max-width: 80px; /* 최대 너비 제한 */
   }
   
   .device-icon-small {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
   }
 }
 
 /* 매우 작은 화면 (390px 이하) */
 @media (max-width: 390px) {
   .topnav {
-    padding: 0 8px;
+    padding: 0 5px; /* 패딩 최소화 */
     height: 45px;
   }
   
@@ -797,35 +747,50 @@
   }
   
   /* 매우 작은 화면에서 기기입력 버튼 최적화 */
+  .topnav-right {
+    justify-content: flex-end; /* 오른쪽 정렬 유지 */
+    max-width: 80%; /* 더 넓은 공간 확보 */
+    padding-right: 5px; /* 오른쪽 패딩 추가 */
+  }
+  
   .device-input-container {
-    max-width: 80px;
+    max-width: 70px !important; /* 적절한 너비로 조정 */
+    margin-left: 0 !important; /* auto 무효화 */
+    margin-right: 5px !important; /* 오른쪽 여백 적절히 설정 */
+    flex-shrink: 0; /* 축소 방지 */
   }
   
   .device-input-compact {
-    font-size: 9px;
-    padding: 2px 4px;
-    gap: 2px;
+    font-size: 9px; /* 적절한 크기로 조정 */
+    padding: 3px 5px; /* 패딩 적절히 설정 */
+    gap: 2px; /* 간격 적절히 설정 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    min-width: 35px; /* 최소 너비 설정 */
   }
   
   .device-input-form-compact {
-    min-width: 100px;
-    padding: 2px 4px;
+    min-width: 100px;   /* 적절한 너비로 조정 */
+    padding: 3px 5px;   /* 패딩 적절히 설정 */
+    margin-left: 0 !important; /* auto 무효화 */
+    margin-right: 5px !important; /* 오른쪽 여백 적절히 설정 */
+    max-width: 100%; /* 최대 너비 제한 */
   }
   
   .device-input-field {
-    font-size: 9px;
-    min-width: 50px;
+    font-size: 9px; /* 적절한 크기로 조정 */
+    min-width: 50px; /* 적절한 너비로 조정 */
+    max-width: 70px; /* 최대 너비 제한 */
   }
   
   .device-icon-small {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
   
   .device-submit-compact,
   .device-cancel-compact {
-    width: 14px;
-    height: 14px;
-    font-size: 12px;
+    width: 12px;
+    height: 12px;
+    font-size: 10px;
   }
 }
