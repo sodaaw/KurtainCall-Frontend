@@ -484,11 +484,12 @@ const AITranslation = () => {
       <div className="ai-translation-content">
         <div className="ai-translation-header">
           <h1 className="ai-translation-title">AI 다국어 통역 시스템</h1>
-          <p className="ai-translation-subtitle">말하기 어려운 순간, 대신 눌러주세요.</p>
+          <p className="ai-translation-subtitle">언어의 장벽을 넘어 소통하세요.</p>
         </div>
-
+        
         <div className="translation-main">
-          {/* 긴급 상황 표현 버튼들 */}
+          {/* 긴급 상황 표현 버튼들 - 주석처리 */}
+          {/* 
           <div className="emergency-expressions">
             <div className="emergency-header">
               <h3>🚨 긴급 상황 표현</h3>
@@ -504,6 +505,7 @@ const AITranslation = () => {
                 </select>
               </div>
             </div>
+        
             
             <div className="emergency-buttons-grid">
               {emergencyExpressions.map((expression, index) => (
@@ -522,6 +524,7 @@ const AITranslation = () => {
               ))}
             </div>
           </div>
+          */}
 
           {/* 모드 선택 드롭다운 */}
           <div className="mode-selection">

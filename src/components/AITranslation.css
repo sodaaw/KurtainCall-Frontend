@@ -19,6 +19,8 @@
   color: var(--text);
   position: relative;
   overflow-x: hidden;
+  margin-top: -90px;
+  padding-top: 90px; /* 상단 네비게이션 바 높이만큼 패딩 추가 */
 }
 
 /* 커튼 배경 요소들 */
@@ -70,7 +72,7 @@
 .ai-translation-content {
   max-width: 900px;
   margin: 0 auto;
-  padding: 120px 20px 30px 20px; /* 상단 여백 120px로 증가 */
+  padding: 20px 20px 20px 20px; /* 패딩 줄임 */
   position: relative;
   z-index: 2;
 }
@@ -78,26 +80,26 @@
 /* 헤더 */
 .ai-translation-header {
   text-align: center;
-  margin: 55px 0 50px 0;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(18, 65, 112, 0.2);
+  margin: 10px 0 20px 0; /* 마진 대폭 줄임 */
+  padding: 15px; /* 패딩 줄임 */
+  border-radius: 15px;
+  box-shadow: 0 4px 16px rgba(18, 65, 112, 0.2);
   backdrop-filter: blur(10px);
 }
 
 .ai-translation-title {
   color: var(--text);
-  font-size: 2.8rem;
+  font-size: 2.2rem; /* 크기 줄임 */
   font-weight: 600;
-  margin: 0 0 5px 0;
+  margin: 0 0 3px 0; /* 마진 줄임 */
   letter-spacing: -1px;
 }
 
 .ai-translation-subtitle {
   color: var(--text-sub);
-  font-size: 1.1rem;
+  font-size: 1rem; /* 크기 줄임 */
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.4; /* 줄 간격 줄임 */
   font-weight: 400;
 }
 
@@ -105,7 +107,7 @@
 .translation-main {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 8px; /* 간격 줄임 */
   width: 100%;
 }
 
@@ -300,15 +302,15 @@
 
 /* === 모드 선택 영역 === */
 .mode-selection {
-  padding: 20px;
+  padding: 10px; /* 패딩 줄임 */
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* 마진 줄임 */
 }
 
 .mode-selection h3 {
   color: var(--text);
-  font-size: 1.3rem;
-  margin: 0 0 15px 0;
+  font-size: 1.1rem; /* 크기 줄임 */
+  margin: 0 0 8px 0; /* 마진 줄임 */
   font-weight: 700;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
@@ -316,14 +318,14 @@
 .mode-dropdown {
   background: rgba(18, 65, 112, 0.05);
   border: 2px solid var(--secondary);
-  border-radius: 12px;
+  border-radius: 10px; /* 둥글기 줄임 */
   color: var(--text);
-  padding: 15px 20px;
-  font-size: 1rem;
+  padding: 10px 15px; /* 패딩 줄임 */
+  font-size: 0.9rem; /* 크기 줄임 */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 300px;
+  min-width: 250px; /* 최소 너비 줄임 */
   outline: none;
 }
 
@@ -347,43 +349,43 @@
 
 /* === 언어 선택 영역 === */
 .language-selection {
-  padding: 20px;
-  margin-bottom: 10px;
+  padding: 10px; /* 패딩 줄임 */
+  margin-bottom: 5px; /* 마진 줄임 */
 }
 
 .language-pair {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
+  gap: 10px; /* 간격 줄임 */
+  flex-wrap: nowrap; /* 줄바꿈 방지 */
 }
 
 .language-input, .language-output {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 5px; /* 간격 줄임 */
 }
 
 .language-input label, .language-output label {
   color: var(--text);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9rem; /* 크기 줄임 */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .language-input select, .language-output select {
   background: rgba(18, 65, 112, 0.05);
   border: 2px solid var(--secondary);
-  border-radius: 10px;
+  border-radius: 8px; /* 둥글기 줄임 */
   color: var(--text);
-  padding: 12px 16px;
-  font-size: 0.95rem;
+  padding: 8px 12px; /* 패딩 줄임 */
+  font-size: 0.85rem; /* 크기 줄임 */
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 120px;
+  min-width: 100px; /* 최소 너비 줄임 */
   outline: none;
 }
 
@@ -405,22 +407,23 @@
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
   font-weight: bold;
   margin: 0 10px;
+  transform: rotate(0deg); /* 가로 방향 유지 */
 }
 
 /* === TTS 토글 === */
 .tts-toggle {
-  padding: 15px;
+  padding: 8px; /* 패딩 줄임 */
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* 마진 줄임 */
 }
 
 .tts-toggle label {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 8px; /* 간격 줄임 */
   color: var(--text);
-  font-size: 1.1rem;
+  font-size: 0.95rem; /* 크기 줄임 */
   font-weight: 600;
   cursor: pointer;
 }
@@ -434,27 +437,27 @@
 
 /* === 입력 영역 === */
 .input-section {
-  padding: 20px;
-  margin-bottom: 10px;
+  padding: 10px; /* 패딩 줄임 */
+  margin-bottom: 5px; /* 마진 줄임 */
 }
 
 .text-input-area {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-bottom: 15px;
+  gap: 8px; /* 간격 줄임 */
+  margin-bottom: 8px; /* 마진 줄임 */
 }
 
 .text-input {
   background: rgba(18, 65, 112, 0.05);
   border: 2px solid var(--secondary);
-  border-radius: 12px;
+  border-radius: 10px; /* 둥글기 줄임 */
   color: var(--text);
-  padding: 18px;
-  font-size: 1rem;
+  padding: 12px; /* 패딩 줄임 */
+  font-size: 0.9rem; /* 크기 줄임 */
   font-family: inherit;
   resize: vertical;
-  min-height: 120px;
+  min-height: 80px; /* 최소 높이 줄임 */
   outline: none;
   transition: all 0.3s ease;
 }
@@ -474,25 +477,25 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
-  margin-top: 15px;
+  gap: 8px; /* 간격 줄임 */
+  margin-top: 8px; /* 마진 줄임 */
   text-align: center;
 }
 
 .voice-input-header h4 {
   color: var(--text);
-  font-size: 1.3rem;
-  margin: 0 0 10px 0;
+  font-size: 1.1rem; /* 크기 줄임 */
+  margin: 0 0 5px 0; /* 마진 줄임 */
   font-weight: 700;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .voice-input-description {
   color: #FFFFFF;
-  font-size: 1rem;
+  font-size: 0.9rem; /* 크기 줄임 */
   margin: 0;
-  line-height: 1.5;
-  max-width: 400px;
+  line-height: 1.4; /* 줄 간격 줄임 */
+  max-width: 350px; /* 최대 너비 줄임 */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
@@ -500,8 +503,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 8px; /* 간격 줄임 */
+  margin-top: 10px; /* 마진 줄임 */
 }
 
 .listening-animation {
@@ -544,13 +547,13 @@
   background: var(--primary);
   border: 2px solid var(--primary);
   color: var(--text);
-  padding: 15px 25px;
-  border-radius: 12px;
+  padding: 10px 20px; /* 패딩 줄임 */
+  border-radius: 10px; /* 둥글기 줄임 */
   cursor: pointer;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9rem; /* 크기 줄임 */
   transition: all 0.3s ease;
-  box-shadow: 0 6px 15px rgba(103, 192, 144, 0.3);
+  box-shadow: 0 4px 12px rgba(103, 192, 144, 0.3); /* 그림자 줄임 */
   position: relative;
   overflow: hidden;
 }
@@ -598,13 +601,13 @@
 
 /* === 결과 표시 영역 === */
 .translation-results {
-  padding: 20px;
+  padding: 10px; /* 패딩 줄임 */
 }
 
 .result-card h3 {
   color: var(--text);
-  font-size: 1.5rem;
-  margin: 0 0 20px 0;
+  font-size: 1.2rem; /* 크기 줄임 */
+  margin: 0 0 10px 0; /* 마진 줄임 */
   text-align: center;
   font-weight: 700;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
@@ -772,12 +775,27 @@
 
 /* === 반응형 디자인 === */
 @media (max-width: 768px) {
+  .ai-translation-container {
+    margin-top: -90px;
+    padding-top: 90px; /* 모바일에서도 상단 패딩 유지 */
+  }
+
   .ai-translation-content {
-    padding: 20px 15px;
+    padding: 15px 10px; /* 모바일에서 패딩 더 줄임 */
+  }
+  
+  .ai-translation-header {
+    margin: 5px 0 15px 0; /* 모바일에서 헤더 마진 더 줄임 */
+    padding: 12px 10px; /* 모바일에서 패딩 더 줄임 */
   }
   
   .ai-translation-title {
-    font-size: 2.2rem;
+    font-size: 1.8rem; /* 모바일에서 제목 크기 더 줄임 */
+    margin-bottom: 5px; /* 제목과 부제목 사이 간격 더 줄임 */
+  }
+  
+  .ai-translation-subtitle {
+    font-size: 0.9rem; /* 모바일에서 부제목 크기 더 줄임 */
   }
   
   .emergency-header {
@@ -814,19 +832,45 @@
   }
   
   .language-pair {
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: row; /* 가로 배치 유지 */
+    gap: 6px; /* 간격 더 줄임 */
   }
   
   .language-arrow {
-    transform: rotate(90deg);
-    margin: 10px 0;
+    transform: rotate(0deg); /* 가로 방향 유지 */
+    margin: 0 3px; /* 좌우 마진 더 줄임 */
+    font-size: 1.2rem; /* 화살표 크기 줄임 */
+  }
+  
+  .language-input select, .language-output select {
+    min-width: 80px; /* 드롭다운 최소 너비 줄임 */
+    padding: 6px 8px; /* 패딩 더 줄임 */
+    font-size: 0.8rem; /* 폰트 크기 더 줄임 */
   }
 }
 
 @media (max-width: 480px) {
+  .ai-translation-container {
+    margin-top: -90px;
+    padding-top: 90px; /* 작은 모바일에서도 상단 패딩 유지 */
+  }
+
+  .ai-translation-content {
+    padding: 10px 8px; /* 작은 모바일에서 패딩 더 줄임 */
+  }
+  
+  .ai-translation-header {
+    margin: 3px 0 10px 0; /* 작은 모바일에서 헤더 마진 더 줄임 */
+    padding: 10px 8px; /* 작은 모바일에서 패딩 더 줄임 */
+  }
+
   .ai-translation-title {
-    font-size: 1.8rem;
+    font-size: 1.5rem; /* 작은 모바일에서 제목 크기 더 줄임 */
+    margin-bottom: 3px; /* 제목과 부제목 사이 간격 더 줄임 */
+  }
+  
+  .ai-translation-subtitle {
+    font-size: 0.8rem; /* 작은 모바일에서 부제목 크기 더 줄임 */
   }
   
   .emergency-expressions {
@@ -855,6 +899,23 @@
     font-size: 0.8rem;
   }
   
+  .language-pair {
+    flex-direction: row; /* 가로 배치 유지 */
+    gap: 4px; /* 간격 더 줄임 */
+  }
+  
+  .language-arrow {
+    transform: rotate(0deg); /* 가로 방향 유지 */
+    margin: 0 2px; /* 좌우 마진 더 줄임 */
+    font-size: 1rem; /* 화살표 크기 더 줄임 */
+  }
+  
+  .language-input select, .language-output select {
+    min-width: 70px; /* 드롭다운 최소 너비 더 줄임 */
+    padding: 5px 6px; /* 패딩 더 줄임 */
+    font-size: 0.75rem; /* 폰트 크기 더 줄임 */
+  }
+  
   .mode-dropdown {
     min-width: 200px;
     font-size: 0.9rem;
@@ -863,5 +924,59 @@
   .translate-btn, .tts-btn, .microphone-btn {
     padding: 12px 20px;
     font-size: 0.9rem;
+  }
+}
+
+/* 매우 작은 화면 (390px 이하) */
+@media (max-width: 390px) {
+  .ai-translation-container {
+    margin-top: -90px;
+    padding-top: 90px;
+  }
+
+  .ai-translation-content {
+    padding: 8px 6px; /* 매우 작은 화면에서 패딩 최소화 */
+  }
+  
+  .ai-translation-header {
+    margin: 0 0 8px 0; /* 매우 작은 화면에서 마진 최소화 */
+    padding: 8px 6px; /* 매우 작은 화면에서 패딩 최소화 */
+  }
+
+  .ai-translation-title {
+    font-size: 1.4rem; /* 매우 작은 화면에서 제목 크기 최소화 */
+    margin-bottom: 2px; /* 매우 작은 화면에서 간격 최소화 */
+  }
+  
+  .ai-translation-subtitle {
+    font-size: 0.75rem; /* 매우 작은 화면에서 부제목 크기 최소화 */
+  }
+  
+  .language-pair {
+    flex-direction: row; /* 가로 배치 유지 */
+    gap: 3px; /* 간격 최소화 */
+  }
+  
+  .language-arrow {
+    transform: rotate(0deg); /* 가로 방향 유지 */
+    margin: 0 1px; /* 좌우 마진 최소화 */
+    font-size: 0.9rem; /* 화살표 크기 최소화 */
+  }
+  
+  .language-input select, .language-output select {
+    min-width: 60px; /* 드롭다운 최소 너비 최소화 */
+    padding: 4px 5px; /* 패딩 최소화 */
+    font-size: 0.7rem; /* 폰트 크기 최소화 */
+  }
+  
+  .mode-dropdown {
+    min-width: 180px;
+    font-size: 0.85rem;
+    padding: 12px 16px;
+  }
+  
+  .translate-btn, .tts-btn, .microphone-btn {
+    padding: 10px 16px;
+    font-size: 0.85rem;
   }
 }
