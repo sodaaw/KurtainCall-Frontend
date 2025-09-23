@@ -19,8 +19,8 @@
   color: var(--text);
   position: relative;
   overflow-x: hidden;
-  margin-top: -90px;
-  padding-top: 90px; /* 상단 네비게이션 바 높이만큼 패딩 추가 */
+  margin-top: 10px;
+  padding-top: 40px; /* 상단 네비게이션 바 높이만큼 패딩 추가 */
 }
 
 /* 커튼 배경 요소들 */
@@ -776,8 +776,7 @@
 /* === 반응형 디자인 === */
 @media (max-width: 768px) {
   .ai-translation-container {
-    margin-top: -90px;
-    padding-top: 90px; /* 모바일에서도 상단 패딩 유지 */
+    padding-top: 60px; /* 모바일에서도 상단 패딩 유지 */
   }
 
   .ai-translation-content {
@@ -851,7 +850,6 @@
 
 @media (max-width: 480px) {
   .ai-translation-container {
-    margin-top: -90px;
     padding-top: 90px; /* 작은 모바일에서도 상단 패딩 유지 */
   }
 
