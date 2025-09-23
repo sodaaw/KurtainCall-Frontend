@@ -474,18 +474,18 @@
 }
 
 /* 확장된 입력 폼 */
-.device-input-form-compact {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(103, 192, 144, 0.15);
-  border: 1px solid rgba(103, 192, 144, 0.4);
-  padding: 6px 12px;
-  border-radius: 20px;
-  animation: expandInput 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  min-width: 200px;
-  margin-left: auto; /* 오른쪽 정렬을 위한 기본 설정 */
-}
+  .device-input-form-compact {
+    display: flex;
+    align-items: center;
+    gap: 4px; /* 간격 줄임 */
+    background: rgba(103, 192, 144, 0.15);
+    border: 1px solid rgba(103, 192, 144, 0.4);
+    padding: 6px 12px;
+    border-radius: 20px;
+    animation: expandInput 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 200px;
+    margin-left: auto; /* 오른쪽 정렬을 위한 기본 설정 */
+  }
 
 .device-input-field {
   background: none;
