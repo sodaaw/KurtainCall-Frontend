@@ -360,3 +360,22 @@
     font-size: 50px;
   }
 }
+
+/* 매우 작은 화면 (390px 이하): 패딩/간격 축소 + 2열 보장 */
+@media (max-width: 390px) {
+  .recommended-places-section { padding: 0 12px; }
+  .places-grid { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); /* 무조건 2열 */
+    gap: 8px; 
+    justify-content: initial;
+  }
+  .place-card { 
+    min-width: 0;           /* grid 환경에서 크기 강제 줄임 */
+    max-width: none; 
+    width: 100%;
+  }
+  .place-emoji { font-size: 46px; }
+  .place-name { font-size: 13px; }
+  .place-address, .rating-value, .distance-value { font-size: 11px; }
+}

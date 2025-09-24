@@ -1523,6 +1523,8 @@
   .shows-container {
     gap: 8px;
     padding: 0 6px;
+    flex-wrap: wrap;               /* 2열 배치 */
+    justify-content: space-between;
   }
   
   .show-card {
@@ -1561,4 +1563,8 @@
     padding: 16px;
     max-height: 400px;
   }
+
+  /* 래퍼 그라디언트는 그리드 전환 시 숨김 */
+  .shows-slider::before,
+  .shows-slider::after { display: none; }
 }

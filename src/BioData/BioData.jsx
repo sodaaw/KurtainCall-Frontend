@@ -14,66 +14,56 @@ export default function BioData() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 실제 센서 데이터 API 연동
+  // 실제 센서 데이터 API 연동 (GET /sensor-result)
   useEffect(() => {
     const fetchSensorData = async () => {
       try {
         setLoading(true);
         setError(null);
-        
-        // 사용자 ID (임시로 123 사용, 실제로는 로그인한 사용자 ID 사용)
-        const userId = 123;
-        console.log('🔍 센서 데이터 조회 시작 - 사용자 ID:', userId);
-        
-        // 센서 분석 결과 조회
-        const sensorResult = await sensorAPI.getSensorResultById(userId);
-        console.log('📊 API 응답 데이터:', sensorResult);
-        
-        if (sensorResult) {
-          console.log('✅ 센서 데이터 수신 성공');
-          console.log('📋 원본 데이터:', sensorResult);
-          
-          // API 응답 구조 확인 및 데이터 추출
-          const actualData = sensorResult.data || sensorResult;
-          console.log('🔍 실제 센서 데이터:', actualData);
-          
-          // API 응답 데이터를 컴포넌트 상태에 맞게 변환
-          const transformedData = {
-            id: actualData.id || actualData._id,
-            timestamp: actualData.timestamp || new Date().toISOString(),
-            status: actualData.status || 'ok',
-            analysis: {
-              avg_hr_bpm: actualData.heartRate || actualData.avg_hr_bpm || 0,
-              avg_spo2_pct: actualData.oxygenSaturation || actualData.avg_spo2_pct || 0,
-              avg_temperature_c: actualData.temperature || actualData.avg_temperature_c || 0,
-              avg_humidity_pct: actualData.humidity || actualData.avg_humidity_pct || 0
-            }
-          };
-          
-          console.log('🔄 변환된 데이터:', transformedData);
-          setBiometricData(transformedData);
-          
-          // 기존 상태들도 업데이트
-          setGsr(actualData.gsr || 0.75);
-          setSpo2(actualData.oxygenSaturation || actualData.avg_spo2_pct || 98);
-          setMood(actualData.user_status || "분석 중...");
-          
-          console.log('📈 상태 업데이트 완료:', {
-            gsr: actualData.gsr || 0.75,
-            spo2: actualData.oxygenSaturation || actualData.avg_spo2_pct || 98,
-            mood: actualData.user_status || "분석 중..."
-          });
-        } else {
-          console.log('⚠️ 센서 데이터가 없습니다');
+
+        console.log('🔍 센서 데이터(전체) 조회 시작');
+        const listResponse = await sensorAPI.getAllSensorResults();
+        console.log('📊 전체 결과 응답:', listResponse);
+
+        // 응답 형태: { success: true, count: n, data: [ {...}, {...} ] }
+        const items = Array.isArray(listResponse?.data) ? listResponse.data : [];
+        if (items.length === 0) {
+          console.log('⚠️ 센서 분석 결과가 비어 있습니다');
           setMood("데이터 없음");
+          setBiometricData(null);
+          return;
         }
+
+        // 최신(updatedAt 또는 timestamp 기준) 레코드 선택
+        const latest = [...items].sort((a, b) => {
+          const ta = new Date(a.updatedAt || a.timestamp || 0).getTime();
+          const tb = new Date(b.updatedAt || b.timestamp || 0).getTime();
+          return tb - ta;
+        })[0];
+
+        console.log('✅ 선택된 최신 레코드:', latest);
+
+        const transformedData = {
+          id: latest.id || latest._id,
+          timestamp: latest.timestamp || latest.updatedAt || latest.createdAt || new Date().toISOString(),
+          status: latest.status || 'ok',
+          analysis: {
+            avg_hr_bpm: latest.heartRate ?? 0,
+            avg_spo2_pct: latest.oxygenSaturation ?? 0,
+            avg_temperature_c: latest.temperature ?? 0,
+            avg_humidity_pct: latest.humidity ?? 0,
+          },
+        };
+
+        console.log('🔄 변환된 데이터:', transformedData);
+        setBiometricData(transformedData);
+
+        setGsr(latest.gsr ?? null);
+        setSpo2(latest.oxygenSaturation ?? null);
+        setMood(latest.user_status || mood);
+        console.log('📈 상태 업데이트 완료:', { gsr: latest.gsr, spo2: latest.oxygenSaturation, mood: latest.user_status });
       } catch (error) {
-        console.error('❌ 센서 데이터 조회 실패:', error);
-        console.error('🔍 에러 상세:', {
-          message: error.message,
-          status: error.response?.status,
-          data: error.response?.data
-        });
+        console.error('❌ 센서 데이터(전체) 조회 실패:', error);
         setError('센서 데이터를 불러올 수 없습니다.');
         setMood("데이터 로딩 실패");
       } finally {

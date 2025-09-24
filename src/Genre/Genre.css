@@ -1042,12 +1042,12 @@
 
 @media (max-width: 480px) {
   .poster-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* 2열 고정 */
     gap: 10px;
   }
   
   .category-poster-img {
-    height: 140px;
+    height: 160px; /* 2열에서도 시인성 유지 */
   }
   
   .category-poster-info {
@@ -1070,6 +1070,18 @@
   .category-title {
     font-size: 1.1rem;
   }
+}
+
+/* 매우 작은 화면 (390px 이하) - 2열 유지 및 간격 조정 */
+@media (max-width: 390px) {
+  .poster-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .category-poster-img { height: 150px; }
+  .category-poster-title { font-size: 0.82rem; }
+  .category-poster-location,
+  .category-poster-price { font-size: 0.72rem; }
 }
 
 /* ===== 새로운 탭 스타일 ===== */
