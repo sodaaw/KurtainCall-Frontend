@@ -79,7 +79,7 @@
   border-radius: 12px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, #67C090, #7dd3a3);
+  background: #0f0f0f;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,6 +90,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   border-radius: 12px;
 }
 
@@ -110,7 +111,7 @@
 }
 
 .play-card:hover .play-image-container {
-  background: linear-gradient(135deg, #5aa67a, #6bc491);
+  background: #1a1a1a;
   transform: scale(1.02);
 }
 

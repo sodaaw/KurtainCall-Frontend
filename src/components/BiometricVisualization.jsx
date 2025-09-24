@@ -174,3 +174,4 @@ const BiometricVisualization = ({ data }) => {
 };
 
 export default BiometricVisualization;
+

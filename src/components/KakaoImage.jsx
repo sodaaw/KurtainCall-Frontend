@@ -18,6 +18,7 @@ const KakaoImage = ({
         width, 
         height, 
         objectFit: "cover",
+        objectPosition: "center",
         borderRadius: "8px",
         ...style 
       }}

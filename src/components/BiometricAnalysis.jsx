@@ -137,3 +137,4 @@ const BiometricAnalysis = ({ data }) => {
 };
 
 export default BiometricAnalysis;
+
