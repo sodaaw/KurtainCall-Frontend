@@ -370,7 +370,7 @@
     rgba(0, 11, 88, 0.3) 70%,
     transparent 100%);
   transform: skewX(-15deg);
-  z-index: 1;
+  z-index: -1;
   animation: curtainLeft 8s ease-in-out infinite;
 }
 
@@ -387,7 +387,7 @@
     rgba(0, 11, 88, 0.3) 70%,
     transparent 100%);
   transform: skewX(15deg);
-  z-index: 1;
+  z-index: -1;
   animation: curtainRight 8s ease-in-out infinite;
 }
 
@@ -1046,6 +1046,22 @@
   background: rgba(18, 65, 112, 0.2);
   border-radius: 15px;
   border: 1px solid rgba(103, 192, 144, 0.3);
+}
+
+/* 매우 작은 화면(430px 이하): 모드 토글 컴팩트화 */
+@media (max-width: 430px) {
+  .mode-toggle {
+    gap: 12px;
+    padding: 10px 6px;       /* 양옆 여백 증가 */
+    margin: 12px 10px;        /* 컨테이너 좌우 여백 추가 */
+    border-radius: 16px;
+  }
+  .mode-btn {
+    padding: 5px 10px;       /* 버튼 크기 축소 */
+    min-width: 90px;         /* 최소 너비 축소 */
+    font-size: 0.95rem;       /* 폰트 약간 축소 */
+    border-radius: 20px;
+  }
 }
 
 /* ===============================
