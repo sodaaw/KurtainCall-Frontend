@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Topnav from "../components/Topnav";
-import { festivals } from "../data/festivals";
+// import { festivals } from "../data/festivals"; // 제거됨
 
 export default function AllPosters() {
   const navigate = useNavigate();
@@ -10,18 +10,8 @@ export default function AllPosters() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // 축제 데이터를 plays 형식으로 변환
-  const festivalData = festivals.map(festival => ({
-    id: festival.id,
-    title: festival.title,
-    posterUrl: festival.posterUrl,
-    location: festival.location,
-    detailUrl: festival.detailUrl,
-    description: festival.description,
-    university: festival.university,
-    date: festival.date,
-    performers: festival.performers
-  }));
+  // 축제 데이터 제거로 빈 배열
+  const festivalData = [];
 
   const total = festivalData.length;
 

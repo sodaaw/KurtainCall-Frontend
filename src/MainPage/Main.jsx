@@ -5,8 +5,9 @@ import Topnav from "../components/Topnav";
 // import SearchModal from "../components/SearchModal";
 import EventCalendar from "./EventCalendar"; // ✅ 분리한 캘린더
 import EventPanel from "./EventPanel";       // ✅ 분리한 우측 패널
+import RecommendedPlaces from "../components/RecommendedPlaces"; // ✅ 추천 장소 컴포넌트
 import { playAPI } from "../services/api";
-import { festivals } from "../data/festivals"; // ✅ 연극 데이터 import
+// import { festivals } from "../data/festivals"; // ✅ 연극 데이터 import - 제거됨
 import "./Main.css";
 
 // 카테고리 버튼 데이터
@@ -101,7 +102,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
-          <p className="no-data-detail">현재 등록된 축제 정보가 없습니다.</p>
+          <p className="no-data-detail">현재 등록된 공연 정보가 없습니다.</p>
         </div>
       </header>
     );
@@ -119,7 +120,7 @@ function Hero({ plays, isLoading, error, isLoggedIn = false }) {
         <div className="no-data">
           <div className="no-data-icon">📭</div>
           <p className="no-data-title">표시할 데이터가 없습니다</p>
-          <p className="no-data-detail">현재 등록된 축제 정보가 없습니다.</p>
+          <p className="no-data-detail">현재 등록된 공연 정보가 없습니다.</p>
         </div>
       </header>
     );
@@ -192,7 +193,7 @@ function RecommendedShows({ plays, isLoading, error }) {
     return (
       <section className="recommended-section">
         <div className="loading-text">
-          <p>축제 정보를 불러오는 중...</p>
+          <p>공연 정보를 불러오는 중...</p>
         </div>
       </section>
     );
@@ -203,7 +204,7 @@ function RecommendedShows({ plays, isLoading, error }) {
       <section className="recommended-section">
         <div className="no-data">
           <div className="no-data-icon">🎭</div>
-          <p className="no-data-title">축제 정보를 불러올 수 없습니다</p>
+          <p className="no-data-title">공연 정보를 불러올 수 없습니다</p>
           <p className="no-data-detail">잠시 후 다시 시도해주세요.</p>
         </div>
       </section>
@@ -321,7 +322,7 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         <form className="search-input-wrapper" onSubmit={handleSearch}>
           <input 
             type="text" 
-            placeholder="축제명 또는 대학교를 검색해보세요." 
+            placeholder="문화시설, 장소 등을 검색해보세요." 
             className="search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -379,67 +380,57 @@ export default function Main() {
   const [error, setError] = useState(null);
 
 
-  // 데이터 로딩 - 축제 데이터 사용
+  // 데이터 로딩 - 연극 API 사용
   useEffect(() => {
-    try {
-      setIsLoading(true);
-      setError(null);
+    const loadPlays = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
 
-      // 축제 데이터를 plays 형식으로 변환
-      const festivalData = festivals.map(festival => ({
-        id: festival.id,
-        title: festival.title,
-        posterUrl: festival.posterUrl,
-        location: festival.location,
-        detailUrl: festival.detailUrl,
-        description: festival.description,
-        university: festival.university,
-        date: festival.date,
-        performers: festival.performers
-      }));
-      
-      setPlays(festivalData);
-    } catch (err) {
-      console.error('Failed to load festival data:', err);
-      setError(err.message || '축제 데이터를 불러오는데 실패했습니다.');
-      setPlays([]); // 빈 배열로 설정
-    } finally {
-      setIsLoading(false);
-    }
+        // API에서 연극 데이터 가져오기
+        const apiPlays = await playAPI.getPlays();
+        console.log('API에서 받은 연극 데이터:', apiPlays);
+        
+        // API 데이터를 plays 형식으로 변환
+        const formattedPlays = apiPlays.map(play => ({
+          id: play.id,
+          title: play.title,
+          posterUrl: play.posterUrl || play.image,
+          location: typeof play.location === 'string' 
+            ? play.location 
+            : play.location?.address || play.location,
+          detailUrl: play.detailUrl,
+          description: play.description,
+          university: play.university,
+          date: play.date,
+          performers: play.performers,
+          category: play.category
+        }));
+        
+        setPlays(formattedPlays);
+      } catch (err) {
+        console.error('Failed to load plays from API:', err);
+        setError(err.message || '공연 데이터를 불러오는데 실패했습니다.');
+        
+        // API 실패 시 빈 배열로 설정
+        console.log('API 실패, 빈 배열로 설정');
+        setPlays([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPlays();
   }, []);
 
-  // ✅ 선택 날짜에 속하는 연극 이벤트 필터
+  // ✅ 선택 날짜에 속하는 연극 이벤트 필터 (festivals 제거로 빈 배열)
   const eventsOfDay = useMemo(() => {
-    return festivals.filter(festival => {
-      const festivalDates = parseFestivalDate(festival.date);
-      if (!festivalDates) return false;
-      
-      const dateStr = fmt(selectedDate);
-      const startStr = fmt(festivalDates.start);
-      const endStr = fmt(festivalDates.end);
-      
-      return dateStr >= startStr && dateStr <= endStr;
-    });
+    return [];
   }, [selectedKey]);
 
-  // ✅ 달력에 표시할 마커 (연극이 있는 날짜들)
+  // ✅ 달력에 표시할 마커 (festivals 제거로 빈 Set)
   const markers = useMemo(() => {
-    const markerSet = new Set();
-    
-    festivals.forEach(festival => {
-      const festivalDates = parseFestivalDate(festival.date);
-      if (festivalDates) {
-        const current = new Date(festivalDates.start);
-        const end = new Date(festivalDates.end);
-        
-        while (current <= end) {
-          markerSet.add(fmt(current));
-          current.setDate(current.getDate() + 1);
-        }
-      }
-    });
-    
-    return markerSet;
+    return new Set();
   }, []);
 
   return (
@@ -464,11 +455,72 @@ export default function Main() {
           />
         </section>
         
-        {/* 추천 공연 슬라이드 */}
-        <RecommendedShows plays={plays} isLoading={isLoading} error={error} />
+        {/* ✅ 추천 장소 섹션 */}
+        <RecommendedPlaces 
+          title="📍 내 주변 문화시설" 
+          limit={6}
+        />
+
+        {/* ✅ 근처 연극 정보 섹션 */}
+        <section className="nearby-plays-section">
+          <h3 className="plays-section-title">🎭 근처 연극 정보</h3>
+          <div className="plays-grid">
+            {isLoading ? (
+              <div className="plays-loading">
+                <div className="loading-spinner"></div>
+                <p>연극 정보를 불러오는 중...</p>
+              </div>
+            ) : error ? (
+              <div className="plays-error">
+                <div className="error-icon">⚠️</div>
+                <p>연극 정보를 불러올 수 없습니다.</p>
+              </div>
+            ) : plays && plays.length > 0 ? (
+              plays.slice(0, 6).map((play) => (
+                <div key={play.id} className="play-card">
+                  <div className="play-image-container">
+                    {play.posterUrl ? (
+                      <img
+                        src={play.posterUrl}
+                        alt={play.title}
+                        className="play-image"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="play-emoji-container">
+                        <div className="play-emoji">🎭</div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="play-info">
+                    <h4 className="play-title">{play.title}</h4>
+                    {play.location && (
+                      <p className="play-location">
+                        {typeof play.location === 'string' 
+                          ? play.location 
+                          : play.location.address || play.location}
+                      </p>
+                    )}
+                    {play.date && (
+                      <p className="play-date">{play.date}</p>
+                    )}
+                    {play.university && (
+                      <p className="play-university">{play.university}</p>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="plays-empty">
+                <div className="empty-icon">🎭</div>
+                <p>근처에 연극 정보가 없어요.</p>
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* ✅ 좌: 캘린더 / 우: 이벤트 패널 */}
-        <section className="schedule">
+        {/* <section className="schedule">
           <EventCalendar
             selected={selectedDate}
             onSelect={setSelectedDate}
@@ -478,7 +530,7 @@ export default function Main() {
             date={selectedDate}
             events={eventsOfDay}
           />
-        </section>
+        </section> */}
       </main>
     </div>
   );

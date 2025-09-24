@@ -803,6 +803,155 @@ body {
   transform: translateY(-1px);
 }
 
+/* AI 추천 결과 스타일 */
+.recommendation-results {
+  margin: 20px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(42, 42, 42, 0.9));
+  border-radius: 12px;
+  border: 1px solid var(--primary-green);
+  box-shadow: 0 8px 32px rgba(103, 192, 144, 0.2);
+}
+
+.recommendation-results h4 {
+  color: var(--primary-green);
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.recommendation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.recommendation-card {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(18, 65, 112, 0.3), rgba(26, 26, 26, 0.8));
+  border: 1px solid rgba(103, 192, 144, 0.3);
+  border-radius: 10px;
+  padding: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.recommendation-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-green), var(--primary-green-light));
+}
+
+.recommendation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(103, 192, 144, 0.3);
+  border-color: var(--primary-green);
+}
+
+.recommendation-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--primary-green), var(--primary-green-light));
+  border-radius: 50%;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.rank-number {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.recommendation-info {
+  flex: 1;
+  margin-right: 15px;
+}
+
+.recommendation-info h5 {
+  color: var(--text);
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.recommendation-address {
+  color: var(--text-sub);
+  margin: 0 0 10px 0;
+  font-size: 13px;
+}
+
+.recommendation-details {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.recommendation-details span {
+  background: rgba(103, 192, 144, 0.2);
+  color: var(--primary-green-light);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.recommendation-score {
+  color: var(--text-sub);
+  font-size: 11px;
+}
+
+.recommendation-actions {
+  flex-shrink: 0;
+}
+
+.view-detail-btn {
+  display: inline-block;
+  background: var(--primary-green);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.view-detail-btn:hover {
+  background: var(--primary-green-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(103, 192, 144, 0.4);
+}
+
+/* 추천 버튼 스타일 */
+.recommendation-section {
+  margin-bottom: 20px;
+}
+
+.recommend-btn:hover:not(:disabled) {
+  background: var(--primary-green-light) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(103, 192, 144, 0.3);
+}
+
+.reset-recommend-btn:hover {
+  background: #ff5252 !important;
+  transform: translateY(-1px);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .category-buttons {
@@ -812,6 +961,25 @@ body {
   .category-btn {
     padding: 10px 12px;
     font-size: 13px;
+  }
+  
+  .recommendation-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .recommendation-rank {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  .recommendation-info {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  .recommendation-details {
+    justify-content: center;
   }
 }
   
