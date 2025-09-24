@@ -24,7 +24,8 @@
     rgba(0, 11, 88, 0.3) 70%,
     transparent 100%);
   transform: skewX(-15deg);
-  z-index: 1;
+  z-index: 0; /* 메인 요소 뒤로 */
+  pointer-events: none; /* 클릭 막지 않도록 */
   animation: curtainLeft 8s ease-in-out infinite;
 }
 
@@ -41,7 +42,8 @@
     rgba(0, 11, 88, 0.3) 70%,
     transparent 100%);
   transform: skewX(15deg);
-  z-index: 1;
+  z-index: 0; /* 메인 요소 뒤로 */
+  pointer-events: none; /* 클릭 막지 않도록 */
   animation: curtainRight 8s ease-in-out infinite;
 }
 
