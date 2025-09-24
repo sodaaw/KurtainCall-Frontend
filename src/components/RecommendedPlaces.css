@@ -1,6 +1,5 @@
 /* 추천 장소 섹션 스타일 */
 .recommended-places-section {
-  margin: 40px 0;
   padding: 0 20px;
 }
 
@@ -117,27 +116,27 @@
   margin: 0;
 }
 
-/* 장소 그리드 - 기존 축제 카드와 동일한 스타일 */
+/* 장소 그리드 - 컴팩트한 레이아웃으로 수정 */
 .places-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 16px;
   max-width: 1200px;
   margin: 0 auto;
   justify-content: center;
 }
 
-/* 장소 카드 - 기존 축제 카드와 동일한 스타일 */
+/* 장소 카드 - 컴팩트한 크기로 수정 */
 .place-card {
-  flex: 0 0 calc(20% - 16px);
+  flex: 0 0 calc(16.666% - 16px);
   padding: 0;
   background: none;
   border: none;
   box-shadow: none;
   transition: all 0.3s ease;
   cursor: pointer;
-  min-width: 200px;
-  max-width: 250px;
+  min-width: 160px;
+  max-width: 180px;
 }
 
 .place-card:hover {
@@ -147,7 +146,7 @@
 /* 이미지 컨테이너 - 카카오맵 이미지와 이모지 공통 */
 .place-image-container {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;
   border-radius: 12px;
   overflow: hidden;
   position: relative;
@@ -176,7 +175,7 @@
 }
 
 .place-emoji {
-  font-size: 80px;
+  font-size: 60px;
   text-align: center;
   line-height: 1;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
@@ -288,11 +287,11 @@
   display: none;
 }
 
-/* 반응형 디자인 - 기존 축제 카드와 동일 */
+/* 반응형 디자인 - 컴팩트한 크기로 수정 */
 @media (max-width: 1200px) {
   .place-card {
-    flex: 0 0 calc(25% - 15px);
-    min-width: 180px;
+    flex: 0 0 calc(20% - 15px);
+    min-width: 150px;
   }
 }
 
@@ -307,8 +306,8 @@
   }
   
   .place-card {
-    flex: 0 0 calc(33.333% - 10px);
-    min-width: 160px;
+    flex: 0 0 calc(25% - 10px);
+    min-width: 140px;
   }
   
   .place-name {
@@ -333,7 +332,7 @@
   }
 
   .place-emoji {
-    font-size: 60px;
+    font-size: 50px;
   }
 }
 
@@ -357,7 +356,7 @@
   }
 
   .place-emoji {
-    font-size: 50px;
+    font-size: 40px;
   }
 }
 
@@ -375,7 +374,7 @@
     max-width: none; 
     width: 100%;
   }
-  .place-emoji { font-size: 46px; }
+  .place-emoji { font-size: 36px; }
   .place-name { font-size: 13px; }
   .place-address, .rating-value, .distance-value { font-size: 11px; }
 }

@@ -2,6 +2,335 @@
    Genre 페이지 - Login 테마와 일치
 ======================== */
 
+/* ========================
+   탭 네비게이션
+======================== */
+.genre-tabs {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+  gap: 20px;
+}
+
+.genre-tab {
+  background: rgba(103, 192, 144, 0.1);
+  border: 2px solid rgba(103, 192, 144, 0.3);
+  color: #67C090;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.genre-tab:hover {
+  background: rgba(103, 192, 144, 0.2);
+  border-color: #67C090;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(103, 192, 144, 0.3);
+}
+
+.genre-tab.active {
+  background: linear-gradient(135deg, #67C090, #7dd3a3);
+  border-color: #67C090;
+  color: #0a0a0a;
+  box-shadow: 0 6px 20px rgba(103, 192, 144, 0.4);
+}
+
+.genre-tab.active:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(103, 192, 144, 0.5);
+}
+
+/* 탭 애니메이션 */
+.genre-tab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.genre-tab:hover::before {
+  left: 100%;
+}
+
+/* ========================
+   연극 정보 섹션 (Genre 페이지용)
+======================== */
+.genre-plays-section {
+  margin: 40px 0;
+  padding: 0 20px;
+}
+
+.plays-section-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #DDF4E7;
+  margin-bottom: 24px;
+  text-align: center;
+  position: relative;
+}
+
+.plays-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(135deg, #67C090, #7dd3a3);
+  border-radius: 2px;
+}
+
+.plays-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.play-card {
+  flex: 0 0 calc(16.666% - 16px);
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-width: 160px;
+  max-width: 180px;
+}
+
+.play-card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+
+.play-image-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #67C090, #7dd3a3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.play-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.play-emoji-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-emoji {
+  font-size: 60px;
+  text-align: center;
+  line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  transition: all 0.3s ease;
+}
+
+.play-card:hover .play-image-container {
+  background: linear-gradient(135deg, #5aa67a, #6bc491);
+  transform: scale(1.02);
+}
+
+.play-card:hover .play-emoji {
+  transform: scale(1.1);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+}
+
+.play-info {
+  padding: 12px 0 0 0;
+}
+
+.play-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #DDF4E7;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: center;
+}
+
+.play-location,
+.play-date,
+.play-university,
+.play-price {
+  font-size: 13px;
+  color: #898989;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: center;
+}
+
+.play-price {
+  color: #67C090;
+  font-weight: 600;
+}
+
+/* 로딩, 에러, 빈 상태 */
+.plays-loading,
+.plays-error,
+.plays-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.plays-loading .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #67C090;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+.plays-error .error-icon,
+.plays-empty .empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.plays-loading p,
+.plays-error p,
+.plays-empty p {
+  color: #666;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .genre-tabs {
+    margin: 30px 0;
+    gap: 15px;
+  }
+  
+  .genre-tab {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .genre-plays-section {
+    padding: 0 16px;
+  }
+  
+  .plays-section-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .play-card {
+    flex: 0 0 calc(25% - 10px);
+    min-width: 140px;
+  }
+  
+  .play-title {
+    font-size: 14px;
+  }
+  
+  .play-location,
+  .play-date,
+  .play-university,
+  .play-price {
+    font-size: 12px;
+  }
+
+  .play-emoji {
+    font-size: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .genre-tabs {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .genre-tab {
+    width: 200px;
+    padding: 12px 20px;
+  }
+  
+  .play-card {
+    flex: 0 0 calc(33.333% - 5px);
+    min-width: 120px;
+  }
+  
+  .play-title {
+    font-size: 13px;
+  }
+  
+  .play-location,
+  .play-date,
+  .play-university,
+  .play-price {
+    font-size: 11px;
+  }
+
+  .play-emoji {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 390px) {
+  .genre-plays-section { padding: 0 12px; }
+  .plays-grid { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px; 
+    justify-content: initial;
+  }
+  .play-card { 
+    min-width: 0;
+    max-width: none; 
+    width: 100%;
+  }
+  .play-emoji { font-size: 36px; }
+  .play-title { font-size: 13px; }
+  .play-location, .play-date, .play-university, .play-price { font-size: 11px; }
+}
+
 /* === Login Theme Colors === */
 :root {
   --primary-green: #67C090;     /* 민트 그린 */

@@ -4,6 +4,7 @@ import './Genre.css';
 import Topnav from '../components/Topnav';
 import RecommendedPlaces from '../components/RecommendedPlaces';
 import { festivals } from '../data/festivals';
+import { playAPI } from '../services/api';
 import axios from 'axios';
 
 // === 샘플 리뷰 (기존과 동일) =========================================
@@ -170,6 +171,7 @@ const Genre = () => {
   // API 데이터 상태
   const [plays, setPlays] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   // 기존 상태들
   const [current, setCurrent] = useState(0);
@@ -187,7 +189,7 @@ const Genre = () => {
   // const [viewMode, setViewMode] = useState('all'); // 'all' | 'filtered'
 
   // === 새로운 탭 상태 추가 =========================
-  const [activeTab, setActiveTab] = useState('posters'); // 'posters' | 'reviews'
+  const [activeTab, setActiveTab] = useState('places'); // 'places' | 'plays'
 
   // URL 카테고리 변경 시 로컬 상태 동기화
   useEffect(() => {
@@ -205,51 +207,79 @@ const Genre = () => {
     }
   };
 
-  // 축제 데이터 로드
+  // 연극 데이터 로드 (API 우선, 실패 시 축제 데이터 폴백)
   useEffect(() => {
-    try {
-      setLoading(true);
-      
-      // 축제 데이터를 장르별로 분류하여 plays 형식으로 변환
-      const festivalPlays = festivals.map(festival => {
-        // 축제 이름에서 장르 추출 (대학 축제는 모두 'festival'로 분류)
-        let category = 'festival';
+    const loadPlays = async () => {
+      try {
+        setLoading(true);
         
-        // 축제 제목에서 장르 키워드 추출
-        const title = festival.title.toLowerCase();
-        if (title.includes('뮤지컬') || title.includes('musical')) {
-          category = 'musical';
-        } else if (title.includes('코미디') || title.includes('comedy')) {
-          category = 'comedy';
-        } else if (title.includes('로맨스') || title.includes('romance')) {
-          category = 'romance';
-        } else if (title.includes('공포') || title.includes('horror')) {
-          category = 'horror';
-        }
+        // API에서 연극 데이터 가져오기
+        const apiPlays = await playAPI.getPlays();
+        console.log('API에서 받은 연극 데이터:', apiPlays);
         
-        return {
-          id: festival.id,
-          title: festival.title,
-          category: category,
-          location: festival.location.address,
-          image: festival.posterUrl,
-          price: 0, // 축제는 무료
-          rating: 4.5 + Math.random() * 0.5, // 4.5-5.0 사이의 랜덤 평점
-          views: Math.floor(Math.random() * 200) + 50, // 50-250 사이의 랜덤 조회수
-          deadline: festival.date,
-          university: festival.university,
-          performers: festival.performers,
-          description: festival.description
-        };
-      });
-      
-      console.log('축제 데이터 로드됨:', festivalPlays.length, '개');
-      setPlays(festivalPlays);
-      setLoading(false);
-    } catch (error) {
-      console.error('축제 데이터 로드 실패:', error);
-      setLoading(false);
-    }
+        // API 데이터를 plays 형식으로 변환
+        const formattedPlays = apiPlays.map(play => ({
+          id: play.id,
+          title: play.title,
+          category: play.category || '기타',
+          location: play.location?.address || play.location,
+          image: play.posterUrl || play.image,
+          price: play.price || 0,
+          rating: play.rating || (4.5 + Math.random() * 0.5),
+          views: play.views || Math.floor(Math.random() * 200) + 50,
+          deadline: play.date,
+          university: play.university,
+          performers: play.performers,
+          description: play.description
+        }));
+        
+        console.log('API 연극 데이터 로드됨:', formattedPlays.length, '개');
+        setPlays(formattedPlays);
+        setLoading(false);
+      } catch (error) {
+        console.error('API 연극 데이터 로드 실패:', error);
+        
+        // API 실패 시 축제 데이터로 폴백
+        console.log('API 실패, 축제 데이터로 폴백');
+        const festivalPlays = festivals.map(festival => {
+          // 축제 이름에서 장르 추출 (대학 축제는 모두 'festival'로 분류)
+          let category = 'festival';
+          
+          // 축제 제목에서 장르 키워드 추출
+          const title = festival.title.toLowerCase();
+          if (title.includes('뮤지컬') || title.includes('musical')) {
+            category = 'musical';
+          } else if (title.includes('코미디') || title.includes('comedy')) {
+            category = 'comedy';
+          } else if (title.includes('로맨스') || title.includes('romance')) {
+            category = 'romance';
+          } else if (title.includes('공포') || title.includes('horror')) {
+            category = 'horror';
+          }
+          
+          return {
+            id: festival.id,
+            title: festival.title,
+            category: category,
+            location: festival.location.address,
+            image: festival.posterUrl,
+            price: 0, // 축제는 무료
+            rating: 4.5 + Math.random() * 0.5, // 4.5-5.0 사이의 랜덤 평점
+            views: Math.floor(Math.random() * 200) + 50, // 50-250 사이의 랜덤 조회수
+            deadline: festival.date,
+            university: festival.university,
+            performers: festival.performers,
+            description: festival.description
+          };
+        });
+        
+        console.log('축제 데이터 로드됨:', festivalPlays.length, '개');
+        setPlays(festivalPlays);
+        setLoading(false);
+      }
+    };
+
+    loadPlays();
   }, []);
 
   // (1) 카테고리 1차 필터
@@ -412,65 +442,25 @@ const Genre = () => {
       </h2> */}
 
       {/* ===== 탭 네비게이션 추가 ===== */}
-      {/* <div className="genre-tabs">
+      <div className="genre-tabs">
         <button
-          className={`genre-tab ${activeTab === 'posters' ? 'active' : ''}`}
-          onClick={() => setActiveTab('posters')}
+          className={`genre-tab ${activeTab === 'places' ? 'active' : ''}`}
+          onClick={() => setActiveTab('places')}
         >
-          🎭 포스터 보기
+          📍 추천 장소 보기
         </button>
         <button
-          className={`genre-tab ${activeTab === 'reviews' ? 'active' : ''}`}
-          onClick={() => setActiveTab('reviews')}
+          className={`genre-tab ${activeTab === 'plays' ? 'active' : ''}`}
+          onClick={() => setActiveTab('plays')}
         >
-          💬 리뷰 보기
+          🎭 추천 연극 보기
         </button>
-      </div> */}
+      </div>
 
       {/* ===== 탭별 컨텐츠 ===== */}
-      {activeTab === 'posters' && (
+      {activeTab === 'places' && (
         <>
-          {/* ===== 장르별 필터링 버튼들 ===== */}
-          {/* <div className="genre-filter-buttons">
-            <button
-              className={`genre-filter-btn ${selectedGenre === null ? 'active' : ''}`}
-              onClick={() => handleGenreChange(null)}
-            >
-              전체
-            </button>
-            <button
-              className={`genre-filter-btn ${selectedGenre === 'comedy' ? 'active' : ''}`}
-              onClick={() => handleGenreChange('comedy'.toLowerCase())}
-            >
-              코미디
-            </button>
-            <button
-              className={`genre-filter-btn ${selectedGenre === 'romance' ? 'active' : ''}`}
-              onClick={() => handleGenreChange('romance'.toLowerCase())}
-            >
-              로맨스
-            </button>
-            <button
-              className={`genre-filter-btn ${selectedGenre === 'horror' || selectedGenre === 'thriller' ? 'active' : ''}`}
-              onClick={() => handleGenreChange('horror')}
-            >
-              공포/스릴러
-            </button>
-            <button
-              className={`genre-filter-btn ${selectedGenre === 'musical' ? 'active' : ''}`}
-              onClick={() => handleGenreChange('musical'.toLowerCase())}
-            >
-              뮤지컬
-            </button>
-            <button
-              className={`genre-filter-btn ${selectedGenre === 'festival' ? 'active' : ''}`}
-              onClick={() => handleGenreChange('festival'.toLowerCase())}
-            >
-              대학축제
-            </button>
-          </div> */}
-
-          {/* ✅ 추천 장소 섹션 (기존 축제 포스터 대체) */}
+          {/* ✅ 추천 장소 섹션 */}
           <RecommendedPlaces 
             genre={selectedGenre}
             title={`📍 ${selectedGenre ? selectedGenre + ' 관련 추천 장소' : '근처 추천 장소'}`}
@@ -479,203 +469,68 @@ const Genre = () => {
         </>
       )}
 
-      {activeTab === 'reviews' && (
-        <div className="reviews-full-section">
-          {/* ===== 리뷰 섹션 전체 화면 ===== */}
-          <div className="review-title-row">
-            <h3>Community Reviews</h3> 
-            <span className="review-count">{filteredReviews.length} items</span>
-          </div>
-
-          <div className="review-list-full">
-            {filteredReviews.map((r) => (
-              <ReviewCard 
-                key={r.id} 
-                review={r} 
-                onLikeClick={handleLikeClick}
-                onCommentClick={handleCommentClick}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ===== 데스크탑 2컬럼 병렬 레이아웃 (리뷰 보기 탭에서만 표시) ===== */}
-      {activeTab === 'reviews' && (
-        <div className="desktop-parallel-layout">
-          <div className="parallel-left">
-            {/* ===== 필터 박스 ===== */}
-            <section className="filter-wrap">
-              <div className="filter-title">필터</div>
-
-              <div className="filter-grid">
-                {/* 평점순 */}
-                <div className="filter-item">
-                  <label>Rating</label>
-                  <select
-                    className="filter-select"
-                    value={filters.ratingSort}
-                    onChange={onChange('ratingSort')}
-                  >
-                    <option value="none">정렬 없음</option>
-                    <option value="high">높은 평점</option>
-                    <option value="low">Low Rating</option>
-                  </select>
+      {activeTab === 'plays' && (
+        <>
+          {/* ✅ 추천 연극 섹션 */}
+          <section className="genre-plays-section">
+            <h3 className="plays-section-title">🎭 {selectedGenre ? selectedGenre + ' 관련 연극' : '근처 연극 정보'}</h3>
+            <div className="plays-grid">
+              {loading ? (
+                <div className="plays-loading">
+                  <div className="loading-spinner"></div>
+                  <p>연극 정보를 불러오는 중...</p>
                 </div>
-
-                {/* 조회수 */}
-                <div className="filter-item">
-                  <label>Views</label>
-                  <select
-                    className="filter-select"
-                    value={filters.viewsSort}
-                    onChange={onChange('viewsSort')}
-                  >
-                    <option value="none">정렬 없음</option>
-                    <option value="desc">높은 조회수</option>
-                  </select>
+              ) : error || !plays || plays.length === 0 ? (
+                <div className="plays-empty">
+                  <div className="empty-icon">🎭</div>
+                  <p>연극 정보를 불러올 수 없습니다.</p>
                 </div>
-
-                {/* 마감임박순 */}
-                <div className="filter-item">
-                  <label>Deadline</label>
-                  <select
-                    className="filter-select"
-                    value={filters.deadlineSort}
-                    onChange={onChange('deadlineSort')}
-                  >
-                    <option value="none">정렬 없음</option>
-                    <option value="urgent">마감임박</option>
-                    <option value="normal">Normal</option>
-                  </select>
-                </div>
-
-              </div>
-
-              {/* 검색창은 유지 */}
-              <div className="filter-search-row">
-                <div className="search-input-wrapper">
-                  <input
-                    type="text"
-                    placeholder="제목·지역 검색"
-                    value={filters.q}
-                    onChange={onChange('q')}
-                    onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-                  />
-                  <span className="search-icon" onClick={onSearch}>🔍</span>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          <div className="parallel-right">
-            {/* ===== 미니 리뷰 섹션 (데스크탑 병렬용) ===== */}
-            <section className="review-wrap-mini">
-              <div className="review-title-row">
-                <h3>Quick Reviews</h3> 
-                <span className="review-count">{filteredReviews.length} items</span>
-              </div>
-
-              <div className="review-list-mini">
-                {filteredReviews.slice(0, 3).map((r) => (
-                  <ReviewCard 
-                    key={r.id} 
-                    review={r} 
-                    onLikeClick={handleLikeClick}
-                    onCommentClick={handleCommentClick}
-                  />
-                ))}
-              </div>
-            </section>
-          </div>
-        </div>
-      )}
-
-      {/* ===== 모바일용 기존 레이아웃 (리뷰 보기 탭에서만 표시) ===== */}
-      {activeTab === 'reviews' && (
-        <div className="filter-review-layout">
-          <section className="filter-wrap">
-            <div className="filter-title">필터</div>
-
-            <div className="filter-grid">
-              {/* 평점순 */}
-              <div className="filter-item">
-                <label>Rating</label>
-                <select
-                  className="filter-select"
-                  value={filters.ratingSort}
-                  onChange={onChange('ratingSort')}
-                >
-                  <option value="none">정렬 없음</option>
-                  <option value="high">높은 평점</option>
-                  <option value="low">Low Rating</option>
-                </select>
-              </div>
-
-              {/* 조회수 */}
-              <div className="filter-item">
-                <label>Views</label>
-                <select
-                  className="filter-select"
-                  value={filters.viewsSort}
-                  onChange={onChange('viewsSort')}
-                >
-                  <option value="none">정렬 없음</option>
-                  <option value="desc">높은 조회수</option>
-                </select>
-              </div>
-
-              {/* 마감임박순 */}
-              <div className="filter-item">
-                <label>Deadline</label>
-                <select
-                  className="filter-select"
-                  value={filters.deadlineSort}
-                  onChange={onChange('deadlineSort')}
-                >
-                  <option value="none">정렬 없음</option>
-                  <option value="urgent">마감임박</option>
-                  <option value="normal">Normal</option>
-                </select>
-              </div>
-
-            </div>
-
-            {/* 검색창은 유지 */}
-            <div className="filter-search-row">
-              <div className="search-input-wrapper">
-                <input
-                  type="text"
-                  placeholder="제목·지역 검색"
-                  value={filters.q}
-                  onChange={onChange('q')}
-                  onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-                />
-                <span className="search-icon" onClick={onSearch}>🔍</span>
-              </div>
+              ) : (
+                plays.slice(0, 12).map((play) => (
+                  <div key={play.id} className="play-card">
+                    <div className="play-image-container">
+                      {play.image ? (
+                        <img
+                          src={play.image}
+                          alt={play.title}
+                          className="play-image"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="play-emoji-container">
+                          <div className="play-emoji">🎭</div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="play-info">
+                      <h4 className="play-title">{play.title}</h4>
+                      {play.location && (
+                        <p className="play-location">
+                          {typeof play.location === 'string' 
+                            ? play.location 
+                            : play.location.address || play.location}
+                        </p>
+                      )}
+                      {play.deadline && (
+                        <p className="play-date">{play.deadline}</p>
+                      )}
+                      {play.university && (
+                        <p className="play-university">{play.university}</p>
+                      )}
+                      {play.price !== undefined && (
+                        <p className="play-price">
+                          {play.price === 0 ? '무료' : `${play.price}원`}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </section>
-          
-          {/* ===== 리뷰 섹션 ===== */}
-          <section className="review-wrap">
-            <div className="review-title-row">
-              <h3>Results</h3> 
-              <span className="review-count">{filteredReviews.length} items</span>
-            </div>
-
-            <div className="review-list">
-              {filteredReviews.map((r) => (
-                <ReviewCard 
-                  key={r.id} 
-                  review={r} 
-                  onLikeClick={handleLikeClick}
-                  onCommentClick={handleCommentClick}
-                />
-              ))}
-            </div>
-          </section>
-        </div>
+        </>
       )}
+
     </div>
   );
 };
