@@ -670,9 +670,9 @@
   }
   
   .device-input-container {
-    max-width: 80px !important; /* 너비 증가 */
+    max-width: 40px !important; /* 너비 증가 */
     margin-left: auto !important; /* auto 무효화 */
-    margin-right: 40px !important; /* 오른쪽 여백 적절히 설정 */
+    margin-right: 45px !important; /* 오른쪽 여백 적절히 설정 */
     flex-shrink: 0; /* 축소 방지 */
     position: relative;
     z-index: 15;
@@ -683,21 +683,21 @@
     padding: 4px 6px; /* 패딩 적절히 설정 */
     gap: 2px; /* 간격 적절히 설정 */
     white-space: nowrap; /* 줄바꿈 방지 */
-    min-width: 40px; /* 최소 너비 설정 */
+    min-width: 20px; /* 최소 너비 설정 */
   }
   
   .device-input-form-compact {
-    min-width: 120px;   /* 적절한 너비로 조정 */
+    min-width: 85px;   /* 적절한 너비로 조정 */
     padding: 4px 6px;   /* 패딩 적절히 설정 */
     margin-left: 0 !important; /* auto 무효화 */
     margin-right: 8px !important; /* 오른쪽 여백 적절히 설정 */
-    max-width: 100%; /* 최대 너비 제한 */
+    max-width: 60%; /* 최대 너비 제한 */
   }
   
   .device-input-field {
     font-size: 10px; /* 적절한 크기로 조정 */
-    min-width: 60px; /* 적절한 너비로 조정 */
-    max-width: 80px; /* 최대 너비 제한 */
+    min-width: 30px; /* 적절한 너비로 조정 */
+    max-width: 20px; /* 최대 너비 제한 */
   }
   
   .device-icon-small {
@@ -749,12 +749,12 @@
   /* 매우 작은 화면에서 기기입력 버튼 최적화 */
   .topnav-right {
     justify-content: flex-end; /* 오른쪽 정렬 유지 */
-    max-width: 80%; /* 더 넓은 공간 확보 */
+    max-width: 40%; /* 더 넓은 공간 확보 */
     padding-right: 5px; /* 오른쪽 패딩 추가 */
   }
   
   .device-input-container {
-    max-width: 70px !important; /* 적절한 너비로 조정 */
+    max-width: 50px !important; /* 적절한 너비로 조정 */
     margin-left: 0 !important; /* auto 무효화 */
     margin-right: 5px !important; /* 오른쪽 여백 적절히 설정 */
     flex-shrink: 0; /* 축소 방지 */
@@ -765,21 +765,21 @@
     padding: 3px 5px; /* 패딩 적절히 설정 */
     gap: 2px; /* 간격 적절히 설정 */
     white-space: nowrap; /* 줄바꿈 방지 */
-    min-width: 35px; /* 최소 너비 설정 */
+    min-width: 20px; /* 최소 너비 설정 */
   }
   
   .device-input-form-compact {
-    min-width: 100px;   /* 적절한 너비로 조정 */
+    min-width: 60px;   /* 적절한 너비로 조정 */
     padding: 3px 5px;   /* 패딩 적절히 설정 */
     margin-left: 0 !important; /* auto 무효화 */
     margin-right: 5px !important; /* 오른쪽 여백 적절히 설정 */
-    max-width: 100%; /* 최대 너비 제한 */
+    max-width: 60%; /* 최대 너비 제한 */
   }
   
   .device-input-field {
     font-size: 9px; /* 적절한 크기로 조정 */
-    min-width: 50px; /* 적절한 너비로 조정 */
-    max-width: 70px; /* 최대 너비 제한 */
+    min-width: 30px; /* 적절한 너비로 조정 */
+    max-width: 30px; /* 최대 너비 제한 */
   }
   
   .device-icon-small {
