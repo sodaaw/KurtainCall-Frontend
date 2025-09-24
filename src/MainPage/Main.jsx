@@ -472,7 +472,7 @@ export default function Main() {
         />
 
         {/* ✅ 좌: 캘린더 / 우: 이벤트 패널 */}
-        <section className="schedule">
+        {/* <section className="schedule">
           <EventCalendar
             selected={selectedDate}
             onSelect={setSelectedDate}
@@ -482,7 +482,7 @@ export default function Main() {
             date={selectedDate}
             events={eventsOfDay}
           />
-        </section>
+        </section> */}
       </main>
     </div>
   );
