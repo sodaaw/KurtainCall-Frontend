@@ -7,7 +7,7 @@ import EventCalendar from "./EventCalendar"; // ✅ 분리한 캘린더
 import EventPanel from "./EventPanel";       // ✅ 분리한 우측 패널
 import RecommendedPlaces from "../components/RecommendedPlaces"; // ✅ 추천 장소 컴포넌트
 import { playAPI } from "../services/api";
-import { festivals } from "../data/festivals"; // ✅ 연극 데이터 import
+// import { festivals } from "../data/festivals"; // ✅ 연극 데이터 import - 제거됨
 import "./Main.css";
 
 // 카테고리 버튼 데이터
@@ -322,7 +322,7 @@ function SearchAndGenre({ onSearchClick, onGenreClick }) {
         <form className="search-input-wrapper" onSubmit={handleSearch}>
           <input 
             type="text" 
-            placeholder="공연명, 장소, 아티스트를 검색해보세요." 
+            placeholder="문화시설, 장소 등을 검색해보세요." 
             className="search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -412,20 +412,9 @@ export default function Main() {
         console.error('Failed to load plays from API:', err);
         setError(err.message || '공연 데이터를 불러오는데 실패했습니다.');
         
-        // API 실패 시 축제 데이터로 폴백
-        console.log('API 실패, 축제 데이터로 폴백');
-        const festivalData = festivals.map(festival => ({
-          id: festival.id,
-          title: festival.title,
-          posterUrl: festival.posterUrl,
-          location: festival.location,
-          detailUrl: festival.detailUrl,
-          description: festival.description,
-          university: festival.university,
-          date: festival.date,
-          performers: festival.performers
-        }));
-        setPlays(festivalData);
+        // API 실패 시 빈 배열로 설정
+        console.log('API 실패, 빈 배열로 설정');
+        setPlays([]);
       } finally {
         setIsLoading(false);
       }
@@ -434,38 +423,14 @@ export default function Main() {
     loadPlays();
   }, []);
 
-  // ✅ 선택 날짜에 속하는 연극 이벤트 필터
+  // ✅ 선택 날짜에 속하는 연극 이벤트 필터 (festivals 제거로 빈 배열)
   const eventsOfDay = useMemo(() => {
-    return festivals.filter(festival => {
-      const festivalDates = parseFestivalDate(festival.date);
-      if (!festivalDates) return false;
-      
-      const dateStr = fmt(selectedDate);
-      const startStr = fmt(festivalDates.start);
-      const endStr = fmt(festivalDates.end);
-      
-      return dateStr >= startStr && dateStr <= endStr;
-    });
+    return [];
   }, [selectedKey]);
 
-  // ✅ 달력에 표시할 마커 (연극이 있는 날짜들)
+  // ✅ 달력에 표시할 마커 (festivals 제거로 빈 Set)
   const markers = useMemo(() => {
-    const markerSet = new Set();
-    
-    festivals.forEach(festival => {
-      const festivalDates = parseFestivalDate(festival.date);
-      if (festivalDates) {
-        const current = new Date(festivalDates.start);
-        const end = new Date(festivalDates.end);
-        
-        while (current <= end) {
-          markerSet.add(fmt(current));
-          current.setDate(current.getDate() + 1);
-        }
-      }
-    });
-    
-    return markerSet;
+    return new Set();
   }, []);
 
   return (

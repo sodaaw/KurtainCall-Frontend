@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './Recommended.css'; 
 import Topnav from '../components/Topnav';
-import { festivals } from '../data/festivals';
+// import { festivals } from '../data/festivals'; // 제거됨
 import axios from 'axios';
 
 const Recommended = () => {
@@ -63,20 +63,8 @@ const Recommended = () => {
           }
         }
         
-        // 축제 데이터 사용
-        const festivalPlays = festivals.map(festival => ({
-          id: festival.id,
-          title: festival.title,
-          category: '축제',
-          area: festival.location.address,
-          price: '무료',
-          stars: 4.5 + Math.random() * 0.5,
-          university: festival.university,
-          performers: festival.performers,
-          description: festival.description
-        }));
-        
-        setPlays(festivalPlays);
+        // 축제 데이터 제거로 빈 배열
+        setPlays([]);
         setLoading(false);
       } catch (error) {
         console.error('연극 데이터 로드 실패:', error);

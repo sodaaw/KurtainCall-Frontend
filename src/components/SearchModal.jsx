@@ -54,7 +54,7 @@ export default function SearchModal({ onClose }) {
         <form className="search-input-area" onSubmit={(e)=>{e.preventDefault(); goSearch();}}>
           <input
             type="text"
-            placeholder="공연명, 장소, 아티스트를 검색해 보세요"
+            placeholder="문화시설, 장소 등을 검색해 보세요"
             className="search-input"
             value={q}
             onChange={(e) => setQ(e.target.value)}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { festivals } from '../data/festivals';
 import Topnav from '../components/Topnav';
 import './FestivalDetail.css';
 
@@ -11,10 +10,8 @@ const FestivalDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const foundFestival = festivals.find(f => f.id === parseInt(id));
-    if (foundFestival) {
-      setFestival(foundFestival);
-    }
+    // 축제 데이터 제거로 null 설정
+    setFestival(null);
     setLoading(false);
   }, [id]);
 

@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import './Genre.css';
 import Topnav from '../components/Topnav';
 import RecommendedPlaces from '../components/RecommendedPlaces';
-import { festivals } from '../data/festivals';
+// import { festivals } from '../data/festivals'; // 제거됨
 import { playAPI } from '../services/api';
 import axios from 'axios';
 
@@ -239,42 +239,9 @@ const Genre = () => {
       } catch (error) {
         console.error('API 연극 데이터 로드 실패:', error);
         
-        // API 실패 시 축제 데이터로 폴백
-        console.log('API 실패, 축제 데이터로 폴백');
-        const festivalPlays = festivals.map(festival => {
-          // 축제 이름에서 장르 추출 (대학 축제는 모두 'festival'로 분류)
-          let category = 'festival';
-          
-          // 축제 제목에서 장르 키워드 추출
-          const title = festival.title.toLowerCase();
-          if (title.includes('뮤지컬') || title.includes('musical')) {
-            category = 'musical';
-          } else if (title.includes('코미디') || title.includes('comedy')) {
-            category = 'comedy';
-          } else if (title.includes('로맨스') || title.includes('romance')) {
-            category = 'romance';
-          } else if (title.includes('공포') || title.includes('horror')) {
-            category = 'horror';
-          }
-          
-          return {
-            id: festival.id,
-            title: festival.title,
-            category: category,
-            location: festival.location.address,
-            image: festival.posterUrl,
-            price: 0, // 축제는 무료
-            rating: 4.5 + Math.random() * 0.5, // 4.5-5.0 사이의 랜덤 평점
-            views: Math.floor(Math.random() * 200) + 50, // 50-250 사이의 랜덤 조회수
-            deadline: festival.date,
-            university: festival.university,
-            performers: festival.performers,
-            description: festival.description
-          };
-        });
-        
-        console.log('축제 데이터 로드됨:', festivalPlays.length, '개');
-        setPlays(festivalPlays);
+        // API 실패 시 빈 배열로 설정
+        console.log('API 실패, 빈 배열로 설정');
+        setPlays([]);
         setLoading(false);
       }
     };

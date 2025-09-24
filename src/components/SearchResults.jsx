@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { searchAPI } from "../services/search";
-import { festivals } from "../data/festivals";
+// import { festivals } from "../data/festivals"; // 제거됨
 import './SearchResults.css';
 
 const API_BASE = 'https://re-local.onrender.com';
@@ -21,31 +21,8 @@ export default function SearchResults() {
     setError("");
     
     try {
-      // 축제 데이터에서 검색
-      const searchTerm = q.toLowerCase();
-      const filteredFestivals = festivals.filter(festival => {
-        return (
-          festival.title?.toLowerCase().includes(searchTerm) ||
-          festival.university?.toLowerCase().includes(searchTerm) ||
-          festival.location?.address?.toLowerCase().includes(searchTerm) ||
-          festival.description?.toLowerCase().includes(searchTerm)
-        );
-      });
-      
-      // 축제 데이터를 검색 결과 형식으로 변환
-      const searchResults = filteredFestivals.map(festival => ({
-        id: festival.id,
-        title: festival.title,
-        posterUrl: festival.posterUrl,
-        detailUrl: festival.detailUrl,
-        category: '축제',
-        location: {
-          address: festival.location.address,
-          areaName: festival.university
-        }
-      }));
-      
-      setItems(searchResults);
+      // 축제 데이터 제거로 빈 결과
+      setItems([]);
       setLoading(false);
     } catch (error) {
       console.error('축제 검색 실패:', error);
