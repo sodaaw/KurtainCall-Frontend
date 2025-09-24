@@ -272,7 +272,7 @@
 /* 매우 작은 화면 (390px 이하) */
 @media (max-width: 390px) {
   .biodata-page {
-    padding: 0 8px 12px 8px;
+    padding: 0 12px 12px 12px;
   }
   
   .biodata-container {
@@ -314,6 +314,19 @@
     font-size: 14px;
     border-radius: 8px;
     margin-top: 30px;
+  }
+  
+  /* 작은 화면에서 텍스트 및 헤더 중앙 정렬 */
+  .biodata-page > h2,
+  .biodata-page > p,
+  .bio-card h3,
+  .bio-card p {
+    text-align: center;
+  }
+  
+  /* h3는 flex이므로 중앙 정렬 보장 */
+  .bio-card h3 {
+    justify-content: center;
   }
 }
 

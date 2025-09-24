@@ -121,9 +121,7 @@ const AITranslation = () => {
     };
   }, []);
 
-  // -------마이크 권한 자동 켜지는 부분 주석----------
-  // -------개발끝나면 다시 여기 주석 해제하기!!!!!---------
-    /* // MediaRecorder 초기화 (백엔드 연동용)
+  // MediaRecorder 초기화 (백엔드 연동용)
   React.useEffect(() => {
     const initializeMediaRecorder = async () => {
       try {
@@ -164,7 +162,7 @@ const AITranslation = () => {
     };
     
     initializeMediaRecorder();
-  }, [selectedMode]); */
+  }, [selectedMode]);
   
   
 
