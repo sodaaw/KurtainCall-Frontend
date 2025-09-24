@@ -9,39 +9,55 @@ const TestDatabase = () => {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [filterCharacter, setFilterCharacter] = useState('all');
 
-  // 4가지 안전 유형 정보 (TestResults와 일치)
+  // 6가지 문화생활 유형 정보 (TestResults와 일치)
   const characterInfo = {
-    Sentinel: {
-      emoji: '🔍',
-      name: 'Sentinel (경계자)',
-      description: '위험 신호에 아주 민감하고, 사전 대비를 중시하는 타입입니다. 빠른 감지와 예방적 행동이 강점이지만, 지나친 불안이 피로로 이어질 수 있어 균형 잡힌 태도가 필요합니다.',
-      traits: ['위험 감지', '예방 행동', '안전 체크', '민감함'],
-      recommendedGenres: ['스마트 알림', '예방 시스템', '안전 체크'],
-      recommendedPlays: ['출입구 근처', '안전 장치 활용', '스마트 앱 적극 사용']
+    Explorer: {
+      emoji: '🗺️',
+      name: 'Explorer (탐험가)',
+      description: '새로운 전시·공연·카페를 적극적으로 탐험하고, 낯선 공간에서 설렘을 느끼는 타입입니다. 다양한 경험을 통해 폭넓은 시각을 형성하지만, 깊이 있는 감상보다는 경험 체크리스트에 집중할 수 있어 가끔은 한 곳에 오래 머물러 보는 것이 좋습니다.',
+      traits: ['호기심', '발견', '모험', '탐험'],
+      recommendedGenres: ['다양한 장르', '새로운 공간', '트렌드'],
+      recommendedPlays: ['다양한 장소', '기록 남기기', '경험 정리']
     },
-    Guardian: {
-      emoji: '🛡️',
-      name: 'Guardian (수호자)',
-      description: '자신보다 주변 사람들의 안전을 더 의식하는 공동체형입니다. 지역사회 안전 네트워크에 기여할 수 있지만, 본인 스스로의 안전 대비를 놓칠 수 있어 자기 보호 습관 강화가 필요합니다.',
-      traits: ['공동체 안전', '타인 배려', '사회적 책임', '수호자'],
-      recommendedGenres: ['가족 안전', '공동체 시스템', '사회적 책임'],
-      recommendedPlays: ['중앙 위치', '가족/친구와 함께', '공동체 참여']
+    Immerser: {
+      emoji: '🎭',
+      name: 'Immerser (몰입가)',
+      description: '하나의 작품이나 공연에 오랜 시간 집중하며 깊게 몰입하는 타입입니다. 작품과 강렬한 정서적 교감을 경험하지만, 혼자만의 세계에 치우쳐 주변 사람들과의 교류 기회를 놓칠 수 있어 가끔은 함께 즐겨보는 것이 좋습니다.',
+      traits: ['집중', '내면', '감정 연결', '몰입'],
+      recommendedGenres: ['조용한 공간', '깊이 있는 작품', '개인 감상'],
+      recommendedPlays: ['조용한 자리', '혼자 감상', '온라인 커뮤니티 참여']
     },
-    Navigator: {
-      emoji: '🧭',
-      name: 'Navigator (대처가)',
-      description: '위험 상황에서는 침착하게 행동하지만, 평소 대비는 소홀한 편입니다. 위기 상황에서의 침착함이 강점이지만, 사전 인식과 예방 행동이 부족해 훈련과 기술 활용을 생활화할 필요가 있습니다.',
-      traits: ['침착함', '기술 활용', '위기 대응', '대처력'],
-      recommendedGenres: ['스마트 기기', '위기 대응', '기술 활용'],
-      recommendedPlays: ['유동적 위치', '스마트 기기 필수', '위기 대응 훈련']
+    Connector: {
+      emoji: '🤝',
+      name: 'Connector (교류가)',
+      description: '친구·가족·동료와 함께 문화생활을 즐기며, 감상을 대화와 교류로 확장하는 타입입니다. 문화 경험을 통해 인간관계를 강화하지만, 함께할 사람이 없을 경우 문화생활을 미루게 될 수 있어 혼자만의 경험에도 익숙해지는 것이 좋습니다.',
+      traits: ['관계', '공유', '소통', '교류'],
+      recommendedGenres: ['함께 즐기는 문화', '소셜 이벤트', '공동체 활동'],
+      recommendedPlays: ['함께 앉기 좋은 자리', '체험형 전시', '소셜 분위기 카페']
     },
-    Unaware: {
-      emoji: '😅',
-      name: 'Unaware (안전 불감형)',
-      description: '"설마 나한테?"라는 태도로 위험을 과소평가하는 타입입니다. 군중 속에서도 불안이 적고 스트레스가 덜하지만, 안전 불감증은 대형사고로 직결될 수 있어 기초 안전 교육과 기술 기반 알림이 꼭 필요합니다.',
-      traits: ['안전 불감', '과소평가', '무관심', '낙관적'],
-      recommendedGenres: ['기초 안전 교육', '기술 기반 알림', '안전 인식 개선'],
-      recommendedPlays: ['어디든 상관없음', '기초 안전 교육', '스마트 알림 활용']
+    Seeker: {
+      emoji: '🧘',
+      name: 'Seeker (치유가)',
+      description: '전시·공연·카페 같은 공간을 통해 마음의 안정을 찾고 일상 속 피로를 해소하는 타입입니다. 자신에게 맞는 문화적 환경을 선택해 스트레스를 줄이지만, 늘 편안한 경험만 고집하다 보면 새로운 장르나 강렬한 경험을 놓칠 수 있어 가끔은 도전해보는 것이 좋습니다.',
+      traits: ['힐링', '회복', '안정', '치유'],
+      recommendedGenres: ['편안한 공간', '힐링 콘텐츠', '안정적 환경'],
+      recommendedPlays: ['편안한 자리', '익숙한 힐링 공간', '신선한 공연·전시 곁들이기']
+    },
+    Performer: {
+      emoji: '🎨',
+      name: 'Performer (표현가)',
+      description: '관람자이지만 동시에 자신이 무대에 서는 상상을 즐기고, 예술적 자극을 받으면 창작 욕구가 솟구치는 타입입니다. 예술의 디테일에 민감해 작품 속 의미를 잘 캐치하지만, 비판적 시각에 머무를 수 있어 타인의 작품을 있는 그대로 즐기는 여유가 필요합니다.',
+      traits: ['표현', '창조', '주체성', '예술성'],
+      recommendedGenres: ['예술 작품', '창작 활동', '표현 예술'],
+      recommendedPlays: ['무대 가까운 자리', '감상 후 글쓰기', '드로잉, 퍼포먼스']
+    },
+    Wanderer: {
+      emoji: '🌊',
+      name: 'Wanderer (방랑가)',
+      description: '큰 계획 없이 즉흥적으로 문화생활을 즐기며, 오늘의 기분과 상황에 따라 움직이는 타입입니다. 틀에 얽매이지 않고 다양한 경험을 접할 수 있지만, 계획이 없으니 원하는 공연·전시를 놓칠 수 있어 가볍게 문화 캘린더를 확인해보는 것이 좋습니다.',
+      traits: ['자유', '즉흥', '유연성', '방랑'],
+      recommendedGenres: ['즉흥적 경험', '자유로운 공간', '우연한 만남'],
+      recommendedPlays: ['어디든 자유롭게', '문화 캘린더 확인', '관심 분야 알림 설정']
     }
   };
 
@@ -81,12 +97,14 @@ const TestDatabase = () => {
     ? testResults 
     : testResults.filter(result => result.topCharacter === filterCharacter);
 
-  // 안전 유형별 통계 (TestResults의 4개 유형에 맞춤)
+  // 문화생활 유형별 통계 (TestResults의 6개 유형에 맞춤)
   const characterStats = {
-    Sentinel: testResults.filter(r => r.topCharacter === 'Sentinel').length,
-    Guardian: testResults.filter(r => r.topCharacter === 'Guardian').length,
-    Navigator: testResults.filter(r => r.topCharacter === 'Navigator').length,
-    Unaware: testResults.filter(r => r.topCharacter === 'Unaware').length
+    Explorer: testResults.filter(r => r.topCharacter === 'Explorer').length,
+    Immerser: testResults.filter(r => r.topCharacter === 'Immerser').length,
+    Connector: testResults.filter(r => r.topCharacter === 'Connector').length,
+    Seeker: testResults.filter(r => r.topCharacter === 'Seeker').length,
+    Performer: testResults.filter(r => r.topCharacter === 'Performer').length,
+    Wanderer: testResults.filter(r => r.topCharacter === 'Wanderer').length
   };
 
   // 총 테스트 수
@@ -94,10 +112,12 @@ const TestDatabase = () => {
 
   // 퍼센트 계산
   const characterPercentages = {
-    Sentinel: totalTests > 0 ? (characterStats.Sentinel / totalTests * 100) : 0,
-    Guardian: totalTests > 0 ? (characterStats.Guardian / totalTests * 100) : 0,
-    Navigator: totalTests > 0 ? (characterStats.Navigator / totalTests * 100) : 0,
-    Unaware: totalTests > 0 ? (characterStats.Unaware / totalTests * 100) : 0
+    Explorer: totalTests > 0 ? (characterStats.Explorer / totalTests * 100) : 0,
+    Immerser: totalTests > 0 ? (characterStats.Immerser / totalTests * 100) : 0,
+    Connector: totalTests > 0 ? (characterStats.Connector / totalTests * 100) : 0,
+    Seeker: totalTests > 0 ? (characterStats.Seeker / totalTests * 100) : 0,
+    Performer: totalTests > 0 ? (characterStats.Performer / totalTests * 100) : 0,
+    Wanderer: totalTests > 0 ? (characterStats.Wanderer / totalTests * 100) : 0
   };
 
   const handleCharacterClick = (characterName) => {
@@ -139,7 +159,7 @@ const TestDatabase = () => {
           </div>
         </div>
 
-        {/* 안전 유형 통계 섹션 */}
+        {/* 문화생활 유형 통계 섹션 */}
         <section className="character-statistics">
           <h2>유형별 통계</h2>
           {/* 안내 텍스트 */}
