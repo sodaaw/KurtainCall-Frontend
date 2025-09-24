@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topnav from '../components/Topnav';
 import { playAPI } from '../services/api';
+import { rankPlaces, formatRecommendation } from './recommendPlace';
 // import { festivals } from '../data/festivals'; // 축제 데이터는 나중에 제거
 import './Map.css';
 
@@ -22,7 +23,11 @@ const transformKakaoData = (kakaoResponse) => {
     tags: [place.category_group_code],
     detailUrl: place.place_url || '#',
     phone: place.phone || '',
-    roadAddress: place.road_address_name || ''
+    roadAddress: place.road_address_name || '',
+    // 평점 및 리뷰 정보 추가
+    rating: place.rating ? parseFloat(place.rating) : 0,
+    reviewCount: place.review_count ? parseInt(place.review_count) : 0,
+    ratingCount: place.rating_count ? parseInt(place.rating_count) : 0
   }))
 };
 
@@ -55,6 +60,11 @@ const Map = () => {
   const [cultureSpots, setCultureSpots] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // 추천 관련 상태
+  const [recommendedPlaces, setRecommendedPlaces] = useState([]);
+  const [userLocation, setUserLocation] = useState({ lat: 37.5665, lng: 126.9780 }); // 기본값 설정
+  const [showRecommendations, setShowRecommendations] = useState(false);
 
   // Kakao Maps 관련 refs
   const kakaoRef = useRef(null);
@@ -94,10 +104,21 @@ const Map = () => {
   useEffect(() => {
     if (!window.kakao || !window.kakao.maps) return;
 
+    // 임시 테스트용 위치 (서울 시청)
+    const testLocation = { lat: 37.5665, lng: 126.9780 };
+    setUserLocation(testLocation);
+    console.log('📍 테스트 위치 설정:', testLocation);
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
-        console.log("📍 현재위치:", latitude, longitude);
+        console.log("📍 실제 현재위치:", latitude, longitude);
+        
+        // 실제 위치로 업데이트
+        setUserLocation({ lat: latitude, lng: longitude });
+        
+        // 디버깅용: 위치 저장 확인
+        console.log('📍 사용자 위치 저장됨:', { lat: latitude, lng: longitude });
 
         const ps = new window.kakao.maps.services.Places();
 
@@ -115,9 +136,11 @@ const Map = () => {
         
         // 카테고리별 검색 (더 정확함)
         categorySearches.forEach(({ category, type, name }) => {
+          console.log(`🔍 ${name} 카테고리 검색 시작...`);
           ps.categorySearch(
             category,
             (data, status) => {
+              console.log(`🏛️ ${name} 검색 상태:`, status);
               if (status === window.kakao.maps.services.Status.OK) {
                 console.log(`🏛️ ${name} 결과:`, data);
 
@@ -131,7 +154,11 @@ const Map = () => {
                   phone: place.phone || '',
                   type: type,
                   description: place.category_name || '',
-                  hours: '운영시간 정보 없음'
+                  hours: '운영시간 정보 없음',
+                  // 평점 및 리뷰 정보 추가
+                  rating: place.rating ? parseFloat(place.rating) : 0,
+                  reviewCount: place.review_count ? parseInt(place.review_count) : 0,
+                  ratingCount: place.rating_count ? parseInt(place.rating_count) : 0
                 }));
 
                 allSpots = [...allSpots, ...transformed];
@@ -155,9 +182,11 @@ const Map = () => {
         });
 
         keywords.forEach((keyword, idx) => {
+          console.log(`🔍 ${keyword} 키워드 검색 시작...`);
           ps.keywordSearch(
             keyword,
             (data, status) => {
+              console.log(`🔍 ${keyword} 검색 상태:`, status);
               if (status === window.kakao.maps.services.Status.OK) {
                 console.log(`🔍 ${keyword} 결과:`, data);
 
@@ -171,7 +200,11 @@ const Map = () => {
                   phone: place.phone || "",
                   type: getCultureTypeFromKeyword(keyword), // 키워드 기반 카테고리 매핑
                   description: place.category_name || '',
-                  hours: '운영시간 정보 없음'
+                  hours: '운영시간 정보 없음',
+                  // 평점 및 리뷰 정보 추가
+                  rating: place.rating ? parseFloat(place.rating) : 0,
+                  reviewCount: place.review_count ? parseInt(place.review_count) : 0,
+                  ratingCount: place.rating_count ? parseInt(place.rating_count) : 0
                 }));
 
                 allSpots = [...allSpots, ...transformed];
@@ -196,6 +229,8 @@ const Map = () => {
       },
       (err) => {
         console.error("GPS 가져오기 실패:", err);
+        console.log("📍 테스트 위치 사용 중...");
+        // GPS 실패 시에도 테스트 위치는 이미 설정되어 있음
       }
     );
   }, []);
@@ -259,7 +294,11 @@ const Map = () => {
                 phone: place.phone || '',
                 type: categoryKey,
                 description: place.category_name || '',
-                hours: '운영시간 정보 없음'
+                hours: '운영시간 정보 없음',
+                // 평점 및 리뷰 정보 추가
+                rating: place.rating ? parseFloat(place.rating) : 0,
+                reviewCount: place.review_count ? parseInt(place.review_count) : 0,
+                ratingCount: place.rating_count ? parseInt(place.rating_count) : 0
               }));
               
               allSpots = [...allSpots, ...transformed];
@@ -318,7 +357,11 @@ const Map = () => {
               phone: place.phone || '',
               type: getCultureTypeFromKeyword(searchQuery),
               description: place.category_name || '',
-              hours: '운영시간 정보 없음'
+              hours: '운영시간 정보 없음',
+              // 평점 및 리뷰 정보 추가
+              rating: place.rating ? parseFloat(place.rating) : 0,
+              reviewCount: place.review_count ? parseInt(place.review_count) : 0,
+              ratingCount: place.rating_count ? parseInt(place.rating_count) : 0
             }));
             
             setFilteredSpots(transformed);
@@ -591,6 +634,83 @@ const Map = () => {
     }
   };
 
+  // 추천 기능 실행
+  const generateRecommendations = () => {
+    console.log('🎯 추천 버튼 클릭됨!');
+    console.log('현재 상태:', {
+      userLocation,
+      cultureSpotsCount: cultureSpots.length,
+      cultureSpots: cultureSpots
+    });
+    
+    if (!userLocation || cultureSpots.length === 0) {
+      console.log('사용자 위치 또는 문화시설 데이터가 없습니다.');
+      console.log('테스트용 더미 데이터로 추천 실행...');
+      
+      // 테스트용 더미 데이터
+      const dummySpots = [
+        {
+          id: 'test1',
+          name: '테스트 극장',
+          address: '서울특별시 중구',
+          lat: 37.5665,
+          lng: 126.9780,
+          rating: 4.2,
+          reviewCount: 15,
+          ratingCount: 20,
+          type: 'theater'
+        },
+        {
+          id: 'test2', 
+          name: '테스트 박물관',
+          address: '서울특별시 중구',
+          lat: 37.5675,
+          lng: 126.9790,
+          rating: 3.8,
+          reviewCount: 8,
+          ratingCount: 12,
+          type: 'museum'
+        },
+        {
+          id: 'test3',
+          name: '테스트 미술관', 
+          address: '서울특별시 중구',
+          lat: 37.5685,
+          lng: 126.9800,
+          rating: 4.0,
+          reviewCount: 12,
+          ratingCount: 18,
+          type: 'gallery'
+        }
+      ];
+      
+      const recommendations = rankPlaces(userLocation.lat, userLocation.lng, dummySpots);
+      const formattedRecommendations = formatRecommendation(recommendations);
+      
+      console.log('더미 데이터 추천 결과:', formattedRecommendations);
+      setRecommendedPlaces(formattedRecommendations);
+      setShowRecommendations(true);
+      return;
+    }
+    
+    console.log('🎯 추천 알고리즘 실행 중...');
+    console.log('사용자 위치:', userLocation);
+    console.log('문화시설 수:', cultureSpots.length);
+    
+    const recommendations = rankPlaces(userLocation.lat, userLocation.lng, cultureSpots);
+    const formattedRecommendations = formatRecommendation(recommendations);
+    
+    console.log('추천 결과:', formattedRecommendations);
+    setRecommendedPlaces(formattedRecommendations);
+    setShowRecommendations(true);
+  };
+
+  // 추천 결과 초기화
+  const resetRecommendations = () => {
+    setRecommendedPlaces([]);
+    setShowRecommendations(false);
+  };
+
   // 검색 초기화 함수
   const resetSearch = () => {
     setSearchQuery('');
@@ -811,6 +931,12 @@ const Map = () => {
 
   // 디버깅용 렌더링 확인
   console.log('[Map] Component rendering, cultureSpots:', cultureSpots?.length, 'isMapReady:', isMapReady);
+  console.log('[Map] User location:', userLocation);
+  console.log('[Map] AI 추천 버튼 활성화 조건:', {
+    hasUserLocation: !!userLocation,
+    hasCultureSpots: cultureSpots?.length > 0,
+    canRecommend: !!(userLocation && cultureSpots?.length > 0)
+  });
 
   return (
     <div className="map-page">
@@ -870,6 +996,48 @@ const Map = () => {
             </div>
           </div>
           
+          {/* 추천 버튼 */}
+          <div className="recommendation-section">
+            <button 
+              className="recommend-btn" 
+              onClick={generateRecommendations}
+              disabled={false}
+              style={{
+                backgroundColor: '#67C090',
+                color: 'white',
+                padding: '12px 20px',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                opacity: 1,
+                width: '100%',
+                marginBottom: '10px'
+              }}
+            >
+              🎯 AI 추천 받기
+            </button>
+            {showRecommendations && (
+              <button 
+                className="reset-recommend-btn" 
+                onClick={resetRecommendations}
+                style={{
+                  backgroundColor: '#ff6b6b',
+                  color: 'white',
+                  padding: '8px 16px',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  width: '100%'
+                }}
+              >
+                ✖️ 추천 닫기
+              </button>
+            )}
+          </div>
+
           {/* 초기화 버튼 */}
           <div className="reset-section">
             <button className="reset-btn" onClick={resetSearch}>
@@ -911,7 +1079,7 @@ const Map = () => {
           <h4>검색 결과 ({filteredSpots.length}개)</h4>
           <div className="experience-list">
             {filteredSpots.map((spot, index) => (
-              <div key={spot.id || index} className="exp-card">
+              <div key={`filtered-${spot.id || spot.name || index}-${index}`} className="exp-card">
                                   <div className="exp-info">
                   <h5>{spot.name}</h5>
                   <p>{spot.address || '주소 정보 없음'}</p>
@@ -941,10 +1109,48 @@ const Map = () => {
         </section>
       )}
 
+      {/* AI 추천 결과 표시 */}
+      {showRecommendations && recommendedPlaces.length > 0 && (
+        <section className="recommendation-results">
+          <h4>🎯 AI 추천 결과 ({recommendedPlaces.length}개)</h4>
+          <div className="recommendation-list">
+            {recommendedPlaces.map((place, index) => (
+              <div key={`recommended-${place.name || place.rank || index}-${index}`} className="recommendation-card">
+                <div className="recommendation-rank">
+                  <span className="rank-number">{place.rank}</span>
+                </div>
+                <div className="recommendation-info">
+                  <h5>{place.name}</h5>
+                  <p className="recommendation-address">📍 {place.address}</p>
+                  <div className="recommendation-details">
+                    <span className="rating">⭐ {place.rating}/5.0</span>
+                    <span className="reviews">💬 {place.reviewCount}개 리뷰</span>
+                    <span className="distance">🚶‍♂️ {place.distance}</span>
+                  </div>
+                  <div className="recommendation-score">
+                    <small>추천 점수: {place.score}</small>
+                  </div>
+                </div>
+                <div className="recommendation-actions">
+                  <a 
+                    href={place.detailUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="view-detail-btn"
+                  >
+                    상세보기
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* 필터를 적용하지 않았을 때는 아무것도 표시하지 않음 */}
-      {filteredSpots.length === 0 && (
+      {filteredSpots.length === 0 && !showRecommendations && (
         <div className="no-filter-message">
-          <p>검색 조건을 설정하고 "필터 적용하기"를 클릭하여 문화시설을 찾아보세요.</p>
+          <p>검색 조건을 설정하거나 "AI 추천 받기"를 클릭하여 문화시설을 찾아보세요.</p>
         </div>
       )}
     </div>

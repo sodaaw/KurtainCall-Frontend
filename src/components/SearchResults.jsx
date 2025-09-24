@@ -90,6 +90,7 @@ export default function SearchResults() {
                 alt={it.title}
                 className="poster-img"
                 loading="lazy"
+                referrerPolicy="no-referrer"
                 onError={(e)=>{ e.currentTarget.src='/images/fallback.jpg'; }}
               />
                 <div className="meta">

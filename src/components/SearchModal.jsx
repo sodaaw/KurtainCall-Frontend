@@ -11,7 +11,7 @@ export default function SearchModal({ onClose }) {
   const navigate = useNavigate();
 
   const trendingKeywords = useMemo(
-    () => ["홍익대학교", "동국대학교", "세종대학교", "국민대학교", "서울대학교", "연세대학교", "고려대학교", "한양대학교"], []
+    () => ["뮤지컬", "연극", "콘서트", "댄스", "클래식", "재즈", "로맨스", "코미디"], []
   );
 
   const goSearch = (kw) => {
@@ -54,7 +54,7 @@ export default function SearchModal({ onClose }) {
         <form className="search-input-area" onSubmit={(e)=>{e.preventDefault(); goSearch();}}>
           <input
             type="text"
-            placeholder="대학교명 또는 축제를 검색해 보세요"
+            placeholder="공연명, 장소, 아티스트를 검색해 보세요"
             className="search-input"
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -74,10 +74,11 @@ export default function SearchModal({ onClose }) {
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
               <option value="전체 카테고리">전체 카테고리</option>
-              <option value="대동제">대동제</option>
-              <option value="봄축제">봄축제</option>
-              <option value="연희">연희</option>
-              <option value="일감호축전">일감호축전</option>
+              <option value="뮤지컬">뮤지컬</option>
+              <option value="연극">연극</option>
+              <option value="콘서트">콘서트</option>
+              <option value="댄스">댄스</option>
+              <option value="클래식">클래식</option>
             </select>
 
             <select 
@@ -86,12 +87,12 @@ export default function SearchModal({ onClose }) {
               onChange={(e) => setSelectedRegion(e.target.value)}
             >
               <option value="전체 지역">전체 지역</option>
+              <option value="강남구">강남구</option>
               <option value="마포구">마포구</option>
               <option value="성북구">성북구</option>
               <option value="동작구">동작구</option>
               <option value="광진구">광진구</option>
               <option value="중구">중구</option>
-              <option value="동대문구">동대문구</option>
             </select>
 
             <select 
@@ -100,10 +101,18 @@ export default function SearchModal({ onClose }) {
               onChange={(e) => setSelectedMonth(e.target.value)}
             >
               <option value="전체 월">전체 월</option>
+              <option value="1월">1월</option>
+              <option value="2월">2월</option>
+              <option value="3월">3월</option>
+              <option value="4월">4월</option>
               <option value="5월">5월</option>
               <option value="6월">6월</option>
+              <option value="7월">7월</option>
+              <option value="8월">8월</option>
               <option value="9월">9월</option>
               <option value="10월">10월</option>
+              <option value="11월">11월</option>
+              <option value="12월">12월</option>
             </select>
           </div>
 
@@ -117,9 +126,9 @@ export default function SearchModal({ onClose }) {
           </div>
         </div>
 
-        {/* 인기 대학 */}
+        {/* 인기 검색어 */}
         <div className="top-search-box">
-          <div className="top-search-header">인기 대학</div>
+          <div className="top-search-header">인기 검색어</div>
           <ul className="top-search-list">
             {trendingKeywords.map((keyword, idx) => (
               <li key={idx}>

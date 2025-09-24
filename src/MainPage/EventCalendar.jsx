@@ -10,7 +10,7 @@ export default function EventCalendar({ selected, onSelect, markers = new Set() 
 
   useEffect(() => {
     setM(selected.getMonth());
-    setY(selected.getFullYear());
+    setY(selected.getFullYear())
   }, [selected]);
 
   const firstDow = new Date(y, m, 1).getDay();

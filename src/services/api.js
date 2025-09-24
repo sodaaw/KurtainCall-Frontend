@@ -76,4 +76,70 @@ export const playAPI = {
   },
 };
 
+// 센서 데이터 API
+export const sensorAPI = {
+  // 모든 센서 데이터 조회
+  getAllSensorData: async () => {
+    try {
+      const { data } = await apiClient.get('/sensor');
+      return data;
+    } catch (error) {
+      console.error('Failed to fetch all sensor data:', error);
+      throw error;
+    }
+  },
+
+  // 특정 기기번호의 센서 데이터 조회
+  getSensorDataById: async (deviceId) => {
+    try {
+      const { data } = await apiClient.get(`/sensor/${deviceId}`);
+      return data;
+    } catch (error) {
+      console.error(`Failed to fetch sensor data for device ${deviceId}:`, error);
+      throw error;
+    }
+  },
+
+  // 모든 센서 분석 결과 조회
+  getAllSensorResults: async () => {
+    try {
+      const { data } = await apiClient.get('/sensor-result');
+      return data;
+    } catch (error) {
+      console.error('Failed to fetch all sensor results:', error);
+      throw error;
+    }
+  },
+
+  // 특정 기기번호의 센서 분석 결과 조회
+  getSensorResultById: async (deviceId) => {
+    try {
+      console.log(`🌐 API 호출: GET /sensor-result/${deviceId}`);
+      const { data } = await apiClient.get(`/sensor-result/${deviceId}`);
+      console.log(`📡 API 응답 성공 (${deviceId}):`, data);
+      return data;
+    } catch (error) {
+      console.error(`❌ API 호출 실패 (${deviceId}):`, error);
+      console.error(`🔍 에러 상세:`, {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
+      throw error;
+    }
+  },
+
+  // 센서 분석 결과 전송 (데이터분석 시스템에서 호출)
+  sendSensorResult: async (resultData) => {
+    try {
+      const { data } = await apiClient.post('/sensor-result', resultData);
+      return data;
+    } catch (error) {
+      console.error('Failed to send sensor result:', error);
+      throw error;
+    }
+  },
+};
+
 export default apiClient;

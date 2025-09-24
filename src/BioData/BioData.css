@@ -24,7 +24,8 @@
     rgba(0, 11, 88, 0.3) 70%,
     transparent 100%);
   transform: skewX(-15deg);
-  z-index: 1;
+  z-index: 0; /* 메인 요소 뒤로 */
+  pointer-events: none; /* 클릭 막지 않도록 */
   animation: curtainLeft 8s ease-in-out infinite;
 }
 
@@ -41,7 +42,8 @@
     rgba(0, 11, 88, 0.3) 70%,
     transparent 100%);
   transform: skewX(15deg);
-  z-index: 1;
+  z-index: 0; /* 메인 요소 뒤로 */
+  pointer-events: none; /* 클릭 막지 않도록 */
   animation: curtainRight 8s ease-in-out infinite;
 }
 
@@ -74,6 +76,7 @@
   font-size: clamp(30px, 5vw, 40px);
   color: #DDF4E7;
   text-align: center;
+  margin-top: 100px;
   margin-bottom: 10px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   font-weight: 600;
@@ -180,7 +183,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   display: block;
-  margin: 40px auto 0;
+  margin: 20px auto 0;
   position: relative;
   overflow: hidden;
   letter-spacing: 0.3px;
@@ -269,7 +272,7 @@
 /* 매우 작은 화면 (390px 이하) */
 @media (max-width: 390px) {
   .biodata-page {
-    padding: 0 8px 12px 8px;
+    padding: 0 12px 12px 12px;
   }
   
   .biodata-container {
@@ -312,4 +315,80 @@
     border-radius: 8px;
     margin-top: 30px;
   }
+  
+  /* 작은 화면에서 텍스트 및 헤더 중앙 정렬 */
+  .biodata-page > h2,
+  .biodata-page > p,
+  .bio-card h3,
+  .bio-card p {
+    text-align: center;
+  }
+  
+  /* h3는 flex이므로 중앙 정렬 보장 */
+  .bio-card h3 {
+    justify-content: center;
+  }
+}
+
+/* ========================
+   로딩, 에러, 데이터 없음 상태
+======================== */
+.loading-container {
+  text-align: center;
+  padding: 60px 20px;
+  color: #DDF4E7;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(221, 244, 231, 0.3);
+  border-top: 4px solid #67C090;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-container {
+  text-align: center;
+  padding: 40px 20px;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.retry-btn {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 15px;
+  transition: background 0.3s ease;
+}
+
+.retry-btn:hover {
+  background: #ff5252;
+}
+
+.no-data-container {
+  text-align: center;
+  padding: 60px 20px;
+  color: #DDF4E7;
+  background: rgba(103, 192, 144, 0.1);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.no-data-container p {
+  margin: 10px 0;
+  font-size: 18px;
 }
