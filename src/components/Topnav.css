@@ -565,7 +565,6 @@
   border-radius: 20px;
   font-size: 12px;
   font-weight: 500;
-  margin-right: 12px;
 }
 
 .device-icon-small {
@@ -706,8 +705,15 @@
   }
 }
 
+@media (max-width: 480px) {
+  .device-status-compact {
+    margin-right: -10px;
+  }
+}
+
 /* 매우 작은 화면 (390px 이하) */
 @media (max-width: 390px) {
+
   .topnav {
     padding: 0 5px; /* 패딩 최소화 */
     height: 45px;
