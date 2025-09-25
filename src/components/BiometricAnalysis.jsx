@@ -48,43 +48,11 @@ const BiometricAnalysis = ({ data }) => {
       <div className="detailed-analysis">
         <h4>📋 상세 분석</h4>
         <div className="analysis-grid">
-          {/* 심박수 분석 */}
-          <div className="analysis-item">
-            <div className="analysis-header-item">
-              <span className="metric-icon">💓</span>
-              <span className="metric-name">심박수</span>
-              <span className="metric-value">{data.analysis.avg_hr_bpm} BPM</span>
-            </div>
-            <div className="analysis-content">
-              <div className="status-badge" style={{ backgroundColor: analysis.details.heartRate.color + '20', color: analysis.details.heartRate.color }}>
-                {analysis.details.heartRate.level}
-              </div>
-              <p className="analysis-message">{analysis.details.heartRate.message}</p>
-              <p className="analysis-recommendation">{analysis.details.heartRate.recommendation}</p>
-            </div>
-          </div>
-
-          {/* 산소포화도 분석 */}
-          <div className="analysis-item">
-            <div className="analysis-header-item">
-              <span className="metric-icon">🫁</span>
-              <span className="metric-name">산소포화도</span>
-              <span className="metric-value">{data.analysis.avg_spo2_pct}%</span>
-            </div>
-            <div className="analysis-content">
-              <div className="status-badge" style={{ backgroundColor: analysis.details.oxygenSaturation.color + '20', color: analysis.details.oxygenSaturation.color }}>
-                {analysis.details.oxygenSaturation.level}
-              </div>
-              <p className="analysis-message">{analysis.details.oxygenSaturation.message}</p>
-              <p className="analysis-recommendation">{analysis.details.oxygenSaturation.recommendation}</p>
-            </div>
-          </div>
-
-          {/* 체온 분석 */}
+          {/* 주변 온도 분석 */}
           <div className="analysis-item">
             <div className="analysis-header-item">
               <span className="metric-icon">🌡️</span>
-              <span className="metric-name">체온</span>
+              <span className="metric-name">주변 온도</span>
               <span className="metric-value">{data.analysis.avg_temperature_c}°C</span>
             </div>
             <div className="analysis-content">

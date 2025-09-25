@@ -2,20 +2,18 @@ import React from 'react';
 import './BiometricVisualization.css';
 
 const BiometricVisualization = ({ data }) => {
-  // 샘플 데이터 (나중에 실제 API 데이터로 교체)
-  const sampleData = {
-    id: 123,
-    timestamp: "2025-09-22T10:30:00Z",
-    status: "ok",
-    analysis: {
-      avg_hr_bpm: 84,
-      avg_spo2_pct: 97.1,
-      avg_temperature_c: 26.4,
-      avg_humidity_pct: 63.2
-    }
-  };
+  // 데이터가 없으면 렌더링하지 않음
+  if (!data) {
+    return (
+      <div className="biometric-visualization">
+        <div className="no-data-message">
+          <p>📊 생체 데이터를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const biometricData = data || sampleData;
+  const biometricData = data;
 
   // 상태별 색상 결정 함수
   const getStatusColor = (type, value) => {
@@ -76,51 +74,11 @@ const BiometricVisualization = ({ data }) => {
       </div>
 
       <div className="biometric-grid">
-        {/* 심박수 */}
-        <div className="metric-card">
-          <div className="metric-icon">💓</div>
-          <div className="metric-content">
-            <h4>심박수</h4>
-            <div className="metric-value" style={{ color: getStatusColor('hr', biometricData.analysis.avg_hr_bpm) }}>
-              {biometricData.analysis.avg_hr_bpm} BPM
-            </div>
-            <div className="metric-status" style={{ color: getStatusColor('hr', biometricData.analysis.avg_hr_bpm) }}>
-              {getStatusText('hr', biometricData.analysis.avg_hr_bpm)}
-            </div>
-          </div>
-          <div className="metric-chart">
-            <div className="chart-bar" style={{ 
-              height: `${Math.min((biometricData.analysis.avg_hr_bpm / 120) * 100, 100)}%`,
-              backgroundColor: getStatusColor('hr', biometricData.analysis.avg_hr_bpm)
-            }}></div>
-          </div>
-        </div>
-
-        {/* 산소포화도 */}
-        <div className="metric-card">
-          <div className="metric-icon">🫁</div>
-          <div className="metric-content">
-            <h4>산소포화도</h4>
-            <div className="metric-value" style={{ color: getStatusColor('spo2', biometricData.analysis.avg_spo2_pct) }}>
-              {biometricData.analysis.avg_spo2_pct}%
-            </div>
-            <div className="metric-status" style={{ color: getStatusColor('spo2', biometricData.analysis.avg_spo2_pct) }}>
-              {getStatusText('spo2', biometricData.analysis.avg_spo2_pct)}
-            </div>
-          </div>
-          <div className="metric-chart">
-            <div className="chart-bar" style={{ 
-              height: `${biometricData.analysis.avg_spo2_pct}%`,
-              backgroundColor: getStatusColor('spo2', biometricData.analysis.avg_spo2_pct)
-            }}></div>
-          </div>
-        </div>
-
-        {/* 체온 */}
+        {/* 주변 온도 */}
         <div className="metric-card">
           <div className="metric-icon">🌡️</div>
           <div className="metric-content">
-            <h4>체온</h4>
+            <h4>주변 온도</h4>
             <div className="metric-value" style={{ color: getStatusColor('temp', biometricData.analysis.avg_temperature_c) }}>
               {biometricData.analysis.avg_temperature_c}°C
             </div>

@@ -2,11 +2,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Topnav from "../components/Topnav";
+import DeviceInput from "../components/DeviceInput";
+import BiometricAnalysis from "../components/BiometricAnalysis";
 // import SearchModal from "../components/SearchModal";
 import EventCalendar from "./EventCalendar"; // ✅ 분리한 캘린더
 import EventPanel from "./EventPanel";       // ✅ 분리한 우측 패널
 import RecommendedPlaces from "../components/RecommendedPlaces"; // ✅ 추천 장소 컴포넌트
-import { playAPI, testAPIConnection } from "../services/api";
+import { playAPI, testAPIConnection, sensorAPI } from "../services/api";
+import { getBiometricPlaceRecommendation } from "../utils/biometricAnalysis";
 // import { festivals } from "../data/festivals"; // ✅ 연극 데이터 import - 제거됨
 import "./Main.css";
 
@@ -371,7 +374,6 @@ export default function Main() {
   // 검색 모달 제어 (주석처리)
   // const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-
   // ✅ 날짜 선택 상태 (홈화면 진입 시 2025년 5월로 초기화)
   const [selectedDate, setSelectedDate] = useState(new Date(2025, 4, 15)); // 2025년 5월 15일
   const selectedKey = fmt(selectedDate);
@@ -380,6 +382,123 @@ export default function Main() {
   const [plays, setPlays] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // 생체데이터 관련 상태
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [deviceId, setDeviceId] = useState(null);
+  const [biometricData, setBiometricData] = useState(null);
+  const [biometricRecommendation, setBiometricRecommendation] = useState(null);
+  const [showBiometricAnalysis, setShowBiometricAnalysis] = useState(false);
+
+  // localStorage에서 생체데이터 상태 복원
+  useEffect(() => {
+    const loadPersistedBiometricData = () => {
+      try {
+        const savedDeviceId = localStorage.getItem('biometric_device_id');
+        const savedBiometricData = localStorage.getItem('biometric_data');
+        const savedBiometricRecommendation = localStorage.getItem('biometric_recommendation');
+        const savedIsLoggedIn = localStorage.getItem('biometric_is_logged_in');
+
+        if (savedDeviceId && savedBiometricData && savedIsLoggedIn === 'true') {
+          console.log('🔄 저장된 생체데이터 상태 복원 중...');
+          
+          setDeviceId(savedDeviceId);
+          setBiometricData(JSON.parse(savedBiometricData));
+          setBiometricRecommendation(JSON.parse(savedBiometricRecommendation));
+          setIsLoggedIn(true);
+          setShowBiometricAnalysis(true);
+          
+          console.log('✅ 생체데이터 상태 복원 완료:', {
+            deviceId: savedDeviceId,
+            biometricData: JSON.parse(savedBiometricData),
+            recommendation: JSON.parse(savedBiometricRecommendation)
+          });
+        }
+      } catch (error) {
+        console.error('❌ 저장된 생체데이터 복원 실패:', error);
+        // localStorage 데이터가 손상된 경우 클리어
+        localStorage.removeItem('biometric_device_id');
+        localStorage.removeItem('biometric_data');
+        localStorage.removeItem('biometric_recommendation');
+        localStorage.removeItem('biometric_is_logged_in');
+      }
+    };
+
+    loadPersistedBiometricData();
+  }, []);
+
+  // 기기번호 입력 처리 함수
+  const handleDeviceSubmit = async (deviceNumber) => {
+    if (!deviceNumber) {
+      // 로그아웃 - localStorage 클리어
+      console.log('🚪 로그아웃 처리 중...');
+      setIsLoggedIn(false);
+      setDeviceId(null);
+      setBiometricData(null);
+      setBiometricRecommendation(null);
+      setShowBiometricAnalysis(false);
+      
+      // localStorage에서 생체데이터 관련 데이터 모두 제거
+      localStorage.removeItem('biometric_device_id');
+      localStorage.removeItem('biometric_data');
+      localStorage.removeItem('biometric_recommendation');
+      localStorage.removeItem('biometric_is_logged_in');
+      
+      console.log('✅ 로그아웃 완료 - localStorage 클리어됨');
+      return;
+    }
+
+    try {
+      // 기기번호 검증
+      console.log('기기번호 입력:', deviceNumber);
+      
+      // 실제 센서 API에서 최신 데이터 조회
+      console.log('🌐 최신 센서 분석 결과 조회 시작...');
+      const data = await sensorAPI.getLatestSensorResult();
+      
+      console.log('📡 API 응답 데이터:', data);
+      
+      // API 데이터를 기존 형식으로 변환
+      const transformedData = {
+        id: data._id || data.id,
+        timestamp: data.timestamp || data.createdAt,
+        status: data.status,
+        user_status: data.user_status,
+        led_signal: data.led_signal,
+        analysis: {
+          avg_hr_bpm: data.temperature || 0, // API에서 temperature 필드 사용
+          avg_spo2_pct: data.humidity || 0,   // API에서 humidity 필드 사용
+          avg_temperature_c: data.temperature || 0,
+          avg_humidity_pct: data.humidity || 0,
+        },
+      };
+      
+      console.log('✅ 변환된 생체데이터:', transformedData);
+      
+      // 생체데이터 분석 및 추천 생성
+      const recommendation = getBiometricPlaceRecommendation(transformedData);
+      
+      // 상태 업데이트
+      setDeviceId(deviceNumber);
+      setBiometricData(transformedData);
+      setBiometricRecommendation(recommendation);
+      setIsLoggedIn(true);
+      setShowBiometricAnalysis(true);
+      
+      // localStorage에 생체데이터 상태 저장
+      localStorage.setItem('biometric_device_id', deviceNumber);
+      localStorage.setItem('biometric_data', JSON.stringify(transformedData));
+      localStorage.setItem('biometric_recommendation', JSON.stringify(recommendation));
+      localStorage.setItem('biometric_is_logged_in', 'true');
+      
+      console.log('🧠 생체데이터 기반 추천:', recommendation);
+      console.log('💾 생체데이터 상태가 localStorage에 저장되었습니다.');
+      
+    } catch (error) {
+      console.error('❌ 센서 데이터 로드 실패:', error);
+      throw error;
+    }
+  };
 
 
   // 데이터 로딩 - 연극 API 사용
@@ -506,21 +625,55 @@ export default function Main() {
       {/* <div className="spacer" /> */}
       <main className="main-container">
         <section className="hero-block">
-          <Hero plays={plays} isLoading={isLoading} error={error} isLoggedIn={false} />
+          <Hero plays={plays} isLoading={isLoading} error={error} isLoggedIn={isLoggedIn} />
 
+          {/* 기기번호 입력 섹션 */}
+          <div className="device-section">
+            <DeviceInput 
+              onDeviceSubmit={handleDeviceSubmit}
+              isLoggedIn={isLoggedIn}
+              deviceId={deviceId}
+            />
+          </div>
 
-          {/* 검색 및 장르 필터 */}
-          <SearchAndGenre 
+          {/* 생체데이터 분석 결과 */}
+          {showBiometricAnalysis && biometricData && (
+            <div className="biometric-section">
+              <BiometricAnalysis data={biometricData} />
+            </div>
+          )}
+
+          {/* 생체데이터 기반 추천 메시지 */}
+          {biometricRecommendation && (
+            <div className="biometric-recommendation">
+              <div className="recommendation-header">
+                <h3>🧠 생체데이터 기반 추천</h3>
+                <p className="recommendation-message">{biometricRecommendation.message}</p>
+                <p className="recommendation-reason">💡 {biometricRecommendation.reason}</p>
+              </div>
+            </div>
+          )}
+
+          {/* 검색 및 장르 필터 - 제거됨 */}
+          {/* <SearchAndGenre 
             onSearchClick={() => {}} 
             onGenreClick={goGenre} 
-          />
+          /> */}
         </section>
         
-        {/* ✅ 추천 장소 섹션 */}
-        <RecommendedPlaces 
-          title="📍 내 주변 문화시설" 
-          limit={6}
-        />
+        {/* ✅ 생체데이터 기반 추천 장소 섹션 */}
+        {biometricRecommendation && biometricRecommendation.categories.length > 0 ? (
+          <RecommendedPlaces 
+            title={`🧠 ${biometricRecommendation.message}`}
+            genre={biometricRecommendation.categories[0]} // 첫 번째 카테고리 사용
+            limit={6}
+          />
+        ) : (
+          <RecommendedPlaces 
+            title="📍 내 주변 문화시설" 
+            limit={6}
+          />
+        )}
 
         {/* ✅ 근처 연극 정보 섹션 */}
         <section className="nearby-plays-section">
