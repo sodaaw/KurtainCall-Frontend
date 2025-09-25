@@ -3,8 +3,8 @@ import photoService from './photoService';
 
 class LocationService {
   constructor() {
-    // 카카오 개발자 센터의 REST API 키 사용
-    this.kakaoApiKey = 'e7abf7f4973d0c8697effa3139a25e04';
+    // 카카오 개발자 센터의 JavaScript 키 사용
+    this.kakaoApiKey = '305a989699c2b85d2d6470b6376d3853';
     this.userLocation = null;
     this.photoService = photoService;
   }
@@ -13,20 +13,34 @@ class LocationService {
   async getCurrentLocation() {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
+        console.error('❌ GPS를 지원하지 않는 브라우저입니다.');
         reject(new Error('GPS를 지원하지 않는 브라우저입니다.'));
         return;
       }
 
+      console.log('📍 GPS 위치 요청 시작...');
+      
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
+          console.log('🎯 GPS 위치 성공:', { lat: latitude, lng: longitude });
+          console.log('🎯 GPS 좌표 상세:', { 
+            lat: latitude, 
+            lng: longitude, 
+            latType: typeof latitude, 
+            lngType: typeof longitude 
+          });
           this.userLocation = { lat: latitude, lng: longitude };
           resolve({ lat: latitude, lng: longitude });
         },
         (error) => {
-          console.error('GPS 위치 가져오기 실패:', error);
+          console.error('❌ GPS 위치 가져오기 실패:', error);
+          console.error('❌ GPS 오류 코드:', error.code);
+          console.error('❌ GPS 오류 메시지:', error.message);
+          
           // GPS 실패 시 서울 시청을 기본 위치로 사용
           const defaultLocation = { lat: 37.5665, lng: 126.9780 };
+          console.log('📍 기본 위치 사용:', defaultLocation);
           this.userLocation = defaultLocation;
           resolve(defaultLocation);
         },
@@ -107,6 +121,7 @@ class LocationService {
       url: place.place_url || '',
       rating: place.rating ? parseFloat(place.rating) : 0,
       reviewCount: place.review_count ? parseInt(place.review_count) : 0,
+      ratingCount: place.rating_count ? parseInt(place.rating_count) : 0, // 추천 알고리즘을 위해 추가
       distance: this.calculateDistance(
         this.userLocation?.lat || 37.5665, 
         this.userLocation?.lng || 126.9780,
