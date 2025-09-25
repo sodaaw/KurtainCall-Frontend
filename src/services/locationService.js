@@ -7,7 +7,7 @@ class LocationService {
   constructor() {
     // 카카오 개발자 센터의 JavaScript 키 사용
     // 배포 환경에서는 환경변수가 제대로 로드되지 않을 수 있으므로 직접 설정
-    this.kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY || '305a989699c2b85d2d6470b6376d3853';
+    this.kakaoApiKey = '305a989699c2b85d2d6470b6376d3853';
     this.userLocation = null;
     this.photoService = photoService;
     

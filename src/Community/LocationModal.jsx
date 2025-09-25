@@ -19,7 +19,7 @@ const LocationModal = ({ isOpen, onClose, onSelect }) => {
       const exist = document.querySelector('script[data-kakao="true"]');
       if (!exist) {
         const s = document.createElement('script');
-        s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=039270177862ec2c7c46e905b6d3352f&autoload=false&libraries=services';
+        s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=305a989699c2b85d2d6470b6376d3853&autoload=false&libraries=services';
         s.async = true;
         s.dataset.kakao = 'true';
         s.onerror = () => reject(new Error('Failed to load Kakao Maps SDK'));
