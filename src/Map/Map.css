@@ -298,6 +298,8 @@ body {
   max-height: 600px;
   border: 1px solid rgba(38, 102, 127, 0.3);
   position: relative;
+  margin-right: -10px;
+  margin-left: 20px;
 }
 
 .map-container-wrapper::before {
@@ -535,7 +537,8 @@ body {
   }
   
   .map-content {
-    padding: 0 16px 20px 16px;
+    padding: 0 16px 20px 10px;
+    max-width: 85%;
   }
   
   .map-filter {
@@ -745,19 +748,52 @@ body {
   gap: 8px;
   padding: 12px 16px;
   border: 2px solid;
-  border-radius: 8px;
-  background: transparent;
-  color: inherit;
+  border-radius: 12px;
+  background: var(--background-blue);
+  color: var(--text);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: left;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 카테고리별 색상 테마 */
+.category-btn[data-category="theater"] {
+  border-color: #67C090;
+  background: rgba(103, 192, 144, 0.1);
+}
+
+.category-btn[data-category="museum"] {
+  border-color: #26667F;
+  background: rgba(38, 102, 127, 0.1);
+}
+
+.category-btn[data-category="gallery"] {
+  border-color: #7dd3a3;
+  background: rgba(125, 211, 163, 0.1);
+}
+
+.category-btn[data-category="exhibition"] {
+  border-color: #4A9B6E;
+  background: rgba(74, 155, 110, 0.1);
+}
+
+.category-btn[data-category="concert"] {
+  border-color: #124170;
+  background: rgba(18, 65, 112, 0.1);
+}
+
+.category-btn[data-category="cafe"] {
+  border-color: #5A7A8A;
+  background: rgba(90, 122, 138, 0.1);
 }
 
 .category-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .category-btn:disabled {
@@ -767,7 +803,45 @@ body {
 
 .category-btn.active {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  font-weight: 700;
+}
+
+/* 활성 상태별 색상 강화 */
+.category-btn.active[data-category="theater"] {
+  background: rgba(103, 192, 144, 0.2);
+  border-color: #67C090;
+  color: #67C090;
+}
+
+.category-btn.active[data-category="museum"] {
+  background: rgba(38, 102, 127, 0.2);
+  border-color: #26667F;
+  color: #26667F;
+}
+
+.category-btn.active[data-category="gallery"] {
+  background: rgba(125, 211, 163, 0.2);
+  border-color: #7dd3a3;
+  color: #7dd3a3;
+}
+
+.category-btn.active[data-category="exhibition"] {
+  background: rgba(74, 155, 110, 0.2);
+  border-color: #4A9B6E;
+  color: #4A9B6E;
+}
+
+.category-btn.active[data-category="concert"] {
+  background: rgba(18, 65, 112, 0.2);
+  border-color: #124170;
+  color: #124170;
+}
+
+.category-btn.active[data-category="cafe"] {
+  background: rgba(90, 122, 138, 0.2);
+  border-color: #5A7A8A;
+  color: #5A7A8A;
 }
 
 .category-icon {

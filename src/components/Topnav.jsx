@@ -240,58 +240,62 @@ export default function Topnav({ variant = "default" }) {
 
         {/* 오른쪽 영역 */}
         <div className="topnav-right">
-          {/* 기기입력 버튼 */}
-          {isDeviceLoggedIn ? (
-            <div className="device-status-compact">
-              <img src="/icons/vest.png" alt="device" className="device-icon-small" />
-              <span className="device-id-compact">{deviceId}</span>
-              <button 
-                className="device-logout-compact"
-                onClick={() => handleDeviceSubmit(null)}
-                title="기기 연결 해제"
-              >
-                ×
-              </button>
-            </div>
-          ) : (
-            <div className={`device-input-container ${isDeviceInputExpanded ? 'expanded' : ''}`}>
-              {isDeviceInputExpanded ? (
-                <form onSubmit={handleDeviceInputSubmit} className="device-input-form-compact">
+          {/* 기기입력 버튼 - 메인페이지가 아닐 때만 표시 */}
+          {!isHome && (
+            <>
+              {isDeviceLoggedIn ? (
+                <div className="device-status-compact">
                   <img src="/icons/vest.png" alt="device" className="device-icon-small" />
-                  <input
-                    type="text"
-                    placeholder="기기번호를 입력하세요"
-                    value={deviceInputValue}
-                    onChange={handleDeviceInputChange}
-                    onKeyDown={handleDeviceInputKeyDown}
-                    className="device-input-field"
-                    autoFocus
-                  />
-                  <button type="submit" className="device-submit-compact">
-                    ✓
-                  </button>
+                  <span className="device-id-compact">{deviceId}</span>
                   <button 
-                    type="button" 
-                    className="device-cancel-compact"
-                    onClick={() => {
-                      setIsDeviceInputExpanded(false);
-                      setDeviceInputValue('');
-                    }}
+                    className="device-logout-compact"
+                    onClick={() => handleDeviceSubmit(null)}
+                    title="기기 연결 해제"
                   >
                     ×
                   </button>
-                </form>
+                </div>
               ) : (
-                <button 
-                  className="device-input-compact"
-                  onClick={handleDeviceInputClick}
-                  aria-label="기기번호 입력"
-                >
-                  <img src="/icons/vest.png" alt="device" className="device-icon-small" />
-                  기기입력
-                </button>
+                <div className={`device-input-container ${isDeviceInputExpanded ? 'expanded' : ''}`}>
+                  {isDeviceInputExpanded ? (
+                    <form onSubmit={handleDeviceInputSubmit} className="device-input-form-compact">
+                      <img src="/icons/vest.png" alt="device" className="device-icon-small" />
+                      <input
+                        type="text"
+                        placeholder="기기번호를 입력하세요"
+                        value={deviceInputValue}
+                        onChange={handleDeviceInputChange}
+                        onKeyDown={handleDeviceInputKeyDown}
+                        className="device-input-field"
+                        autoFocus
+                      />
+                      <button type="submit" className="device-submit-compact">
+                        ✓
+                      </button>
+                      <button 
+                        type="button" 
+                        className="device-cancel-compact"
+                        onClick={() => {
+                          setIsDeviceInputExpanded(false);
+                          setDeviceInputValue('');
+                        }}
+                      >
+                        ×
+                      </button>
+                    </form>
+                  ) : (
+                    <button 
+                      className="device-input-compact"
+                      onClick={handleDeviceInputClick}
+                      aria-label="기기번호 입력"
+                    >
+                      <img src="/icons/vest.png" alt="device" className="device-icon-small" />
+                      기기입력
+                    </button>
+                  )}
+                </div>
               )}
-            </div>
+            </>
           )}
 
           {/* 로그인/로그아웃 버튼 주석처리

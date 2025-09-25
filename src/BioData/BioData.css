@@ -24,7 +24,7 @@
     rgba(0, 11, 88, 0.3) 70%,
     transparent 100%);
   transform: skewX(-15deg);
-  z-index: 0; /* 메인 요소 뒤로 */
+  z-index: -1; /* 메인 요소 뒤로 */
   pointer-events: none; /* 클릭 막지 않도록 */
   animation: curtainLeft 8s ease-in-out infinite;
 }
@@ -42,7 +42,7 @@
     rgba(0, 11, 88, 0.3) 70%,
     transparent 100%);
   transform: skewX(15deg);
-  z-index: 0; /* 메인 요소 뒤로 */
+  z-index: -1; /* 메인 요소 뒤로 */
   pointer-events: none; /* 클릭 막지 않도록 */
   animation: curtainRight 8s ease-in-out infinite;
 }
@@ -153,6 +153,89 @@
 }
 
 /* ========================
+   센서 상태 컨테이너
+======================== */
+.sensor-status-container {
+  margin-bottom: 30px;
+}
+
+.status-card {
+  background: rgba(18, 65, 112, 0.1);
+  border: 1px solid rgba(38, 102, 127, 0.3);
+  border-radius: 15px;
+  padding: 25px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(18, 65, 112, 0.2);
+}
+
+.status-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #67C090, #26667F);
+  opacity: 0.8;
+}
+
+.status-card h3 {
+  margin-top: 10px;
+  font-size: clamp(20px, 2.2vw, 24px);
+  color: #DDF4E7;
+  margin-bottom: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-info p {
+  font-size: clamp(16px, 1.6vw, 18px);
+  color: #DDF4E7;
+  margin-bottom: 15px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.status-info strong {
+  color: #67C090;
+  font-weight: 600;
+}
+
+/* LED 신호 스타일 */
+.led-signal {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 8px;
+  text-transform: uppercase;
+}
+
+.led-green {
+  background: rgba(103, 192, 144, 0.2);
+  color: #67C090;
+  border: 1px solid rgba(103, 192, 144, 0.4);
+}
+
+.led-red {
+  background: rgba(231, 76, 60, 0.2);
+  color: #E74C3C;
+  border: 1px solid rgba(231, 76, 60, 0.4);
+}
+
+.led-yellow {
+  background: rgba(243, 156, 18, 0.2);
+  color: #F39C12;
+  border: 1px solid rgba(243, 156, 18, 0.4);
+}
+
+/* ========================
    기분 분석 카드
 ======================== */
 .bio-card.mood {
@@ -170,36 +253,61 @@
 }
 
 /* ========================
-   추천 버튼
+   생체데이터 기반 추천 메시지
 ======================== */
-.recommend-btn {
-  background: #67C090;
-  color: #DDF4E7;
-  border: 2px solid #67C090;
-  border-radius: 12px;
-  padding: 18px 36px;
-  font-size: clamp(16px, 1.8vw, 18px);
-  font-weight: 600;
-  cursor: pointer;
+.biometric-recommendation {
+  margin: 30px 0;
+  padding: 25px;
+  background: rgba(103, 192, 144, 0.08);
+  border: 1px solid rgba(103, 192, 144, 0.3);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
   transition: all 0.3s ease;
-  display: block;
-  margin: 20px auto 0;
   position: relative;
   overflow: hidden;
-  letter-spacing: 0.3px;
+  box-shadow: 0 4px 16px rgba(103, 192, 144, 0.2);
 }
 
-.recommend-btn:hover {
-  background: #26667F;
-  border-color: #26667F;
-  transform: translateY(-1px);
+.biometric-recommendation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #67C090, #26667F);
+  opacity: 0.8;
 }
 
-.recommend-btn:active {
-  transform: translateY(0);
-  background: #124170;
-  border-color: #124170;
+.recommendation-header h3 {
+  font-size: clamp(20px, 2.2vw, 24px);
+  color: #DDF4E7;
+  margin-bottom: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+
+.recommendation-message {
+  font-size: clamp(16px, 1.6vw, 18px);
+  color: #DDF4E7;
+  margin-bottom: 10px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.recommendation-reason {
+  font-size: clamp(14px, 1.4vw, 16px);
+  color: #67C090;
+  margin-bottom: 0;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* ========================
+   추천 버튼 (제거됨)
+======================== */
 
 /* ========================
    반응형 디자인

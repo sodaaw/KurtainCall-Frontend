@@ -1,6 +1,6 @@
 // 생체데이터 분석 및 멘트 생성 유틸리티
 
-// 기준값 정의
+// 기준값 정의 (시연용 극단적 설정)
 const BIOMETRIC_THRESHOLDS = {
   heartRate: {
     low: 60,
@@ -15,14 +15,14 @@ const BIOMETRIC_THRESHOLDS = {
     criticalHigh: 100
   },
   temperature: {
-    low: 20,
-    high: 30,
-    criticalLow: 15,
-    criticalHigh: 35
+    low: 25,  // 시연용: 조금만 더워도 추천 변경
+    high: 28, // 시연용: 조금만 더워도 추천 변경
+    criticalLow: 20,
+    criticalHigh: 32
   },
   humidity: {
-    low: 40,
-    high: 70,
+    low: 50,  // 시연용: 조금만 건조해도 추천 변경
+    high: 65, // 시연용: 조금만 습해도 추천 변경
     criticalLow: 30,
     criticalHigh: 80
   }
@@ -110,13 +110,13 @@ export const analyzeOxygenSaturation = (spo2) => {
   }
 };
 
-// 체온 분석
+// 주변 온도 분석
 export const analyzeTemperature = (temp) => {
   if (temp < BIOMETRIC_THRESHOLDS.temperature.criticalLow) {
     return {
       status: 'critical',
       level: '위험',
-      message: `체온이 ${temp}°C로 매우 낮습니다. 저체온증 위험이 있습니다.`,
+      message: `주변 온도가 ${temp}°C로 매우 낮습니다. 추위로 인한 불편함이 있을 수 있습니다.`,
       recommendation: '따뜻한 곳으로 이동하고 따뜻한 음료를 섭취하세요.',
       color: '#E74C3C'
     };
@@ -124,7 +124,7 @@ export const analyzeTemperature = (temp) => {
     return {
       status: 'warning',
       level: '주의',
-      message: `체온이 ${temp}°C로 정상보다 낮습니다.`,
+      message: `주변 온도가 ${temp}°C로 쌀쌀합니다.`,
       recommendation: '따뜻한 옷을 입고 따뜻한 음료를 마셔보세요.',
       color: '#F39C12'
     };
@@ -132,7 +132,7 @@ export const analyzeTemperature = (temp) => {
     return {
       status: 'critical',
       level: '위험',
-      message: `체온이 ${temp}°C로 매우 높습니다. 열사병 위험이 있습니다.`,
+      message: `주변 온도가 ${temp}°C로 매우 높습니다. 더위로 인한 불편함이 있을 수 있습니다.`,
       recommendation: '시원한 곳으로 이동하고 충분한 수분을 섭취하세요.',
       color: '#E74C3C'
     };
@@ -140,7 +140,7 @@ export const analyzeTemperature = (temp) => {
     return {
       status: 'warning',
       level: '주의',
-      message: `체온이 ${temp}°C로 정상보다 높습니다.`,
+      message: `주변 온도가 ${temp}°C로 따뜻합니다.`,
       recommendation: '시원한 곳에서 휴식을 취하고 수분을 충분히 섭취하세요.',
       color: '#F39C12'
     };
@@ -148,8 +148,8 @@ export const analyzeTemperature = (temp) => {
     return {
       status: 'normal',
       level: '정상',
-      message: `체온이 ${temp}°C로 정상 범위입니다.`,
-      recommendation: '체온이 적절합니다.',
+      message: `주변 온도가 ${temp}°C로 쾌적합니다.`,
+      recommendation: '환경이 적절합니다.',
       color: '#67C090'
     };
   }
@@ -204,13 +204,11 @@ export const analyzeHumidity = (humidity) => {
 export const analyzeBiometricData = (data) => {
   const { analysis } = data;
   
-  const heartRateAnalysis = analyzeHeartRate(analysis.avg_hr_bpm);
-  const oxygenAnalysis = analyzeOxygenSaturation(analysis.avg_spo2_pct);
   const temperatureAnalysis = analyzeTemperature(analysis.avg_temperature_c);
   const humidityAnalysis = analyzeHumidity(analysis.avg_humidity_pct);
   
   // 전체 상태 결정
-  const analyses = [heartRateAnalysis, oxygenAnalysis, temperatureAnalysis, humidityAnalysis];
+  const analyses = [temperatureAnalysis, humidityAnalysis];
   const criticalCount = analyses.filter(a => a.status === 'critical').length;
   const warningCount = analyses.filter(a => a.status === 'warning').length;
   
@@ -241,8 +239,6 @@ export const analyzeBiometricData = (data) => {
       message: overallMessage
     },
     details: {
-      heartRate: heartRateAnalysis,
-      oxygenSaturation: oxygenAnalysis,
       temperature: temperatureAnalysis,
       humidity: humidityAnalysis
     }
@@ -278,5 +274,55 @@ export const getPerformanceRecommendation = (analysis) => {
       message: '현재 상태가 양호하여 모든 장르의 공연을 추천합니다.'
     };
   }
+};
+
+// 생체데이터 기반 장소 추천 로직
+export const getBiometricPlaceRecommendation = (data) => {
+  const { analysis } = data;
+  const temp = analysis.avg_temperature_c;
+  const humidity = analysis.avg_humidity_pct;
+  
+  // 더위/추위 판단 (시연용 극단적 설정)
+  const isHot = temp > 26; // 조금만 더워도
+  const isCold = temp < 24; // 조금만 추워도
+  
+  // 습도 기반 환경 판단
+  const isDry = humidity < 55; // 조금만 건조해도
+  const isHumid = humidity > 60; // 조금만 습해도
+  
+  let recommendation = {
+    categories: [],
+    message: '',
+    reason: ''
+  };
+  
+  // 우선순위: 온도 > 습도 (온도가 더 직접적인 체감 요인)
+  if (isHot) {
+    recommendation.categories.push('cafe');
+    recommendation.message = '주변 온도가 높아 시원한 카페를 추천합니다 ☕';
+    recommendation.reason = '주변 온도 상승';
+  } else if (isCold) {
+    recommendation.categories.push('cafe');
+    recommendation.message = '주변 온도가 낮아 따뜻한 카페를 추천합니다 ☕';
+    recommendation.reason = '주변 온도 하락';
+  } else if (isHumid) {
+    recommendation.categories.push('cafe');
+    recommendation.message = '습도가 높아 시원한 카페를 추천합니다 ☕';
+    recommendation.reason = '습도 상승';
+  } else if (isDry) {
+    recommendation.categories.push('cafe');
+    recommendation.message = '습도가 낮아 수분 보충이 가능한 카페를 추천합니다 ☕';
+    recommendation.reason = '습도 하락';
+  } else {
+    // 생체데이터가 정상이면 문화시설 추천
+    recommendation.categories = ['theater', 'museum', 'gallery', 'exhibition', 'concert'];
+    recommendation.message = '생체데이터가 정상이므로 문화시설을 추천합니다 🎭';
+    recommendation.reason = '정상 상태';
+  }
+  
+  // 중복 제거
+  recommendation.categories = [...new Set(recommendation.categories)];
+  
+  return recommendation;
 };
 

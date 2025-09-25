@@ -298,7 +298,7 @@
 
 @media (max-width: 768px) {
   .recommended-places-section {
-    padding: 0 16px;
+    padding: 0 30px 0 0;
   }
   
   .places-section-title {

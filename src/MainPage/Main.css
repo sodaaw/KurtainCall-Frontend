@@ -201,7 +201,7 @@
 
 @media (max-width: 768px) {
   .nearby-plays-section {
-    padding: 0 16px;
+    padding: 0 30px 0 0;
   }
   
   .plays-section-title {
@@ -1615,6 +1615,80 @@
 }
 
 @media (max-width: 480px) {
+  /* 메인 컨테이너 중앙정렬 */
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* Hero 섹션 중앙정렬 */
+  .hero {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero h1 {
+    text-align: center;
+  }
+  
+  .hero .tagline {
+    text-align: center;
+  }
+  
+  .hero .hero-sub {
+    justify-content: center;
+  }
+  
+  /* 검색바 중앙정렬 */
+  .search-input-wrapper {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* 장르 필터 중앙정렬 */
+  .genre-filters {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  /* 추천 섹션 중앙정렬 */
+  .recommended-section {
+    text-align: center;
+  }
+  
+  .recommended-section h2 {
+    text-align: center;
+  }
+  
+  .shows-slider {
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* 달력/이벤트 패널 중앙정렬 */
+  .schedule {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cal {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .events-panel {
+    width: 100%;
+    max-width: 400px;
+  }
+  
   .shows-container {
     gap: 10px;
   }
@@ -1815,4 +1889,67 @@
   /* 래퍼 그라디언트는 그리드 전환 시 숨김 */
   .shows-slider::before,
   .shows-slider::after { display: none; }
+}
+
+/* ========================
+   생체데이터 관련 스타일
+======================== */
+.device-section {
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.biometric-section {
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.biometric-recommendation {
+  margin: 20px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(103, 192, 144, 0.1), rgba(125, 211, 163, 0.05));
+  border: 1px solid rgba(103, 192, 144, 0.3);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.recommendation-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #67C090;
+  margin-bottom: 12px;
+}
+
+.recommendation-message {
+  font-size: 16px;
+  color: #DDF4E7;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.recommendation-reason {
+  font-size: 14px;
+  color: #7dd3a3;
+  margin: 0;
+  font-style: italic;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .biometric-recommendation {
+    margin: 15px 0;
+    padding: 15px;
+  }
+  
+  .recommendation-header h3 {
+    font-size: 18px;
+  }
+  
+  .recommendation-message {
+    font-size: 14px;
+  }
+  
+  .recommendation-reason {
+    font-size: 12px;
+  }
 }

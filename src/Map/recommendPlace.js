@@ -1,76 +1,75 @@
-// src/Map/recommendPlaces.js
+// src/Map/recommendPlace.js
 
-// °Å¸® °è»ê (Haversine °ø½Ä)
+// ê±°ë¦¬ ê³„ì‚° (Haversine ê³µì‹)
 export const getDistance = (lat1, lng1, lat2, lng2) => {
-    const R = 6371; // Áö±¸ ¹ÝÁö¸§ (km)
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLng = (lng2 - lng1) * Math.PI / 180;
-  
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * Math.PI / 180) *
-      Math.cos(lat2 * Math.PI / 180) *
-      Math.sin(dLng / 2) * Math.sin(dLng / 2);
-  
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  };
-  
-  // ÃßÃµ ·ÎÁ÷ - Ä«Ä«¿À API µ¥ÀÌÅÍ ±â¹Ý
-  export const rankPlaces = (userLat, userLng, spots) => {
-    // °¡ÁßÄ¡ ¼³Á¤
-    const ratingWeight = 3.0;  // ÆòÁ¡ °¡ÁßÄ¡ (³ôÀ»¼ö·Ï ÆòÁ¡ÀÌ Áß¿ä)
-    const reviewWeight = 0.1;  // ¸®ºä¼ö °¡ÁßÄ¡ (³ôÀ»¼ö·Ï ¸®ºä¼ö°¡ ¸¹À»¼ö·Ï ÁÁÀ½)
-    const distancePenalty = 2.0;  // °Å¸® Æä³ÎÆ¼ (³ôÀ»¼ö·Ï °Å¸®°¡ ¸Ö¼ö·Ï ºÒ¸®)
-    const reliabilityWeight = 0.5;  // ÆòÁ¡ °³¼ö °¡ÁßÄ¡ (½Å·Úµµ)
-  
-    return spots
-      .map(p => {
-        const dist = getDistance(userLat, userLng, p.lat, p.lng);
-        
-        // Ä«Ä«¿À API¿¡¼­ °¡Á®¿Â ½ÇÁ¦ µ¥ÀÌÅÍ »ç¿ë
-        const rating = p.rating || 0;                    // ½ÇÁ¦ ÆòÁ¡ (0-5)
-        const reviewCount = p.reviewCount || 0;          // ½ÇÁ¦ ¸®ºä¼ö
-        const ratingCount = p.ratingCount || 0;          // ½ÇÁ¦ ÆòÁ¡ °³¼ö
-        
-        // ½Å·Úµµ Á¡¼ö °è»ê (ÆòÁ¡ °³¼ö°¡ ¸¹À»¼ö·Ï ½Å·Úµµ ³ôÀ½)
-        const reliability = Math.min(ratingCount / 10, 1); // ÃÖ´ë 1.0
-        
-        // Á¾ÇÕ Á¡¼ö °è»ê
-        const score = (rating * ratingWeight) + 
-                     (reviewCount * reviewWeight) + 
-                     (reliability * reliabilityWeight) - 
-                     (dist * distancePenalty);
-  
-        return { 
-          ...p, 
-          dist: Math.round(dist * 100) / 100, // ¼Ò¼öÁ¡ 2ÀÚ¸®±îÁö
-          reviewCount, 
-          rating, 
-          ratingCount,
-          reliability: Math.round(reliability * 100) / 100,
-          score: Math.round(score * 100) / 100
-        };
-      })
-      .filter(p => p.dist <= 5.0) // ¹Ý°æ 5km·Î È®Àå (´õ ¸¹Àº ¼±ÅÃÁö)
-      .filter(p => p.rating > 0)  // ÆòÁ¡ÀÌ ÀÖ´Â Àå¼Ò¸¸
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3); // TOP3
-  };
+  const R = 6371; // ì§€êµ¬ ë°˜ì§€ë¦„ (km)
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
 
-  // ÃßÃµ °á°ú¸¦ »ç¿ëÀÚ Ä£È­ÀûÀ¸·Î Æ÷¸ËÆÃ
-  export const formatRecommendation = (recommendedPlaces) => {
-    return recommendedPlaces.map((place, index) => ({
-      rank: index + 1,
-      name: place.name,
-      address: place.address,
-      distance: `${place.dist}km`,
-      rating: place.rating,
-      reviewCount: place.reviewCount,
-      score: place.score,
-      type: place.type,
-      phone: place.phone,
-      detailUrl: place.detailUrl
-    }));
-  };
-  
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
+
+// ì¶”ì²œ ì•Œê³ ë¦¬ì¦˜ - ì¹´ì¹´ì˜¤ API ë°ì´í„° ê¸°ë°˜
+export const rankPlaces = (userLat, userLng, spots) => {
+  // ê°€ì¤‘ì¹˜ ì„¤ì •
+  const ratingWeight = 3.0;  // í‰ì  ê°€ì¤‘ì¹˜ (ë†’ì„ìˆ˜ë¡ ë” ì¤‘ìš”)
+  const reviewWeight = 0.1;  // ë¦¬ë·° ê°€ì¤‘ì¹˜ (ë†’ì„ìˆ˜ë¡ ë” ì‹ ë¢°í•  ìˆ˜ ìžˆìŒ)
+  const distancePenalty = 2.0;  // ê±°ë¦¬ íŽ˜ë„í‹° (ë†’ì„ìˆ˜ë¡ ê±°ë¦¬ê°€ ë©€ìˆ˜ë¡ ê°ì )
+  const reliabilityWeight = 0.5;  // ì‹ ë¢°ë„ ê°€ì¤‘ì¹˜ (ë¦¬ë·°ìˆ˜)
+
+  return spots
+    .map(p => {
+      const dist = getDistance(userLat, userLng, p.lat, p.lng);
+      
+      // ì¹´ì¹´ì˜¤ APIì—ì„œ ë°›ì€ í‰ì  ì •ë³´ í™œìš©
+      const rating = p.rating || 0;                    // í‰ì  ì ìˆ˜ (0-5)
+      const reviewCount = p.reviewCount || 0;          // ë¦¬ë·° ê°œìˆ˜
+      const ratingCount = p.ratingCount || 0;          // í‰ì  ë§¤ê¸´ ê°œìˆ˜
+      
+      // ì‹ ë¢°ë„ ê³„ì‚° (ë¦¬ë·°ìˆ˜ê°€ ë§Žì„ìˆ˜ë¡ ì‹ ë¢°ë„ ë†’ìŒ)
+      const reliability = Math.min(ratingCount / 10, 1); // ìµœëŒ€ 1.0
+      
+      // ìµœì¢… ì ìˆ˜ ê³„ì‚°
+      const score = (rating * ratingWeight) + 
+                   (reviewCount * reviewWeight) + 
+                   (reliability * reliabilityWeight) - 
+                   (dist * distancePenalty);
+
+      return { 
+        ...p, 
+        dist: Math.round(dist * 100) / 100, // ì†Œìˆ˜ì  2ìžë¦¬ê¹Œì§€
+        reviewCount, 
+        rating, 
+        ratingCount,
+        reliability: Math.round(reliability * 100) / 100,
+        score: Math.round(score * 100) / 100
+      };
+    })
+    .filter(p => p.dist <= 5.0) // ê·¼ì²˜ 5kmë§Œ í™•ë³´ (ë„ˆë¬´ ë©€ë©´ ì œì™¸)
+    .filter(p => p.rating > 0)  // í‰ì ì´ ìžˆëŠ” ìž¥ì†Œë§Œ
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3); // TOP3
+};
+
+// ì¶”ì²œ ê²°ê³¼ë¥¼ ì‚¬ìš©ìž ì¹œí™”ì ìœ¼ë¡œ í¬ë§·íŒ…
+export const formatRecommendation = (recommendedPlaces) => {
+  return recommendedPlaces.map((place, index) => ({
+    rank: index + 1,
+    name: place.name,
+    address: place.address,
+    distance: `${place.dist}km`,
+    rating: place.rating,
+    reviewCount: place.reviewCount,
+    score: place.score,
+    type: place.type,
+    phone: place.phone,
+    detailUrl: place.detailUrl
+  }));
+};

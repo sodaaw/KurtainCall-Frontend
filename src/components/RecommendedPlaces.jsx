@@ -19,41 +19,51 @@ const RecommendedPlaces = ({ genre = null, limit = 6, title = "📍 근처 추�
       setLoading(true);
       setError(null);
 
+      console.log('🎯 RecommendedPlaces: 추천 장소 로드 시작...');
+      console.log('📋 파라미터:', { genre, limit });
+
       let recommendedPlaces = [];
       
       if (genre) {
         // 장르별 추천 장소
+        console.log('🎭 장르별 추천:', genre);
         recommendedPlaces = await locationService.getGenreSpecificPlaces(genre);
       } else {
         // 일반 추천 장소
+        console.log('📍 일반 추천 장소');
         recommendedPlaces = await locationService.getRecommendedPlaces(limit);
       }
 
+      console.log('📊 받은 추천 장소:', recommendedPlaces.length, '개');
       setPlaces(recommendedPlaces);
       
       // 각 장소에 대해 카카오맵 이미지 크롤링 시도
-      const imagePromises = recommendedPlaces.map(async (place) => {
-        try {
-          const imageUrl = await photoService.getPlacePhoto(place.name, place.address, place.category);
-          return { placeId: place.id, imageUrl };
-        } catch (error) {
-          console.log('이미지 크롤링 실패:', place.name, error);
-          return { placeId: place.id, imageUrl: null };
-        }
-      });
-      
-      const imageResults = await Promise.all(imagePromises);
-      const imageMap = {};
-      imageResults.forEach(({ placeId, imageUrl }) => {
-        if (imageUrl) {
-          imageMap[placeId] = imageUrl;
-        }
-      });
-      
-      setImageUrls(imageMap);
+      if (recommendedPlaces.length > 0) {
+        console.log('🖼️ 이미지 크롤링 시작...');
+        const imagePromises = recommendedPlaces.map(async (place) => {
+          try {
+            const imageUrl = await photoService.getPlacePhoto(place.name, place.address, place.category);
+            return { placeId: place.id, imageUrl };
+          } catch (error) {
+            console.log('이미지 크롤링 실패:', place.name, error);
+            return { placeId: place.id, imageUrl: null };
+          }
+        });
+        
+        const imageResults = await Promise.all(imagePromises);
+        const imageMap = {};
+        imageResults.forEach(({ placeId, imageUrl }) => {
+          if (imageUrl) {
+            imageMap[placeId] = imageUrl;
+          }
+        });
+        
+        console.log('🖼️ 이미지 크롤링 완료:', Object.keys(imageMap).length, '개 이미지');
+        setImageUrls(imageMap);
+      }
     } catch (err) {
-      console.error('추천 장소 로드 실패:', err);
-      setError('추천 장소를 불러올 수 없습니다.');
+      console.error('❌ 추천 장소 로드 실패:', err);
+      setError('추천 장소를 불러올 수 없습니다. API 키를 확인해주세요.');
     } finally {
       setLoading(false);
     }
