@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topnav from '../components/Topnav';
 import { playAPI } from '../services/api';
+import locationService from '../services/locationService';
 import { rankPlaces, formatRecommendation } from './recommendPlace';
 // import { festivals } from '../data/festivals'; // 축제 데이터는 나중에 제거
 import './Map.css';
@@ -71,9 +72,67 @@ const Map = () => {
   const mapObjRef = useRef(null);
   const geocoderRef = useRef(null);
   const markersRef = useRef([]);
+  const userLocationMarkerRef = useRef(null); // 사용자 위치 마커
   const regionPolygonsRef = useRef([]);
   const dongPolygonsRef = useRef([]);
   const [isMapReady, setIsMapReady] = useState(false);
+
+  // 사용자 위치 마커 추가/업데이트 함수
+  const addUserLocationMarker = (lat, lng) => {
+    console.log('📍 addUserLocationMarker 호출됨:', lat, lng);
+    console.log('📍 수원 위치 마커 생성 시도:', lat, lng);
+    
+    if (!kakaoRef.current || !mapObjRef.current) {
+      console.log('❌ 카카오 맵 또는 지도 객체가 없음');
+      return;
+    }
+    
+    // 기존 사용자 위치 마커 제거
+    if (userLocationMarkerRef.current) {
+      console.log('📍 기존 마커 제거 중...');
+      userLocationMarkerRef.current.setMap(null);
+    }
+    
+    const position = new kakaoRef.current.maps.LatLng(lat, lng);
+    console.log('📍 마커 위치 객체 생성:', position);
+    
+    // 사용자 위치 마커 생성 (파란색 원형 마커)
+    const userMarker = new kakaoRef.current.maps.Marker({
+      position: position,
+      map: mapObjRef.current,
+      zIndex: 2000, // 다른 마커보다 위에 표시
+      image: new kakaoRef.current.maps.MarkerImage(
+        'data:image/svg+xml;base64,' + btoa(`
+          <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" fill="#4285F4" stroke="#ffffff" stroke-width="3"/>
+            <circle cx="12" cy="12" r="4" fill="#ffffff"/>
+          </svg>
+        `),
+        new kakaoRef.current.maps.Size(24, 24),
+        new kakaoRef.current.maps.Point(12, 12)
+      )
+    });
+    
+    // 사용자 위치 인포윈도우
+    const userInfoWindow = new kakaoRef.current.maps.InfoWindow({
+      content: `
+        <div style="padding: 8px; text-align: center; font-size: 12px; font-weight: bold; color: #333;">
+          📍 현재 위치 (수원)
+        </div>
+      `,
+      removable: false,
+      zIndex: 2001
+    });
+    
+    // 마커 클릭 시 인포윈도우 표시
+    kakaoRef.current.maps.event.addListener(userMarker, 'click', () => {
+      userInfoWindow.open(mapObjRef.current, userMarker);
+    });
+    
+    userLocationMarkerRef.current = userMarker;
+    console.log('🎯 수원 위치 마커 추가 완료!:', lat, lng);
+    console.log('🎯 마커가 지도에 표시되었는지 확인하세요!');
+  };
 
   // 인기 문화지역 데이터
   const popularAreas = [
@@ -90,149 +149,104 @@ const Map = () => {
   const [filteredSpots, setFilteredSpots] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // 문화시설 카테고리 목록 (카페 추가)
+  // 문화시설 카테고리 목록 (테마에 맞는 색상으로 수정)
   const cultureCategories = [
     { key: 'theater', name: '극장', icon: '🎭', color: '#67C090' },
     { key: 'museum', name: '박물관', icon: '🏛️', color: '#26667F' },
     { key: 'gallery', name: '미술관', icon: '🖼️', color: '#7dd3a3' },
-    { key: 'exhibition', name: '전시회', icon: '🎨', color: '#ffc107' },
-    { key: 'concert', name: '콘서트홀', icon: '🎵', color: '#9c27b0' },
-    { key: 'cafe', name: '카페', icon: '☕', color: '#8d6e63' }
+    { key: 'exhibition', name: '전시회', icon: '🎨', color: '#4A9B6E' },
+    { key: 'concert', name: '콘서트홀', icon: '🎵', color: '#124170' },
+    { key: 'cafe', name: '카페', icon: '☕', color: '#5A7A8A' }
   ];
 
-  // 문화시설 데이터 가져오기 
+  // 사용자 현재 위치 가져오기 및 지도 초기화
   useEffect(() => {
     if (!window.kakao || !window.kakao.maps) return;
 
-    // 임시 테스트용 위치 (서울 시청)
-    const testLocation = { lat: 37.5665, lng: 126.9780 };
-    setUserLocation(testLocation);
-    console.log('📍 테스트 위치 설정:', testLocation);
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-        console.log("📍 실제 현재위치:", latitude, longitude);
+    console.log('📍 사용자 현재 위치 요청 중...');
+    console.log('📍 수원 위치 감지 시작!');
+    
+    // locationService를 사용하여 위치 가져오기 (Main 페이지와 동일한 방식)
+    const loadUserLocationAndPlaces = async () => {
+      try {
+        // locationService를 사용하여 GPS 위치 가져오기
+        const userPos = await locationService.getCurrentLocation();
+        console.log("🎯 locationService로 GPS 성공! 실제 현재위치:", userPos.lat, userPos.lng);
+        console.log("🎯 수원 위치인지 확인:", userPos.lat, userPos.lng);
         
         // 실제 위치로 업데이트
-        setUserLocation({ lat: latitude, lng: longitude });
+        setUserLocation({ lat: userPos.lat, lng: userPos.lng });
+        console.log('📍 사용자 위치 상태 업데이트됨:', { lat: userPos.lat, lng: userPos.lng });
         
-        // 디버깅용: 위치 저장 확인
-        console.log('📍 사용자 위치 저장됨:', { lat: latitude, lng: longitude });
-
-        const ps = new window.kakao.maps.services.Places();
-
-        const keywords = ['극장', '박물관', '미술관', '전시관', '문화센터'];
-        let allSpots = [];
-        let completedSearches = 0;
+        // 지도 중심을 사용자 위치로 이동
+        if (mapObjRef.current) {
+          const userPosition = new kakaoRef.current.maps.LatLng(userPos.lat, userPos.lng);
+          mapObjRef.current.setCenter(userPosition);
+          mapObjRef.current.setLevel(3); // 적절한 줌 레벨
+          console.log('📍 지도 중심을 사용자 위치로 이동 완료:', userPos.lat, userPos.lng);
+          console.log('📍 지도 줌 레벨 설정:', mapObjRef.current.getLevel());
+        } else {
+          console.log('❌ 지도 객체가 아직 준비되지 않음');
+        }
         
-        // 카테고리 검색 추가
-        const categorySearches = [
-          { category: 'CT1', type: 'theater', name: '문화시설' },
-          { category: 'CT2', type: 'museum', name: '관광명소' }
-        ];
-        
-        const totalSearches = keywords.length + categorySearches.length;
-        
-        // 카테고리별 검색 (더 정확함)
-        categorySearches.forEach(({ category, type, name }) => {
-          console.log(`🔍 ${name} 카테고리 검색 시작...`);
-          ps.categorySearch(
-            category,
-            (data, status) => {
-              console.log(`🏛️ ${name} 검색 상태:`, status);
-              if (status === window.kakao.maps.services.Status.OK) {
-                console.log(`🏛️ ${name} 결과:`, data);
+        // 사용자 위치 마커 추가/업데이트
+        if (isMapReady && kakaoRef.current && mapObjRef.current) {
+          console.log('📍 마커 추가 시도 중...');
+          addUserLocationMarker(userPos.lat, userPos.lng);
+        } else {
+          console.log('❌ 지도 준비 상태:', { isMapReady, kakao: !!kakaoRef.current, map: !!mapObjRef.current });
+        }
 
-                const transformed = data.map((place) => ({
-                  id: place.id,
-                  name: place.place_name,
-                  address: place.address_name,
-                  lat: parseFloat(place.y),
-                  lng: parseFloat(place.x),
-                  detailUrl: place.place_url,
-                  phone: place.phone || '',
-                  type: type,
-                  description: place.category_name || '',
-                  hours: '운영시간 정보 없음',
-                  // 평점 및 리뷰 정보 추가
-                  rating: place.rating ? parseFloat(place.rating) : 0,
-                  reviewCount: place.review_count ? parseInt(place.review_count) : 0,
-                  ratingCount: place.rating_count ? parseInt(place.rating_count) : 0
-                }));
-
-                allSpots = [...allSpots, ...transformed];
-              }
-              
-              completedSearches++;
-              console.log(`✅ ${name} 카테고리 검색 완료 (${completedSearches}/${totalSearches})`);
-              
-              if (completedSearches === totalSearches) {
-                console.log(`🎉 총 ${allSpots.length}개 문화시설 발견!`);
-                setCultureSpots(allSpots);
-                setIsLoading(false);
-              }
-            },
-            {
-              location: new window.kakao.maps.LatLng(latitude, longitude),
-              radius: 10000, // 10km 반경
-              sort: 'distance'
-            }
+        // locationService를 사용하여 문화시설 검색
+        try {
+          const culturePlaces = await locationService.searchPlacesByCategory('CT1'); // 문화시설
+          const touristPlaces = await locationService.searchPlacesByCategory('AT4'); // 관광명소
+          
+          // 두 결과를 합치고 중복 제거
+          const allPlaces = [...culturePlaces, ...touristPlaces];
+          const uniquePlaces = allPlaces.filter((place, index, self) => 
+            index === self.findIndex(p => p.id === place.id)
           );
-        });
-
-        keywords.forEach((keyword, idx) => {
-          console.log(`🔍 ${keyword} 키워드 검색 시작...`);
-          ps.keywordSearch(
-            keyword,
-            (data, status) => {
-              console.log(`🔍 ${keyword} 검색 상태:`, status);
-              if (status === window.kakao.maps.services.Status.OK) {
-                console.log(`🔍 ${keyword} 결과:`, data);
-
-                const transformed = data.map((place) => ({
-                  id: place.id,
-                  name: place.place_name,
-                  address: place.address_name,
-                  lat: parseFloat(place.y),
-                  lng: parseFloat(place.x),
-                  detailUrl: place.place_url,
-                  phone: place.phone || "",
-                  type: getCultureTypeFromKeyword(keyword), // 키워드 기반 카테고리 매핑
-                  description: place.category_name || '',
-                  hours: '운영시간 정보 없음',
-                  // 평점 및 리뷰 정보 추가
-                  rating: place.rating ? parseFloat(place.rating) : 0,
-                  reviewCount: place.review_count ? parseInt(place.review_count) : 0,
-                  ratingCount: place.rating_count ? parseInt(place.rating_count) : 0
-                }));
-
-                allSpots = [...allSpots, ...transformed];
-              }
-              
-              completedSearches++;
-              console.log(`✅ ${keyword} 검색 완료 (${completedSearches}/${totalSearches})`);
-              
-              // 모든 검색이 완료되면 업데이트
-              if (completedSearches === totalSearches) {
-                console.log(`🎉 총 ${allSpots.length}개 문화시설 발견!`);
-                setCultureSpots(allSpots);
+          
+          console.log(`🎉 총 ${uniquePlaces.length}개 문화시설 발견!`);
+          setCultureSpots(uniquePlaces);
+          setIsLoading(false);
+        } catch (searchError) {
+          console.error('문화시설 검색 실패:', searchError);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("❌ locationService GPS 가져오기 실패:", error);
+        console.log("📍 기본 위치(서울시청) 사용");
+        
+        // GPS 실패 시에만 기본 위치 사용
+        const defaultLocation = { lat: 37.5665, lng: 126.9780 };
+        setUserLocation(defaultLocation);
+        console.log('📍 기본 위치로 상태 설정:', defaultLocation);
+        
+        // 기본 위치로 지도 중심 이동
+        if (mapObjRef.current) {
+          const defaultPosition = new kakaoRef.current.maps.LatLng(defaultLocation.lat, defaultLocation.lng);
+          mapObjRef.current.setCenter(defaultPosition);
+          mapObjRef.current.setLevel(3);
+          console.log('📍 지도 중심을 기본 위치로 이동:', defaultLocation);
+        } else {
+          console.log('❌ 지도 객체가 아직 준비되지 않음 (기본 위치)');
+        }
+        
+        // 기본 위치 마커 추가
+        if (isMapReady && kakaoRef.current && mapObjRef.current) {
+          console.log('📍 기본 위치 마커 추가 시도...');
+          addUserLocationMarker(defaultLocation.lat, defaultLocation.lng);
+        } else {
+          console.log('❌ 지도 준비 상태 (기본 위치):', { isMapReady, kakao: !!kakaoRef.current, map: !!mapObjRef.current });
+        }
+        
         setIsLoading(false);
-              }
-            },
-            {
-              location: new window.kakao.maps.LatLng(latitude, longitude),
-              radius: 5000, // 5km 반경
-            }
-          );
-        });
-      },
-      (err) => {
-        console.error("GPS 가져오기 실패:", err);
-        console.log("📍 테스트 위치 사용 중...");
-        // GPS 실패 시에도 테스트 위치는 이미 설정되어 있음
       }
-    );
+    };
+
+    loadUserLocationAndPlaces();
   }, []);
 
   // 키워드에서 문화시설 유형 추출
@@ -248,23 +262,10 @@ const Map = () => {
 
   // 카테고리별 검색 함수
   const searchByCategory = async (categoryKey) => {
-    if (!window.kakao || !window.kakao.maps) return;
-    
     setIsSearching(true);
     setSelectedCategory(categoryKey);
     
     try {
-      // 현재 위치 가져오기
-      const position = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          timeout: 10000,
-          enableHighAccuracy: true
-        });
-      });
-      
-      const { latitude, longitude } = position.coords;
-      const ps = new window.kakao.maps.services.Places();
-      
       // 카테고리별 키워드 매핑
       const categoryKeywords = {
         'theater': ['극장', '공연장', '연극', '뮤지컬'],
@@ -277,47 +278,41 @@ const Map = () => {
       
       const keywords = categoryKeywords[categoryKey] || ['문화시설'];
       let allSpots = [];
-      let completedSearches = 0;
       
-      keywords.forEach((keyword) => {
-        ps.keywordSearch(
-          keyword,
-          (data, status) => {
-            if (status === window.kakao.maps.services.Status.OK) {
-              const transformed = data.map((place) => ({
-                id: place.id,
-                name: place.place_name,
-                address: place.address_name,
-                lat: parseFloat(place.y),
-                lng: parseFloat(place.x),
-                detailUrl: place.place_url,
-                phone: place.phone || '',
-                type: categoryKey,
-                description: place.category_name || '',
-                hours: '운영시간 정보 없음',
-                // 평점 및 리뷰 정보 추가
-                rating: place.rating ? parseFloat(place.rating) : 0,
-                reviewCount: place.review_count ? parseInt(place.review_count) : 0,
-                ratingCount: place.rating_count ? parseInt(place.rating_count) : 0
-              }));
-              
-              allSpots = [...allSpots, ...transformed];
-            }
-            
-            completedSearches++;
-            if (completedSearches === keywords.length) {
-              setFilteredSpots(allSpots);
-              setIsSearching(false);
-              console.log(`🎉 ${categoryKey} 카테고리에서 ${allSpots.length}개 장소 발견!`);
-            }
-          },
-          {
-            location: new window.kakao.maps.LatLng(latitude, longitude),
-            radius: 10000,
-            sort: 'distance'
-          }
-        );
-      });
+      // locationService를 사용하여 각 키워드로 검색
+      for (const keyword of keywords) {
+        try {
+          const places = await locationService.searchPlacesByKeyword(keyword, 10000);
+          const transformed = places.map((place) => ({
+            id: place.id,
+            name: place.name,
+            address: place.address,
+            lat: place.lat,
+            lng: place.lng,
+            detailUrl: place.url,
+            phone: place.phone || '',
+            type: categoryKey,
+            description: place.category || '',
+            hours: '운영시간 정보 없음',
+            rating: place.rating || 0,
+            reviewCount: place.reviewCount || 0,
+            ratingCount: place.ratingCount || 0
+          }));
+          
+          allSpots = [...allSpots, ...transformed];
+        } catch (keywordError) {
+          console.error(`키워드 "${keyword}" 검색 실패:`, keywordError);
+        }
+      }
+      
+      // 중복 제거
+      const uniqueSpots = allSpots.filter((place, index, self) => 
+        index === self.findIndex(p => p.id === place.id)
+      );
+      
+      setFilteredSpots(uniqueSpots);
+      setIsSearching(false);
+      console.log(`🎉 ${categoryKey} 카테고리에서 ${uniqueSpots.length}개 장소 발견!`);
       
     } catch (error) {
       console.error('카테고리 검색 실패:', error);
@@ -333,48 +328,28 @@ const Map = () => {
     setSelectedCategory('');
     
     try {
-      const position = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          timeout: 10000,
-          enableHighAccuracy: true
-        });
-      });
+      // locationService를 사용하여 검색
+      const places = await locationService.searchPlacesByKeyword(searchQuery, 10000);
       
-      const { latitude, longitude } = position.coords;
-      const ps = new window.kakao.maps.services.Places();
+      const transformed = places.map((place) => ({
+        id: place.id,
+        name: place.name,
+        address: place.address,
+        lat: place.lat,
+        lng: place.lng,
+        detailUrl: place.url,
+        phone: place.phone || '',
+        type: getCultureTypeFromKeyword(searchQuery),
+        description: place.category || '',
+        hours: '운영시간 정보 없음',
+        rating: place.rating || 0,
+        reviewCount: place.reviewCount || 0,
+        ratingCount: place.ratingCount || 0
+      }));
       
-      ps.keywordSearch(
-        searchQuery,
-        (data, status) => {
-          if (status === window.kakao.maps.services.Status.OK) {
-            const transformed = data.map((place) => ({
-              id: place.id,
-              name: place.place_name,
-              address: place.address_name,
-              lat: parseFloat(place.y),
-              lng: parseFloat(place.x),
-              detailUrl: place.place_url,
-              phone: place.phone || '',
-              type: getCultureTypeFromKeyword(searchQuery),
-              description: place.category_name || '',
-              hours: '운영시간 정보 없음',
-              // 평점 및 리뷰 정보 추가
-              rating: place.rating ? parseFloat(place.rating) : 0,
-              reviewCount: place.review_count ? parseInt(place.review_count) : 0,
-              ratingCount: place.rating_count ? parseInt(place.rating_count) : 0
-            }));
-            
-            setFilteredSpots(transformed);
-            console.log(`🔍 '${searchQuery}' 검색 결과: ${transformed.length}개`);
-          }
-          setIsSearching(false);
-        },
-        {
-          location: new window.kakao.maps.LatLng(latitude, longitude),
-          radius: 10000,
-          sort: 'distance'
-        }
-      );
+      setFilteredSpots(transformed);
+      setIsSearching(false);
+      console.log(`🔍 '${searchQuery}' 검색 결과: ${transformed.length}개`);
       
     } catch (error) {
       console.error('검색 실패:', error);
@@ -414,10 +389,22 @@ const Map = () => {
 
         console.log('[Map] Kakao SDK loaded, creating map...');
         kakaoRef.current = kakao;
-        mapObjRef.current = new kakao.maps.Map(mapRef.current, {
-          center: new kakao.maps.LatLng(37.5665, 126.978),
-          level: 9,
-        });
+        
+        // 사용자 위치를 가져와서 지도 중심 설정
+        try {
+          const userPos = await locationService.getCurrentLocation();
+          console.log('[Map] 사용자 위치로 지도 초기화:', userPos);
+          mapObjRef.current = new kakao.maps.Map(mapRef.current, {
+            center: new kakao.maps.LatLng(userPos.lat, userPos.lng),
+            level: 3, // 더 가까운 줌 레벨
+          });
+        } catch (error) {
+          console.log('[Map] 사용자 위치 가져오기 실패, 기본 위치로 지도 초기화:', error);
+          mapObjRef.current = new kakao.maps.Map(mapRef.current, {
+            center: new kakao.maps.LatLng(37.5665, 126.978),
+            level: 9,
+          });
+        }
         geocoderRef.current = new kakao.maps.services.Geocoder();
 
         console.log('[Map] Map initialized successfully');
@@ -743,6 +730,33 @@ const Map = () => {
     }, 3000);
   };
 
+  // 사용자 위치 마커 추가 및 지도 포커스 (지도 준비 시)
+  useEffect(() => {
+    console.log('📍 지도 준비 상태 체크:', { isMapReady, userLocation, kakao: !!kakaoRef.current, map: !!mapObjRef.current });
+    
+    if (isMapReady && userLocation && kakaoRef.current && mapObjRef.current) {
+      console.log('📍 지도 준비됨, 사용자 위치 마커 추가:', userLocation);
+      console.log('📍 수원 위치 마커 추가 시도:', userLocation.lat, userLocation.lng);
+      
+      // 사용자 위치 마커 추가
+      addUserLocationMarker(userLocation.lat, userLocation.lng);
+      
+      // 지도 중심을 사용자 위치로 이동
+      const userPosition = new kakaoRef.current.maps.LatLng(userLocation.lat, userLocation.lng);
+      mapObjRef.current.setCenter(userPosition);
+      mapObjRef.current.setLevel(3); // 적절한 줌 레벨
+      console.log('📍 지도 중심을 사용자 위치로 이동:', userLocation);
+      console.log('📍 현재 지도 중심:', mapObjRef.current.getCenter());
+    } else {
+      console.log('❌ 지도 준비 조건 미충족:', { 
+        isMapReady, 
+        hasUserLocation: !!userLocation, 
+        hasKakao: !!kakaoRef.current, 
+        hasMap: !!mapObjRef.current 
+      });
+    }
+  }, [isMapReady, userLocation]);
+
   // 마커 갱신: cultureSpots 또는 filteredSpots가 바뀔 때마다
   useEffect(() => {
     console.log('[Map] Marker update effect triggered');
@@ -981,13 +995,9 @@ const Map = () => {
                 <button
                   key={category.key}
                   className={`category-btn ${selectedCategory === category.key ? 'active' : ''}`}
+                  data-category={category.key}
                   onClick={() => searchByCategory(category.key)}
                   disabled={isSearching}
-                  style={{
-                    backgroundColor: selectedCategory === category.key ? category.color : 'transparent',
-                    borderColor: category.color,
-                    color: selectedCategory === category.key ? 'white' : category.color
-                  }}
                 >
                   <span className="category-icon">{category.icon}</span>
                   <span className="category-name">{category.name}</span>

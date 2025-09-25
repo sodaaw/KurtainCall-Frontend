@@ -1615,6 +1615,80 @@
 }
 
 @media (max-width: 480px) {
+  /* 메인 컨테이너 중앙정렬 */
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* Hero 섹션 중앙정렬 */
+  .hero {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero h1 {
+    text-align: center;
+  }
+  
+  .hero .tagline {
+    text-align: center;
+  }
+  
+  .hero .hero-sub {
+    justify-content: center;
+  }
+  
+  /* 검색바 중앙정렬 */
+  .search-input-wrapper {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* 장르 필터 중앙정렬 */
+  .genre-filters {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  /* 추천 섹션 중앙정렬 */
+  .recommended-section {
+    text-align: center;
+  }
+  
+  .recommended-section h2 {
+    text-align: center;
+  }
+  
+  .shows-slider {
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* 달력/이벤트 패널 중앙정렬 */
+  .schedule {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cal {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .events-panel {
+    width: 100%;
+    max-width: 400px;
+  }
+  
   .shows-container {
     gap: 10px;
   }

@@ -535,9 +535,8 @@ body {
 }
 
 .search-btn {
-  background: linear-gradient(135deg, var(--community-burgundy), var(--community-burgundy-light));
-  border: 2px solid var(--community-burgundy);
-  color: var(--community-gold);
+  background: #67C090;
+  color: #ffffff;
   padding: 12px 20px;
   border-radius: 10px;
   cursor: pointer;
