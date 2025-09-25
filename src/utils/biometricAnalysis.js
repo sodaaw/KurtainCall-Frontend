@@ -296,36 +296,25 @@ export const getBiometricPlaceRecommendation = (data) => {
     reason: ''
   };
   
-  // 더위일 때 카페 추천
+  // 우선순위: 온도 > 습도 (온도가 더 직접적인 체감 요인)
   if (isHot) {
     recommendation.categories.push('cafe');
     recommendation.message = '주변 온도가 높아 시원한 카페를 추천합니다 ☕';
     recommendation.reason = '주변 온도 상승';
-  }
-  
-  // 추위일 때 카페 추천
-  if (isCold) {
+  } else if (isCold) {
     recommendation.categories.push('cafe');
     recommendation.message = '주변 온도가 낮아 따뜻한 카페를 추천합니다 ☕';
     recommendation.reason = '주변 온도 하락';
-  }
-  
-  // 건조할 때 카페 추천
-  if (isDry) {
-    recommendation.categories.push('cafe');
-    recommendation.message = '습도가 낮아 수분 보충이 가능한 카페를 추천합니다 ☕';
-    recommendation.reason = '습도 하락';
-  }
-  
-  // 습할 때 카페 추천
-  if (isHumid) {
+  } else if (isHumid) {
     recommendation.categories.push('cafe');
     recommendation.message = '습도가 높아 시원한 카페를 추천합니다 ☕';
     recommendation.reason = '습도 상승';
-  }
-  
-  // 생체데이터가 정상이면 문화시설 추천
-  if (!isHot && !isCold && !isDry && !isHumid) {
+  } else if (isDry) {
+    recommendation.categories.push('cafe');
+    recommendation.message = '습도가 낮아 수분 보충이 가능한 카페를 추천합니다 ☕';
+    recommendation.reason = '습도 하락';
+  } else {
+    // 생체데이터가 정상이면 문화시설 추천
     recommendation.categories = ['theater', 'museum', 'gallery', 'exhibition', 'concert'];
     recommendation.message = '생체데이터가 정상이어서 문화시설을 추천합니다 🎭';
     recommendation.reason = '정상 상태';

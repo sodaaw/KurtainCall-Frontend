@@ -390,6 +390,7 @@ export default function Main() {
   const [biometricData, setBiometricData] = useState(null);
   const [biometricRecommendation, setBiometricRecommendation] = useState(null);
   const [showBiometricAnalysis, setShowBiometricAnalysis] = useState(false);
+  const [isRefreshingBio, setIsRefreshingBio] = useState(false);
 
   // 카테고리별 이모티콘 반환 함수
   const getCategoryIcon = (category) => {
@@ -518,6 +519,42 @@ export default function Main() {
     } catch (error) {
       console.error('❌ 센서 데이터 로드 실패:', error);
       throw error;
+    }
+  };
+
+  // 홈에서 즉시 새로고침: 최신 센서 결과를 불러와 상태와 추천 갱신
+  const refreshBiometricNow = async () => {
+    try {
+      setIsRefreshingBio(true);
+      const data = await sensorAPI.getLatestSensorResult();
+      const transformedData = {
+        id: data._id || data.id,
+        timestamp: data.timestamp || data.createdAt,
+        status: data.status,
+        user_status: data.user_status,
+        led_signal: data.led_signal,
+        analysis: {
+          avg_hr_bpm: data.temperature || 0,
+          avg_spo2_pct: data.humidity || 0,
+          avg_temperature_c: data.temperature || 0,
+          avg_humidity_pct: data.humidity || 0,
+        },
+      };
+      const recommendation = getBiometricPlaceRecommendation(transformedData);
+      setBiometricData(transformedData);
+      setBiometricRecommendation(recommendation);
+      setShowBiometricAnalysis(true);
+      // 로그인 플래그가 없으면 켜줌 (게스트도 즉시 확인 가능하게)
+      if (!isLoggedIn) setIsLoggedIn(true);
+      // localStorage에 즉시 반영
+      if (deviceId) localStorage.setItem('biometric_device_id', deviceId);
+      localStorage.setItem('biometric_data', JSON.stringify(transformedData));
+      localStorage.setItem('biometric_recommendation', JSON.stringify(recommendation));
+      localStorage.setItem('biometric_is_logged_in', 'true');
+    } catch (e) {
+      console.error('❌ 생체데이터 새로고침 실패:', e);
+    } finally {
+      setIsRefreshingBio(false);
     }
   };
 
@@ -660,7 +697,12 @@ export default function Main() {
           {/* 생체데이터 요약 */}
           {showBiometricAnalysis && biometricData && biometricRecommendation && (
             <div className="biometric-section">
-              <BiometricSummary data={biometricData} recommendation={biometricRecommendation} />
+              <BiometricSummary 
+                data={biometricData} 
+                recommendation={biometricRecommendation}
+                onRefresh={refreshBiometricNow}
+                refreshing={isRefreshingBio}
+              />
             </div>
           )}
 

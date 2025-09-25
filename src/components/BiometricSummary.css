@@ -29,6 +29,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
+  flex-wrap: nowrap;
 }
 
 .summary-icon {
@@ -38,6 +39,7 @@
 
 .summary-content {
   flex: 1;
+  min-width: 0;
 }
 
 .summary-content h3 {
@@ -59,7 +61,8 @@
   background: rgba(103, 192, 144, 0.2);
   color: #67C090;
   border: 1px solid rgba(103, 192, 144, 0.4);
-  border-radius: 8px;
+  border-radius: 8px 0 0 8px;
+  border-right: none;
   padding: 8px 16px;
   font-size: clamp(12px, 1.2vw, 14px);
   font-weight: 500;
@@ -67,6 +70,8 @@
   transition: all 0.3s ease;
   flex-shrink: 0;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
 }
 
 .detail-button:hover {
@@ -78,6 +83,42 @@
 .detail-button:active {
   transform: translateY(0);
   background: rgba(103, 192, 144, 0.4);
+}
+
+/* 새로고침 버튼 (아이콘형) */
+.refresh-button {
+  margin-left: 0;
+  background: rgba(103, 192, 144, 0.18);
+  color: #DDF4E7;
+  border: 1px solid rgba(103, 192, 144, 0.4);
+  border-radius: 0 8px 8px 0;
+  border-left: none;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
+  vertical-align: top;
+}
+
+.refresh-button:hover {
+  background: rgba(103, 192, 144, 0.28);
+  border-color: rgba(103, 192, 144, 0.6);
+  transform: rotate(20deg);
+}
+
+.refresh-button.refreshing {
+  opacity: 0.8;
+  cursor: progress;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 /* ========================
@@ -126,6 +167,7 @@
     width: 100%;
     text-align: center;
     padding: 10px 16px;
+    flex: 1 1;
   }
 }
 
