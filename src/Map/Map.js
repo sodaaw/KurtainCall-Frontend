@@ -96,28 +96,32 @@ const Map = () => {
     const position = new kakaoRef.current.maps.LatLng(lat, lng);
     console.log('📍 마커 위치 객체 생성:', position);
     
-    // 사용자 위치 마커 생성 (파란색 원형 마커)
+    // 사용자 위치 마커 생성 (더 명확한 파란색 원형 마커)
     const userMarker = new kakaoRef.current.maps.Marker({
       position: position,
       map: mapObjRef.current,
       zIndex: 2000, // 다른 마커보다 위에 표시
       image: new kakaoRef.current.maps.MarkerImage(
         'data:image/svg+xml;base64,' + btoa(`
-          <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" fill="#4285F4" stroke="#ffffff" stroke-width="3"/>
-            <circle cx="12" cy="12" r="4" fill="#ffffff"/>
+          <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="14" fill="#4285F4" stroke="#ffffff" stroke-width="4"/>
+            <circle cx="16" cy="16" r="6" fill="#ffffff"/>
+            <circle cx="16" cy="16" r="3" fill="#4285F4"/>
           </svg>
         `),
-        new kakaoRef.current.maps.Size(24, 24),
-        new kakaoRef.current.maps.Point(12, 12)
+        new kakaoRef.current.maps.Size(32, 32),
+        new kakaoRef.current.maps.Point(16, 16)
       )
     });
     
     // 사용자 위치 인포윈도우
     const userInfoWindow = new kakaoRef.current.maps.InfoWindow({
       content: `
-        <div style="padding: 8px; text-align: center; font-size: 12px; font-weight: bold; color: #333;">
-          📍 현재 위치 (수원)
+        <div style="padding: 12px; text-align: center; font-size: 14px; font-weight: bold; color: #333; background: linear-gradient(135deg, #4285F4, #34A853); color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);">
+          📍 현재 위치
+          <div style="font-size: 12px; margin-top: 4px; opacity: 0.9;">
+            ${lat.toFixed(6)}, ${lng.toFixed(6)}
+          </div>
         </div>
       `,
       removable: false,
@@ -336,8 +340,48 @@ const Map = () => {
           checkReady();
         });
         
-        // 5단계: 사용자 마커 추가
+        // 5단계: 사용자 마커 추가 및 지도 포커스
         addUserLocationMarker(userPos.lat, userPos.lng);
+        
+        // 5-1단계: 지도를 사용자 위치로 포커스 (부드러운 애니메이션)
+        const userPosition = new kakao.maps.LatLng(userPos.lat, userPos.lng);
+        
+        // 부드러운 이동을 위한 애니메이션 옵션
+        const moveOption = {
+          center: userPosition,
+          level: 3,
+          animate: true,
+          duration: 1000 // 1초 동안 부드럽게 이동
+        };
+        
+        mapObjRef.current.setCenter(userPosition);
+        mapObjRef.current.setLevel(3);
+        
+        // 약간의 지연 후 마커 클릭 이벤트 시뮬레이션 (인포윈도우 자동 표시)
+        setTimeout(() => {
+          if (userLocationMarkerRef.current) {
+            const userInfoWindow = new kakao.maps.InfoWindow({
+              content: `
+                <div style="padding: 12px; text-align: center; font-size: 14px; font-weight: bold; color: #333; background: linear-gradient(135deg, #4285F4, #34A853); color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);">
+                  📍 현재 위치
+                  <div style="font-size: 12px; margin-top: 4px; opacity: 0.9;">
+                    ${userPos.lat.toFixed(6)}, ${userPos.lng.toFixed(6)}
+                  </div>
+                </div>
+              `,
+              removable: false,
+              zIndex: 2001
+            });
+            userInfoWindow.open(mapObjRef.current, userLocationMarkerRef.current);
+            
+            // 3초 후 자동으로 닫기
+            setTimeout(() => {
+              userInfoWindow.close();
+            }, 3000);
+          }
+        }, 1500);
+        
+        console.log('🎯 지도 포커스를 사용자 위치로 이동:', userPos);
         
         // 6단계: 테스트 문화시설 데이터 추가
         const testPlaces = [
