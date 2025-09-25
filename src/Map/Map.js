@@ -159,8 +159,8 @@ const Map = () => {
     { key: 'cafe', name: '카페', icon: '☕', color: '#5A7A8A' }
   ];
 
-  // 사용자 위치 및 문화시설 로딩 (통합된 useEffect)
-  useEffect(() => {
+  // 사용자 위치 및 문화시설 로딩 (통합된 useEffect) - 주석 처리
+  /* useEffect(() => {
     if (!window.kakao || !window.kakao.maps) return;
 
     console.log('📍 사용자 현재 위치 요청 중...');
@@ -283,7 +283,111 @@ const Map = () => {
     };
 
     loadUserLocationAndPlaces();
-  }, []); // 빈 dependency로 최초 1회만 실행
+  }, []); // 빈 dependency로 최초 1회만 실행 */
+
+  // 🚀 통합된 지도 초기화 useEffect - 모든 초기화를 순차적으로 처리
+  useEffect(() => {
+    let mounted = true;
+    
+    const initEverything = async () => {
+      try {
+        console.log('[Map] 전체 초기화 시작...');
+        
+        // 1단계: 카카오 지도 로드
+        const kakao = await loadKakao();
+        if (!mounted || !mapRef.current) return;
+        console.log('[Map] 카카오 SDK 로드 완료');
+        kakaoRef.current = kakao;
+        
+        // 2단계: 사용자 위치 가져오기
+        let userPos;
+        try {
+          userPos = await locationService.getCurrentLocation();
+          console.log('[Map] GPS 성공:', userPos);
+          
+          // 중요: React 상태 즉시 업데이트
+          setUserLocation({ lat: userPos.lat, lng: userPos.lng });
+        } catch (error) {
+          console.log('[Map] GPS 실패, 기본값 사용');
+          userPos = { lat: 37.5665, lng: 126.978 };
+          setUserLocation(userPos);
+        }
+        
+        // 3단계: 지도 생성 (실제 위치로)
+        mapObjRef.current = new kakao.maps.Map(mapRef.current, {
+          center: new kakao.maps.LatLng(userPos.lat, userPos.lng),
+          level: 3,
+        });
+        geocoderRef.current = new kakao.maps.services.Geocoder();
+        
+        console.log('[Map] 지도 생성 완료');
+        
+        // 4단계: 지도 준비 완료 대기
+        await new Promise(resolve => {
+          const checkReady = () => {
+            if (mapObjRef.current?.getCenter) {
+              console.log('[Map] 지도 준비 완료');
+              setIsMapReady(true);
+              resolve();
+            } else {
+              setTimeout(checkReady, 100);
+            }
+          };
+          checkReady();
+        });
+        
+        // 5단계: 사용자 마커 추가
+        addUserLocationMarker(userPos.lat, userPos.lng);
+        
+        // 6단계: 테스트 문화시설 데이터 추가
+        const testPlaces = [
+          {
+            id: 'test1',
+            name: '수원화성박물관',
+            address: '경기도 수원시 팔달구',
+            lat: userPos.lat + 0.005,
+            lng: userPos.lng + 0.005,
+            category: '박물관',
+            type: 'museum',
+            rating: 4.2,
+            reviewCount: 85,
+            distance: 0.8
+          },
+          {
+            id: 'test2',
+            name: '수원시립미술관',
+            address: '경기도 수원시 영통구',
+            lat: userPos.lat - 0.005,
+            lng: userPos.lng + 0.005,
+            category: '미술관',
+            type: 'gallery',
+            rating: 4.0,
+            reviewCount: 62,
+            distance: 1.2
+          }
+        ];
+        
+        console.log('[Map] 테스트 데이터 설정:', testPlaces);
+        setCultureSpots(testPlaces);
+        setIsLoading(false);
+        
+        // 7단계: 서울 지도 초기화 (옵션)
+        try {
+          await initializeSeoulMap(kakao);
+          console.log('[Map] 서울 지도 완료');
+        } catch (err) {
+          console.log('[Map] 서울 지도 실패 (무시)');
+        }
+        
+      } catch (error) {
+        console.error('[Map] 초기화 실패:', error);
+        setIsLoading(false);
+      }
+    };
+
+    initEverything();
+    return () => { mounted = false; };
+  }, []); // 한 번만 실행
 
   // 키워드에서 문화시설 유형 추출
   const getCultureTypeFromKeyword = (keyword) => {
@@ -440,8 +544,8 @@ const Map = () => {
       (exist || document.querySelector('script[data-kakao="true"]')).addEventListener('load', onReady, { once: true });
     });
 
-  // 지도 초기화: 최초 1회
-  useEffect(() => {
+  // 지도 초기화: 최초 1회 - 주석 처리
+  /* useEffect(() => {
     let mounted = true;
     
     (async () => {
@@ -510,7 +614,7 @@ const Map = () => {
     })().catch(err => console.error('Map init error:', err));
 
     return () => { mounted = false; };
-  }, []);
+  }, []); */
 
   // 서울 지도 초기화 함수
   const initializeSeoulMap = async (kakao) => {
@@ -798,8 +902,8 @@ const Map = () => {
     }, 3000);
   };
 
-  // 사용자 위치가 변경될 때마다 마커 업데이트
-  useEffect(() => {
+  // 사용자 위치가 변경될 때마다 마커 업데이트 - 주석 처리 (통합 useEffect에서 처리)
+  /* useEffect(() => {
     if (!userLocation || !isMapReady || !kakaoRef.current || !mapObjRef.current) {
       return;
     }
@@ -819,7 +923,7 @@ const Map = () => {
     mapObjRef.current.setCenter(userPosition);
     mapObjRef.current.setLevel(3);
     
-  }, [userLocation, isMapReady]); // userLocation이 변경될 때마다 실행
+  }, [userLocation, isMapReady]); // userLocation이 변경될 때마다 실행 */
 
   // 마커 갱신: cultureSpots 또는 filteredSpots가 바뀔 때마다
   useEffect(() => {
