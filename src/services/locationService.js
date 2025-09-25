@@ -3,8 +3,8 @@ import photoService from './photoService';
 
 class LocationService {
   constructor() {
-    // 카카오 개발자 센터의 JavaScript 키 사용
-    this.kakaoApiKey = '305a989699c2b85d2d6470b6376d3853';
+    // 카카오 개발자 센터의 JavaScript 키 사용 (환경 변수에서 가져오기)
+    this.kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY || '305a989699c2b85d2d6470b6376d3853';
     this.userLocation = null;
     this.photoService = photoService;
   }
