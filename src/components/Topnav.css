@@ -670,7 +670,7 @@
   }
   
   .device-input-container {
-    max-width: 40px !important; /* 너비 증가 */
+    max-width: 20px !important; /* 너비 증가 */
     margin-left: auto !important; /* auto 무효화 */
     margin-right: 45px !important; /* 오른쪽 여백 적절히 설정 */
     flex-shrink: 0; /* 축소 방지 */
