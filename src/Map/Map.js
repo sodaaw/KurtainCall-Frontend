@@ -314,6 +314,21 @@ const Map = () => {
         
       } catch (error) {
         console.error('[Map] 초기화 실패:', error);
+        console.error('[Map] 에러 타입:', error.message);
+        
+        // Kakao SDK 로딩 실패인 경우 사용자에게 안내
+        if (error.message.includes('Kakao JavaScript Key not configured')) {
+          console.error('❌ 해결 방법:');
+          console.error('   1. Frontend 폴더에 .env 파일 생성');
+          console.error('   2. REACT_APP_KAKAO_JAVASCRIPT_KEY=실제_JavaScript_키 추가');
+          console.error('   3. 개발 서버 재시작 (npm start)');
+        } else if (error.message.includes('Failed to load Kakao Maps SDK')) {
+          console.error('❌ 해결 방법:');
+          console.error('   1. 카카오 개발자 센터에서 JavaScript 키 확인');
+          console.error('   2. localhost:3000 도메인 등록 확인');
+          console.error('   3. HTTPS 환경에서 테스트 (또는 localhost는 HTTP 허용)');
+        }
+        
         setIsLoading(false);
       }
     };
@@ -445,6 +460,14 @@ const Map = () => {
   // Kakao SDK 로딩 함수
   const loadKakao = () =>
     new Promise((resolve, reject) => {
+      // 환경 변수 체크
+      if (!process.env.REACT_APP_KAKAO_JAVASCRIPT_KEY) {
+        console.error('❌ REACT_APP_KAKAO_JAVASCRIPT_KEY 환경변수가 설정되지 않았습니다.');
+        console.error('❌ .env 파일에 REACT_APP_KAKAO_JAVASCRIPT_KEY=실제_JavaScript_키 형태로 설정해주세요.');
+        reject(new Error('Kakao JavaScript Key not configured'));
+        return;
+      }
+
       if (window.kakao && window.kakao.maps) return resolve(window.kakao);
 
       const exist = document.querySelector('script[data-kakao="true"]');
@@ -459,6 +482,8 @@ const Map = () => {
           console.error('   1. HTTPS가 아닌 환경에서 접속');
           console.error('   2. Kakao 개발자 센터에서 도메인 미등록');
           console.error('   3. 네트워크 연결 문제');
+          console.error('   4. REACT_APP_KAKAO_JAVASCRIPT_KEY가 잘못 설정됨');
+          console.error('❌ 현재 설정된 키:', process.env.REACT_APP_KAKAO_JAVASCRIPT_KEY);
           reject(new Error('Failed to load Kakao Maps SDK'));
         };
         document.head.appendChild(s);
