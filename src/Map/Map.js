@@ -40,7 +40,7 @@ const fetchCultureSpotsFromKakao = async (query, lat, lng, radius = 5000) => {
       `query=${encodeURIComponent(query)}&x=${lng}&y=${lat}&radius=${radius}&size=15&sort=distance`,
       {
         headers: {
-          Authorization: `KakaoAK 305a989699c2b85d2d6470b6376d3853`
+          Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_API_KEY}`
         }
       }
     );
@@ -450,7 +450,7 @@ const Map = () => {
       const exist = document.querySelector('script[data-kakao="true"]');
       if (!exist) {
         const s = document.createElement('script');
-        s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=305a989699c2b85d2d6470b6376d3853&autoload=false&libraries=services';
+        s.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_JAVASCRIPT_KEY}&autoload=false&libraries=services`;
         s.async = true;
         s.dataset.kakao = 'true';
         s.onerror = () => {
