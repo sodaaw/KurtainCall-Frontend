@@ -117,11 +117,8 @@ const Map = () => {
     // 사용자 위치 인포윈도우
     const userInfoWindow = new kakaoRef.current.maps.InfoWindow({
       content: `
-        <div style="padding: 12px; text-align: center; font-size: 14px; font-weight: bold; color: #333; background: linear-gradient(135deg, #4285F4, #34A853); color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);">
+        <div style="padding: 8px; text-align: center; font-size: 12px; font-weight: bold; color: #333;">
           📍 현재 위치
-          <div style="font-size: 12px; margin-top: 4px; opacity: 0.9;">
-            ${lat.toFixed(6)}, ${lng.toFixed(6)}
-          </div>
         </div>
       `,
       removable: false,
@@ -357,29 +354,8 @@ const Map = () => {
         mapObjRef.current.setCenter(userPosition);
         mapObjRef.current.setLevel(3);
         
-        // 약간의 지연 후 마커 클릭 이벤트 시뮬레이션 (인포윈도우 자동 표시)
-        setTimeout(() => {
-          if (userLocationMarkerRef.current) {
-            const userInfoWindow = new kakao.maps.InfoWindow({
-              content: `
-                <div style="padding: 12px; text-align: center; font-size: 14px; font-weight: bold; color: #333; background: linear-gradient(135deg, #4285F4, #34A853); color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);">
-                  📍 현재 위치
-                  <div style="font-size: 12px; margin-top: 4px; opacity: 0.9;">
-                    ${userPos.lat.toFixed(6)}, ${userPos.lng.toFixed(6)}
-                  </div>
-                </div>
-              `,
-              removable: false,
-              zIndex: 2001
-            });
-            userInfoWindow.open(mapObjRef.current, userLocationMarkerRef.current);
-            
-            // 3초 후 자동으로 닫기
-            setTimeout(() => {
-              userInfoWindow.close();
-            }, 3000);
-          }
-        }, 1500);
+        // 인포윈도우는 마커 클릭 시에만 표시됨
+        console.log('📍 사용자 위치 마커가 추가되었습니다. 마커를 클릭하면 위치 정보를 확인할 수 있습니다.');
         
         console.log('🎯 지도 포커스를 사용자 위치로 이동:', userPos);
         
