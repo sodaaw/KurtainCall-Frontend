@@ -316,7 +316,7 @@ export const getBiometricPlaceRecommendation = (data) => {
   } else {
     // 생체데이터가 정상이면 문화시설 추천
     recommendation.categories = ['theater', 'museum', 'gallery', 'exhibition', 'concert'];
-    recommendation.message = '생체데이터가 정상이어서 문화시설을 추천합니다 🎭';
+    recommendation.message = '생체데이터가 정상이므로 문화시설을 추천합니다 🎭';
     recommendation.reason = '정상 상태';
   }
   

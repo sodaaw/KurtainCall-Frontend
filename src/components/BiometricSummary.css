@@ -42,6 +42,12 @@
   min-width: 0;
 }
 
+.button-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
 .summary-content h3 {
   font-size: clamp(16px, 1.8vw, 18px);
   color: #DDF4E7;
@@ -163,11 +169,15 @@
     width: 100%;
   }
   
-  .detail-button {
+  .button-group {
     width: 100%;
+    justify-content: center;
+  }
+  
+  .detail-button {
+    width: auto;
     text-align: center;
     padding: 10px 16px;
-    flex: 1 1;
   }
 }
 
