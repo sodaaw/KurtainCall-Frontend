@@ -1,20 +1,20 @@
 // GPS 위치 기반 추천 장소 서비스
 import photoService from './photoService';
-const KAKAO_API_KEY = '305a989699c2b85d2d6470b6376d3853';
-
 
 class LocationService {
   constructor() {
-    // 카카오 개발자 센터의 JavaScript 키 사용
-    // 배포 환경에서는 환경변수가 제대로 로드되지 않을 수 있으므로 직접 설정
-    this.kakaoApiKey = '305a989699c2b85d2d6470b6376d3853';
+    // 환경변수에서 카카오 API 키 가져오기
+    this.kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
     this.userLocation = null;
     this.photoService = photoService;
     
     // API 키 유효성 검사
-    if (!this.kakaoApiKey || this.kakaoApiKey === 'undefined') {
+    if (!this.kakaoApiKey || this.kakaoApiKey === 'undefined' || this.kakaoApiKey === 'YOUR_KAKAO_API_KEY_HERE') {
       console.error('❌ 카카오 API 키가 설정되지 않았습니다.');
-      this.kakaoApiKey = '305a989699c2b85d2d6470b6376d3853'; // 기본값 사용
+      console.error('❌ REACT_APP_KAKAO_API_KEY 환경변수를 확인해주세요.');
+      console.error('❌ .env 파일에 REACT_APP_KAKAO_API_KEY=실제_API_키 형태로 설정해주세요.');
+      // 개발용 임시 키 (실제로는 카카오 개발자 센터에서 발급받아야 함)
+      this.kakaoApiKey = 'INVALID_API_KEY';
     }
     console.log('🔑 카카오 API 키 설정됨:', this.kakaoApiKey.substring(0, 8) + '...');
   }
