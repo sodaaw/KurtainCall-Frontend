@@ -40,7 +40,7 @@ const fetchCultureSpotsFromKakao = async (query, lat, lng, radius = 5000) => {
       `query=${encodeURIComponent(query)}&x=${lng}&y=${lat}&radius=${radius}&size=15&sort=distance`,
       {
         headers: {
-          Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_API_KEY}`
+          Authorization: `KakaoAK 305a989699c2b85d2d6470b6376d3853`
         }
       }
     );
