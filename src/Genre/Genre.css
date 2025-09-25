@@ -1398,9 +1398,90 @@
 }
 
 @media (max-width: 480px) {
+  /* 장르 컨테이너 중앙정렬 */
+  .genre-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* 헤더 중앙정렬 */
+  .genre-header {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .genre-title {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  /* 탭 네비게이션 중앙정렬 */
+  .genre-tabs {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  /* 필터 섹션 중앙정렬 */
+  .filter-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .filter-title {
+    text-align: center;
+  }
+  
+  .genre-filter-buttons {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  /* 검색창 중앙정렬 */
+  .filter-search-clean {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  /* 포스터 그리드 중앙정렬 */
   .poster-grid {
     grid-template-columns: repeat(2, 1fr); /* 2열 고정 */
     gap: 10px;
+    justify-items: center;
+  }
+  
+  .category-group {
+    text-align: center;
+  }
+  
+  .category-title {
+    text-align: center;
+    padding-left: 0;
+    border-left: none;
+    border-bottom: 4px solid var(--primary-green);
+    margin-bottom: 15px;
+  }
+  
+  /* 리뷰 섹션 중앙정렬 */
+  .review-wrap {
+    text-align: center;
+  }
+  
+  .review-title-row {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .review-list {
+    justify-items: center;
   }
   
   .category-poster-img {
