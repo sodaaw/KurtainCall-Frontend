@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Topnav from "../components/Topnav";
 import DeviceInput from "../components/DeviceInput";
 import BiometricAnalysis from "../components/BiometricAnalysis";
+import BiometricSummary from "../components/BiometricSummary";
 // import SearchModal from "../components/SearchModal";
 import EventCalendar from "./EventCalendar"; // ✅ 분리한 캘린더
 import EventPanel from "./EventPanel";       // ✅ 분리한 우측 패널
@@ -390,6 +391,26 @@ export default function Main() {
   const [biometricRecommendation, setBiometricRecommendation] = useState(null);
   const [showBiometricAnalysis, setShowBiometricAnalysis] = useState(false);
 
+  // 카테고리별 이모티콘 반환 함수
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case 'cafe':
+        return '☕';
+      case 'theater':
+        return '🎭';
+      case 'museum':
+        return '🏛️';
+      case 'gallery':
+        return '🖼️';
+      case 'exhibition':
+        return '🎨';
+      case 'concert':
+        return '🎵';
+      default:
+        return '📍';
+    }
+  };
+
   // localStorage에서 생체데이터 상태 복원
   useEffect(() => {
     const loadPersistedBiometricData = () => {
@@ -636,21 +657,10 @@ export default function Main() {
             />
           </div>
 
-          {/* 생체데이터 분석 결과 */}
-          {showBiometricAnalysis && biometricData && (
+          {/* 생체데이터 요약 */}
+          {showBiometricAnalysis && biometricData && biometricRecommendation && (
             <div className="biometric-section">
-              <BiometricAnalysis data={biometricData} />
-            </div>
-          )}
-
-          {/* 생체데이터 기반 추천 메시지 */}
-          {biometricRecommendation && (
-            <div className="biometric-recommendation">
-              <div className="recommendation-header">
-                <h3>🧠 생체데이터 기반 추천</h3>
-                <p className="recommendation-message">{biometricRecommendation.message}</p>
-                <p className="recommendation-reason">💡 {biometricRecommendation.reason}</p>
-              </div>
+              <BiometricSummary data={biometricData} recommendation={biometricRecommendation} />
             </div>
           )}
 
@@ -664,77 +674,79 @@ export default function Main() {
         {/* ✅ 생체데이터 기반 추천 장소 섹션 */}
         {biometricRecommendation && biometricRecommendation.categories.length > 0 ? (
           <RecommendedPlaces 
-            title={`🧠 ${biometricRecommendation.message}`}
+            title={biometricRecommendation.message}
             genre={biometricRecommendation.categories[0]} // 첫 번째 카테고리 사용
-            limit={6}
+            limit={4}
           />
         ) : (
           <RecommendedPlaces 
             title="📍 내 주변 문화시설" 
-            limit={6}
+            limit={4}
           />
         )}
 
-        {/* ✅ 근처 연극 정보 섹션 */}
-        <section className="nearby-plays-section">
-          <h3 className="plays-section-title">🎭 근처 연극 정보</h3>
-          <div className="plays-grid">
-            {isLoading ? (
-              <div className="plays-loading">
-                <div className="loading-spinner"></div>
-                <p>연극 정보를 불러오는 중...</p>
-              </div>
-            ) : error ? (
-              <div className="plays-error">
-                <div className="error-icon">⚠️</div>
-                <p>연극 정보를 불러올 수 없습니다.</p>
-              </div>
-            ) : plays && plays.length > 0 ? (
-              plays.slice(0, 6).map((play, index) => (
-                <div key={play.id || `play-${index}`} className="play-card">
-                  <div className="play-image-container">
-                    {play.posterUrl ? (
-                      <img
-                        src={play.posterUrl}
-                        alt={play.title}
-                        className="play-image"
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                        onLoad={() => console.log(`✅ 연극 이미지 로드 성공: ${play.title}`, play.posterUrl)}
-                        onError={(e) => console.error(`❌ 연극 이미지 로드 실패: ${play.title}`, play.posterUrl, e)}
-                      />
-                    ) : (
-                      <div className="play-emoji-container">
-                        <div className="play-emoji">🎭</div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="play-info">
-                    <h4 className="play-title">{play.title}</h4>
-                    {play.location && (
-                      <p className="play-location">
-                        {typeof play.location === 'string' 
-                          ? play.location 
-                          : play.location.address || play.location}
-                      </p>
-                    )}
-                    {play.date && (
-                      <p className="play-date">{play.date}</p>
-                    )}
-                    {play.university && (
-                      <p className="play-university">{play.university}</p>
-                    )}
-                  </div>
+        {/* ✅ 근처 연극 정보 섹션 - 로그인하지 않은 경우에만 표시 */}
+        {!isLoggedIn && (
+          <section className="nearby-plays-section">
+            <h3 className="plays-section-title">🎭 연극 정보</h3>
+            <div className="plays-grid">
+              {isLoading ? (
+                <div className="plays-loading">
+                  <div className="loading-spinner"></div>
+                  <p>연극 정보를 불러오는 중...</p>
                 </div>
-              ))
-            ) : (
-              <div className="plays-empty">
-                <div className="empty-icon">🎭</div>
-                <p>근처에 연극 정보가 없어요.</p>
-              </div>
-            )}
-          </div>
-        </section>
+              ) : error ? (
+                <div className="plays-error">
+                  <div className="error-icon">⚠️</div>
+                  <p>연극 정보를 불러올 수 없습니다.</p>
+                </div>
+              ) : plays && plays.length > 0 ? (
+                plays.slice(0, 6).map((play, index) => (
+                  <div key={play.id || `play-${index}`} className="play-card">
+                    <div className="play-image-container">
+                      {play.posterUrl ? (
+                        <img
+                          src={play.posterUrl}
+                          alt={play.title}
+                          className="play-image"
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                          onLoad={() => console.log(`✅ 연극 이미지 로드 성공: ${play.title}`, play.posterUrl)}
+                          onError={(e) => console.error(`❌ 연극 이미지 로드 실패: ${play.title}`, play.posterUrl, e)}
+                        />
+                      ) : (
+                        <div className="play-emoji-container">
+                          <div className="play-emoji">🎭</div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="play-info">
+                      <h4 className="play-title">{play.title}</h4>
+                      {play.location && (
+                        <p className="play-location">
+                          {typeof play.location === 'string' 
+                            ? play.location 
+                            : play.location.address || play.location}
+                        </p>
+                      )}
+                      {play.date && (
+                        <p className="play-date">{play.date}</p>
+                      )}
+                      {play.university && (
+                        <p className="play-university">{play.university}</p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="plays-empty">
+                  <div className="empty-icon">🎭</div>
+                  <p>근처에 연극 정보가 없어요.</p>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         {/* ✅ 좌: 캘린더 / 우: 이벤트 패널 */}
         {/* <section className="schedule">
