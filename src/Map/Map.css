@@ -298,6 +298,8 @@ body {
   max-height: 600px;
   border: 1px solid rgba(38, 102, 127, 0.3);
   position: relative;
+  margin-right: -10px;
+  margin-left: 20px;
 }
 
 .map-container-wrapper::before {
@@ -535,7 +537,8 @@ body {
   }
   
   .map-content {
-    padding: 0 16px 20px 16px;
+    padding: 0 16px 20px 10px;
+    max-width: 85%;
   }
   
   .map-filter {
