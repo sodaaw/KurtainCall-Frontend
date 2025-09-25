@@ -160,131 +160,6 @@ const Map = () => {
     { key: 'cafe', name: '카페', icon: '☕', color: '#5A7A8A' }
   ];
 
-  // 사용자 위치 및 문화시설 로딩 (통합된 useEffect) - 주석 처리
-  /* useEffect(() => {
-    if (!window.kakao || !window.kakao.maps) return;
-
-    console.log('📍 사용자 현재 위치 요청 중...');
-    
-    const loadUserLocationAndPlaces = async () => {
-      try {
-        // 1. 먼저 사용자 위치 가져오기
-        const userPos = await locationService.getCurrentLocation();
-        console.log("🎯 GPS 성공! 실제 위치:", userPos);
-        
-        // 2. 상태 즉시 업데이트
-        setUserLocation({ lat: userPos.lat, lng: userPos.lng });
-        
-        // 3. 지도가 준비되면 위치 설정
-        if (mapObjRef.current && kakaoRef.current) {
-          const userPosition = new kakaoRef.current.maps.LatLng(userPos.lat, userPos.lng);
-          mapObjRef.current.setCenter(userPosition);
-          mapObjRef.current.setLevel(3);
-          
-          // 기존 사용자 마커 제거 후 새로 추가
-          if (userLocationMarkerRef.current) {
-            userLocationMarkerRef.current.setMap(null);
-          }
-          addUserLocationMarker(userPos.lat, userPos.lng);
-        }
-
-        // 4. 문화시설 데이터 로드 (테스트 데이터 확실히 설정)
-        const testPlaces = [
-          {
-            id: 'test1',
-            name: '수원화성박물관',
-            address: '경기도 수원시 팔달구 창룡대로 21',
-            lat: userPos.lat + 0.01, // 사용자 위치 근처
-            lng: userPos.lng + 0.01,
-            category: '박물관',
-            type: 'museum',
-            phone: '031-228-4209',
-            url: 'http://www.swcf.or.kr/?p=museum',
-            rating: 4.2,
-            reviewCount: 85,
-            ratingCount: 100,
-            distance: 1.2
-          },
-          {
-            id: 'test2',
-            name: '수원시립미술관',
-            address: '경기도 수원시 영통구 이의동 산 94-6',
-            lat: userPos.lat - 0.01,
-            lng: userPos.lng + 0.01,
-            category: '미술관',
-            type: 'gallery',
-            phone: '031-228-3800',
-            url: 'http://suma.suwon.go.kr',
-            rating: 4.0,
-            reviewCount: 62,
-            ratingCount: 80,
-            distance: 0.8
-          },
-          {
-            id: 'test3',
-            name: '경기도박물관',
-            address: '경기도 용인시 기흥구 상갈로 6',
-            lat: userPos.lat + 0.02,
-            lng: userPos.lng - 0.01,
-            category: '박물관',
-            type: 'museum',
-            phone: '031-288-5300',
-            url: 'https://museum.ggcf.kr',
-            rating: 4.5,
-            reviewCount: 120,
-            ratingCount: 150,
-            distance: 2.1
-          }
-        ];
-        
-        console.log('🎉 테스트 문화시설 데이터 설정:', testPlaces);
-        setCultureSpots(testPlaces); // 확실히 설정
-        setIsLoading(false);
-        
-      } catch (error) {
-        console.error("❌ 위치 또는 데이터 로드 실패:", error);
-        
-        // 실패 시 기본값 설정하되, 여전히 테스트 데이터는 로드
-        const defaultLocation = { lat: 37.5665, lng: 126.9780 };
-        setUserLocation(defaultLocation);
-        
-        // 기본 위치 기준 테스트 데이터
-        const defaultTestPlaces = [
-          {
-            id: 'default1',
-            name: '국립중앙박물관',
-            address: '서울특별시 용산구 서빙고로 137',
-            lat: 37.5240,
-            lng: 126.9803,
-            category: '박물관',
-            type: 'museum',
-            phone: '02-2077-9000',
-            rating: 4.6,
-            reviewCount: 2840,
-            distance: 4.2
-          },
-          {
-            id: 'default2',
-            name: '세종문화회관',
-            address: '서울특별시 중구 세종대로 175',
-            lat: 37.5720,
-            lng: 126.9769,
-            category: '공연장',
-            type: 'theater',
-            phone: '02-399-1000',
-            rating: 4.3,
-            reviewCount: 1250,
-            distance: 0.8
-          }
-        ];
-        
-        setCultureSpots(defaultTestPlaces);
-        setIsLoading(false);
-      }
-    };
-
-    loadUserLocationAndPlaces();
-  }, []); // 빈 dependency로 최초 1회만 실행 */
 
   // 🚀 통합된 지도 초기화 useEffect - 모든 초기화를 순차적으로 처리
   useEffect(() => {
@@ -314,10 +189,10 @@ const Map = () => {
           setUserLocation(userPos);
         }
         
-        // 3단계: 지도 생성 (실제 위치로)
+        // 3단계: 지도 생성 (사용자 위치로 바로 설정)
         mapObjRef.current = new kakao.maps.Map(mapRef.current, {
           center: new kakao.maps.LatLng(userPos.lat, userPos.lng),
-          level: 3,
+          level: 1, // 더 가까운 줌 레벨로 설정
         });
         geocoderRef.current = new kakao.maps.services.Geocoder();
         
@@ -340,56 +215,94 @@ const Map = () => {
         // 5단계: 사용자 마커 추가 및 지도 포커스
         addUserLocationMarker(userPos.lat, userPos.lng);
         
-        // 5-1단계: 지도를 사용자 위치로 포커스 (부드러운 애니메이션)
+        // 5-1단계: 지도를 사용자 위치로 포커스 (더 가까운 줌으로)
         const userPosition = new kakao.maps.LatLng(userPos.lat, userPos.lng);
         
-        // 부드러운 이동을 위한 애니메이션 옵션
-        const moveOption = {
-          center: userPosition,
-          level: 3,
-          animate: true,
-          duration: 1000 // 1초 동안 부드럽게 이동
-        };
-        
+        // 사용자 위치로 지도 중심 설정 (이미 위에서 설정했지만 확실히)
         mapObjRef.current.setCenter(userPosition);
-        mapObjRef.current.setLevel(3);
+        mapObjRef.current.setLevel(1); // 더 가까운 줌 레벨
         
         // 인포윈도우는 마커 클릭 시에만 표시됨
         console.log('📍 사용자 위치 마커가 추가되었습니다. 마커를 클릭하면 위치 정보를 확인할 수 있습니다.');
         
         console.log('🎯 지도 포커스를 사용자 위치로 이동:', userPos);
         
-        // 6단계: 테스트 문화시설 데이터 추가
-        const testPlaces = [
-          {
-            id: 'test1',
-            name: '수원화성박물관',
-            address: '경기도 수원시 팔달구',
-            lat: userPos.lat + 0.005,
-            lng: userPos.lng + 0.005,
-            category: '박물관',
-            type: 'museum',
-            rating: 4.2,
-            reviewCount: 85,
-            distance: 0.8
-          },
-          {
-            id: 'test2',
-            name: '수원시립미술관',
-            address: '경기도 수원시 영통구',
-            lat: userPos.lat - 0.005,
-            lng: userPos.lng + 0.005,
-            category: '미술관',
-            type: 'gallery',
-            rating: 4.0,
-            reviewCount: 62,
-            distance: 1.2
+        // 6단계: 실제 카카오 API로 문화시설 데이터 가져오기
+        console.log('[Map] 실제 문화시설 데이터 로딩 시작...');
+        try {
+          // 문화시설 카테고리별로 검색
+          const cultureKeywords = ['극장', '박물관', '미술관', '갤러리', '공연장', '문화센터'];
+          let allCultureSpots = [];
+          
+          for (const keyword of cultureKeywords) {
+            try {
+              const places = await locationService.searchPlacesByKeyword(keyword, 10000);
+              const transformed = places.map((place) => ({
+                id: place.id,
+                name: place.name,
+                address: place.address,
+                lat: place.lat,
+                lng: place.lng,
+                detailUrl: place.url,
+                phone: place.phone || '',
+                type: getCultureTypeFromKeyword(keyword),
+                description: place.category || '',
+                hours: '운영시간 정보 없음',
+                rating: place.rating || 0,
+                reviewCount: place.reviewCount || 0,
+                ratingCount: place.ratingCount || 0
+              }));
+              
+              allCultureSpots = [...allCultureSpots, ...transformed];
+            } catch (keywordError) {
+              console.error(`키워드 "${keyword}" 검색 실패:`, keywordError);
+            }
           }
-        ];
-        
-        console.log('[Map] 테스트 데이터 설정:', testPlaces);
-        setCultureSpots(testPlaces);
-        setIsLoading(false);
+          
+          // 중복 제거
+          const uniqueSpots = allCultureSpots.filter((place, index, self) => 
+            index === self.findIndex(p => p.id === place.id)
+          );
+          
+          console.log('[Map] 실제 문화시설 데이터 로딩 완료:', uniqueSpots.length, '개');
+          setCultureSpots(uniqueSpots);
+          setIsLoading(false);
+          
+        } catch (error) {
+          console.error('[Map] 문화시설 데이터 로딩 실패:', error);
+          
+          // 실패 시 기본 테스트 데이터 사용
+          const fallbackPlaces = [
+            {
+              id: 'fallback1',
+              name: '국립중앙박물관',
+              address: '서울특별시 용산구 서빙고로 137',
+              lat: 37.5240,
+              lng: 126.9803,
+              category: '박물관',
+              type: 'museum',
+              rating: 4.6,
+              reviewCount: 2840,
+              distance: 4.2
+            },
+            {
+              id: 'fallback2',
+              name: '세종문화회관',
+              address: '서울특별시 중구 세종대로 175',
+              lat: 37.5720,
+              lng: 126.9769,
+              category: '공연장',
+              type: 'theater',
+              rating: 4.3,
+              reviewCount: 1250,
+              distance: 0.8
+            }
+          ];
+          
+          console.log('[Map] 폴백 데이터 사용:', fallbackPlaces);
+          setCultureSpots(fallbackPlaces);
+          setIsLoading(false);
+        }
         
         // 7단계: 서울 지도 초기화 (옵션)
         try {
@@ -564,77 +477,6 @@ const Map = () => {
       (exist || document.querySelector('script[data-kakao="true"]')).addEventListener('load', onReady, { once: true });
     });
 
-  // 지도 초기화: 최초 1회 - 주석 처리
-  /* useEffect(() => {
-    let mounted = true;
-    
-    (async () => {
-      try {
-        console.log('[Map] Starting map initialization...');
-        const kakao = await loadKakao();
-        if (!mounted || !mapRef.current) return;
-
-        console.log('[Map] Kakao SDK loaded, creating map...');
-        kakaoRef.current = kakao;
-        
-        // 사용자 위치를 가져와서 지도 중심 설정
-        try {
-          const userPos = await locationService.getCurrentLocation();
-          console.log('[Map] 사용자 위치로 지도 초기화:', userPos);
-          mapObjRef.current = new kakao.maps.Map(mapRef.current, {
-            center: new kakao.maps.LatLng(userPos.lat, userPos.lng),
-            level: 3, // 더 가까운 줌 레벨
-          });
-        } catch (error) {
-          console.log('[Map] 사용자 위치 가져오기 실패, 기본 위치로 지도 초기화:', error);
-          mapObjRef.current = new kakao.maps.Map(mapRef.current, {
-            center: new kakao.maps.LatLng(37.5665, 126.978),
-            level: 9,
-          });
-        }
-        geocoderRef.current = new kakao.maps.services.Geocoder();
-
-        console.log('[Map] Map initialized successfully');
-        console.log('[Map] Map object:', mapObjRef.current);
-        console.log('[Map] Geocoder object:', geocoderRef.current);
-
-        // 지도가 완전히 로드될 때까지 대기 (더 안정적인 방법)
-        await new Promise(resolve => {
-          const checkMapReady = () => {
-            if (mapObjRef.current && mapObjRef.current.getCenter && mapObjRef.current.getLevel) {
-              console.log('[Map] Map is fully ready, setting isMapReady to true');
-              setIsMapReady(true);
-              resolve();
-            } else {
-              console.log('[Map] Map not ready yet, retrying...');
-              setTimeout(checkMapReady, 100);
-            }
-          };
-          checkMapReady();
-        });
-        
-        // 서울 지도 데이터 로딩 및 구/동 폴리곤 그리기
-        console.log('[Map] Starting Seoul map initialization...');
-        try {
-          await initializeSeoulMap(kakao);
-          console.log('[Map] Seoul map initialization completed');
-        } catch (seoulErr) {
-          console.error('[Map] Seoul map initialization failed:', seoulErr);
-          console.log('[Map] Continuing with basic map display...');
-          // 서울 지도 초기화 실패 시에도 기본 지도는 계속 표시
-        }
-      } catch (err) {
-        console.error('Map init error:', err);
-        console.log('📍 지도 초기화 실패, 기본 기능만 활성화');
-        
-        // 지도 초기화 실패 시에도 기본 기능은 작동하도록 설정
-        setIsMapReady(true);
-        setIsLoading(false);
-      }
-    })().catch(err => console.error('Map init error:', err));
-
-    return () => { mounted = false; };
-  }, []); */
 
   // 서울 지도 초기화 함수
   const initializeSeoulMap = async (kakao) => {
@@ -757,7 +599,7 @@ const Map = () => {
           const center = centers.find((c) => c.name === name);
           if (center)
             map.setCenter(new kakao.maps.LatLng(center.lat, center.lng));
-          map.setLevel(7);
+          map.setLevel(2); // 더 가까운 줌 레벨
           const dongs = dongData.features.filter(
             (f) => f.properties.SIG_KOR_NM === name,
           );
@@ -790,7 +632,7 @@ const Map = () => {
         regionPolygonsRef.current.forEach((p) => p.setMap(map));
         
         infowindow.close();
-        map.setLevel(9);
+        map.setLevel(1); // 더 가까운 줌 레벨
         map.setCenter(new kakao.maps.LatLng(37.5665, 126.9780));
         
         const goBackButton = document.querySelector('#go-back-btn');
@@ -814,7 +656,7 @@ const Map = () => {
   };
 
   // 추천 기능 실행
-  const generateRecommendations = () => {
+  const generateRecommendations = async () => {
     console.log('🎯 추천 버튼 클릭됨!');
     console.log('현재 상태:', {
       userLocation,
@@ -822,61 +664,70 @@ const Map = () => {
       cultureSpots: cultureSpots
     });
     
-    if (!userLocation || cultureSpots.length === 0) {
-      console.log('사용자 위치 또는 문화시설 데이터가 없습니다.');
-      console.log('테스트용 더미 데이터로 추천 실행...');
-      
-      // 테스트용 더미 데이터
-      const dummySpots = [
-        {
-          id: 'test1',
-          name: '테스트 극장',
-          address: '서울특별시 중구',
-          lat: 37.5665,
-          lng: 126.9780,
-          rating: 4.2,
-          reviewCount: 15,
-          ratingCount: 20,
-          type: 'theater'
-        },
-        {
-          id: 'test2', 
-          name: '테스트 박물관',
-          address: '서울특별시 중구',
-          lat: 37.5675,
-          lng: 126.9790,
-          rating: 3.8,
-          reviewCount: 8,
-          ratingCount: 12,
-          type: 'museum'
-        },
-        {
-          id: 'test3',
-          name: '테스트 미술관', 
-          address: '서울특별시 중구',
-          lat: 37.5685,
-          lng: 126.9800,
-          rating: 4.0,
-          reviewCount: 12,
-          ratingCount: 18,
-          type: 'gallery'
+    if (!userLocation) {
+      console.log('사용자 위치가 없습니다.');
+      alert('위치 정보를 가져올 수 없습니다. GPS 권한을 확인해주세요.');
+      return;
+    }
+    
+    // 문화시설 데이터가 없으면 새로 로드
+    let spotsToUse = cultureSpots;
+    if (cultureSpots.length === 0) {
+      console.log('문화시설 데이터가 없어서 새로 로드합니다...');
+      try {
+        const cultureKeywords = ['극장', '박물관', '미술관', '갤러리', '공연장', '문화센터'];
+        let allCultureSpots = [];
+        
+        for (const keyword of cultureKeywords) {
+          try {
+            const places = await locationService.searchPlacesByKeyword(keyword, 10000);
+            const transformed = places.map((place) => ({
+              id: place.id,
+              name: place.name,
+              address: place.address,
+              lat: place.lat,
+              lng: place.lng,
+              detailUrl: place.url,
+              phone: place.phone || '',
+              type: getCultureTypeFromKeyword(keyword),
+              description: place.category || '',
+              hours: '운영시간 정보 없음',
+              rating: place.rating || 0,
+              reviewCount: place.reviewCount || 0,
+              ratingCount: place.ratingCount || 0
+            }));
+            
+            allCultureSpots = [...allCultureSpots, ...transformed];
+          } catch (keywordError) {
+            console.error(`키워드 "${keyword}" 검색 실패:`, keywordError);
+          }
         }
-      ];
-      
-      const recommendations = rankPlaces(userLocation.lat, userLocation.lng, dummySpots);
-      const formattedRecommendations = formatRecommendation(recommendations);
-      
-      console.log('더미 데이터 추천 결과:', formattedRecommendations);
-      setRecommendedPlaces(formattedRecommendations);
-      setShowRecommendations(true);
+        
+        // 중복 제거
+        spotsToUse = allCultureSpots.filter((place, index, self) => 
+          index === self.findIndex(p => p.id === place.id)
+        );
+        
+        console.log('새로 로드된 문화시설:', spotsToUse.length, '개');
+        setCultureSpots(spotsToUse);
+      } catch (error) {
+        console.error('문화시설 로드 실패:', error);
+        alert('문화시설 정보를 가져올 수 없습니다. 잠시 후 다시 시도해주세요.');
+        return;
+      }
+    }
+    
+    if (spotsToUse.length === 0) {
+      console.log('추천할 문화시설이 없습니다.');
+      alert('근처에 문화시설이 없습니다.');
       return;
     }
     
     console.log('🎯 추천 알고리즘 실행 중...');
     console.log('사용자 위치:', userLocation);
-    console.log('문화시설 수:', cultureSpots.length);
+    console.log('문화시설 수:', spotsToUse.length);
     
-    const recommendations = rankPlaces(userLocation.lat, userLocation.lng, cultureSpots);
+    const recommendations = rankPlaces(userLocation.lat, userLocation.lng, spotsToUse);
     const formattedRecommendations = formatRecommendation(recommendations);
     
     console.log('추천 결과:', formattedRecommendations);
@@ -906,8 +757,8 @@ const Map = () => {
     
     // 지도 중심을 해당 지역으로 이동
     map.setCenter(position);
-    // 적절한 줌 레벨로 설정
-    map.setLevel(6);
+    // 더 가까운 줌 레벨로 설정
+    map.setLevel(2);
     
     // 해당 지역에 마커 추가 (선택된 지역 표시)
     const marker = new kakaoRef.current.maps.Marker({
@@ -922,28 +773,6 @@ const Map = () => {
     }, 3000);
   };
 
-  // 사용자 위치가 변경될 때마다 마커 업데이트 - 주석 처리 (통합 useEffect에서 처리)
-  /* useEffect(() => {
-    if (!userLocation || !isMapReady || !kakaoRef.current || !mapObjRef.current) {
-      return;
-    }
-    
-    console.log('📍 사용자 위치 변경됨, 마커 업데이트:', userLocation);
-    
-    // 기존 마커 제거
-    if (userLocationMarkerRef.current) {
-      userLocationMarkerRef.current.setMap(null);
-    }
-    
-    // 새 마커 추가
-    addUserLocationMarker(userLocation.lat, userLocation.lng);
-    
-    // 지도 중심 이동
-    const userPosition = new kakaoRef.current.maps.LatLng(userLocation.lat, userLocation.lng);
-    mapObjRef.current.setCenter(userPosition);
-    mapObjRef.current.setLevel(3);
-    
-  }, [userLocation, isMapReady]); // userLocation이 변경될 때마다 실행 */
 
   // 마커 갱신: cultureSpots 또는 filteredSpots가 바뀔 때마다
   useEffect(() => {
@@ -1122,8 +951,14 @@ const Map = () => {
          }
          
          if (!bounds.isEmpty()) {
+           // 마커들이 모두 보이도록 bounds 설정하되, 너무 멀지 않게 조정
            map.setBounds(bounds);
-           console.log('[Map] Map bounds updated');
+           // bounds 설정 후 줌 레벨을 조정하여 너무 멀지 않게 함
+           const currentLevel = map.getLevel();
+           if (currentLevel < 1) {
+             map.setLevel(1); // 최소 줌 레벨 제한
+           }
+           console.log('[Map] Map bounds updated with zoom level:', map.getLevel());
          }
       } catch (err) {
         console.error('[Map] Error during marker creation:', err);
