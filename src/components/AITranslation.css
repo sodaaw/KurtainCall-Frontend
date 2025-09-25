@@ -435,6 +435,64 @@
   cursor: pointer;
 }
 
+/* === 음성 인식 모드 선택 === */
+.stt-mode-selection {
+  padding: 15px;
+  margin-bottom: 10px;
+  background: rgba(18, 65, 112, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(38, 102, 127, 0.3);
+  text-align: center;
+}
+
+.stt-mode-selection h4 {
+  color: var(--primary);
+  font-size: 1.1rem;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.stt-mode-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.stt-mode-options label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.stt-mode-options label:hover {
+  background: rgba(103, 192, 144, 0.1);
+}
+
+.stt-mode-options input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.stt-mode-description {
+  color: var(--text-sub);
+  font-size: 0.8rem;
+  margin: 0;
+  line-height: 1.4;
+  font-style: italic;
+}
+
 /* === 입력 영역 === */
 .input-section {
   padding: 10px; /* 패딩 줄임 */

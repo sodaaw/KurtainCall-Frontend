@@ -24,6 +24,10 @@ const AITranslation = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   
+  // 브라우저 내장 음성 인식 상태
+  const [recognition, setRecognition] = useState(null);
+  const [useBrowserSTT, setUseBrowserSTT] = useState(false);
+  
   // 긴급 상황 표현 상태
   const [emergencyLanguage, setEmergencyLanguage] = useState('ko'); // 긴급 상황 언어 선택
   
@@ -121,6 +125,59 @@ const AITranslation = () => {
     };
   }, []);
 
+  // 브라우저 내장 음성 인식 초기화
+  React.useEffect(() => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognitionInstance = new SpeechRecognition();
+      
+      recognitionInstance.continuous = false;
+      recognitionInstance.interimResults = false;
+      recognitionInstance.lang = fromLanguage === 'ko' ? 'ko-KR' : 'en-US';
+      
+      recognitionInstance.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        console.log('브라우저 음성 인식 결과:', transcript);
+        
+        if (transcript && transcript.trim()) {
+          setIntermediateResults(prev => ({ ...prev, stt: `음성 인식 텍스트: ${transcript}` }));
+          
+          // 번역 수행
+          performTranslation(transcript, fromLanguage, toLanguage)
+            .then(translatedText => {
+              setIntermediateResults(prev => ({ ...prev, translation: translatedText }));
+              setTranslationResult(translatedText);
+              
+              // TTS 재생
+              if (ttsEnabled) {
+                performTTS(translatedText, toLanguage);
+              }
+            })
+            .catch(error => {
+              console.error('번역 오류:', error);
+              setTranslationResult('번역 중 오류가 발생했습니다.');
+            });
+        }
+      };
+      
+      recognitionInstance.onerror = (event) => {
+        console.error('브라우저 음성 인식 오류:', event.error);
+        setIsListening(false);
+        setTranslationResult('음성 인식 중 오류가 발생했습니다.');
+      };
+      
+      recognitionInstance.onend = () => {
+        setIsListening(false);
+      };
+      
+      setRecognition(recognitionInstance);
+      setUseBrowserSTT(true);
+    } else {
+      console.warn('브라우저에서 음성 인식을 지원하지 않습니다.');
+      setUseBrowserSTT(false);
+    }
+  }, [fromLanguage, toLanguage, ttsEnabled]);
+
   // MediaRecorder 초기화 (백엔드 연동용)
   React.useEffect(() => {
     const initializeMediaRecorder = async () => {
@@ -195,11 +252,26 @@ const AITranslation = () => {
      // 음성 입력 처리 (바로통역 모드만)
    const handleVoiceInput = () => {
      if (selectedMode === 'realtime') {
-       // 실시간 모드: MediaRecorder 사용
-       if (!isRecording) {
-         startRecording();
+       if (useBrowserSTT && recognition) {
+         // 브라우저 내장 음성 인식 사용
+         if (!isListening) {
+           setTranslationResult('');
+           setIntermediateResults({});
+           setIsListening(true);
+           recognition.start();
+           console.log('브라우저 음성 인식 시작');
+         } else {
+           recognition.stop();
+           setIsListening(false);
+           console.log('브라우저 음성 인식 중지');
+         }
        } else {
-         stopRecording();
+         // 백엔드 연동 모드: MediaRecorder 사용
+         if (!isRecording) {
+           startRecording();
+         } else {
+           stopRecording();
+         }
        }
      }
    };
@@ -303,9 +375,12 @@ const AITranslation = () => {
       if (response.ok) {
         const result = await response.json().catch(() => ({}));
         const text = result.text || result.transcript || result.recognizedText || result.translated || '';
-        if (text) {
+        if (text && text.trim() && text !== 'You') {
           console.log('STT 텍스트 인식 성공:', text);
           return text;
+        } else {
+          console.warn('STT 결과가 유효하지 않음:', text);
+          return '';
         }
       } else {
         console.info('[info] STT GET 요청 실패:', response.status);
@@ -570,6 +645,39 @@ const AITranslation = () => {
             </label>
           </div>
 
+          {/* 음성 인식 모드 선택 */}
+          {selectedMode === 'realtime' && useBrowserSTT && (
+            <div className="stt-mode-selection">
+              <h4>🎤 음성 인식 모드</h4>
+              <div className="stt-mode-options">
+                <label>
+                  <input 
+                    type="radio" 
+                    name="sttMode" 
+                    checked={useBrowserSTT} 
+                    onChange={() => setUseBrowserSTT(true)}
+                  />
+                  🌐 브라우저 내장 음성 인식 (권장)
+                </label>
+                <label>
+                  <input 
+                    type="radio" 
+                    name="sttMode" 
+                    checked={!useBrowserSTT} 
+                    onChange={() => setUseBrowserSTT(false)}
+                  />
+                  🖥️ 백엔드 서버 음성 인식
+                </label>
+              </div>
+              <p className="stt-mode-description">
+                {useBrowserSTT 
+                  ? '브라우저의 내장 음성 인식을 사용합니다. 더 빠르고 정확합니다.'
+                  : '백엔드 서버의 음성 인식을 사용합니다. 서버 상태에 따라 다를 수 있습니다.'
+                }
+              </p>
+            </div>
+          )}
+
           {/* 입력 영역 */}
           <div className="input-section">
             {/* 텍스트 입력 영역 - 바로통역 모드가 아닐 때만 표시 */}
@@ -598,7 +706,10 @@ const AITranslation = () => {
                 <div className="voice-input-header">
                   <h4>🎤 음성 인식</h4>
                   <p className="voice-input-description">
-                    마이크를 눌러서 말씀하시면 실시간으로 번역됩니다
+                    {useBrowserSTT 
+                      ? '마이크를 눌러서 말씀하시면 브라우저 음성 인식으로 실시간 번역됩니다'
+                      : '마이크를 눌러서 말씀하시면 백엔드 서버로 실시간 번역됩니다'
+                    }
                   </p>
                 </div>
                 
