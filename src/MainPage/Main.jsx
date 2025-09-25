@@ -421,7 +421,15 @@ export default function Main() {
         const savedBiometricRecommendation = localStorage.getItem('biometric_recommendation');
         const savedIsLoggedIn = localStorage.getItem('biometric_is_logged_in');
 
-        if (savedDeviceId && savedBiometricData && savedIsLoggedIn === 'true') {
+        console.log('🔍 localStorage 체크:', {
+          savedDeviceId,
+          savedBiometricData: savedBiometricData ? '있음' : '없음',
+          savedBiometricRecommendation: savedBiometricRecommendation ? '있음' : '없음',
+          savedIsLoggedIn
+        });
+
+        // 로그인 상태이거나 생체데이터가 있으면 복원
+        if ((savedIsLoggedIn === 'true' || savedDeviceId) && savedBiometricData) {
           console.log('🔄 저장된 생체데이터 상태 복원 중...');
           
           setDeviceId(savedDeviceId);
@@ -435,6 +443,8 @@ export default function Main() {
             biometricData: JSON.parse(savedBiometricData),
             recommendation: JSON.parse(savedBiometricRecommendation)
           });
+        } else {
+          console.log('❌ 생체데이터 복원 조건 미충족');
         }
       } catch (error) {
         console.error('❌ 저장된 생체데이터 복원 실패:', error);
@@ -515,6 +525,11 @@ export default function Main() {
       
       console.log('🧠 생체데이터 기반 추천:', recommendation);
       console.log('💾 생체데이터 상태가 localStorage에 저장되었습니다.');
+      console.log('🔍 저장된 localStorage 확인:', {
+        deviceId: localStorage.getItem('biometric_device_id'),
+        isLoggedIn: localStorage.getItem('biometric_is_logged_in'),
+        hasBiometricData: !!localStorage.getItem('biometric_data')
+      });
       
     } catch (error) {
       console.error('❌ 센서 데이터 로드 실패:', error);

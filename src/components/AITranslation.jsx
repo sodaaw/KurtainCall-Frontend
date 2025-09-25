@@ -204,7 +204,7 @@ const AITranslation = () => {
      }
    };
 
-  // 백엔드 연동 함수들 - 정확한 흐름으로 수정
+  // 백엔드 연동 함수들 - API 문서에 맞게 수정
   const handleRealtimeTranslationWithBackend = async (audioBlob) => {
     if (!audioBlob) {
       console.error('audioBlob이 없습니다!');
@@ -224,8 +224,7 @@ const AITranslation = () => {
       // 2. STS(오디오)와 STT(텍스트) 병렬 요청
       const sttPromise = ttsEnabled
         ? getSTTText(filename).catch((e) => {
-            // 서버가 STT 텍스트 엔드포인트를 제공하지 않을 수 있으므로 조용히 폴백
-            console.info('[info] STT 텍스트 엔드포인트 미지원 또는 404. 텍스트 출력 생략.', e?.message || e);
+            console.info('[info] STT 텍스트 엔드포인트 오류:', e?.message || e);
             return '';
           })
         : Promise.resolve('');
@@ -289,44 +288,33 @@ const AITranslation = () => {
     return await res.blob(); // mp3 Blob
   };
 
-  // ✅ 추가: STT 텍스트(인식 결과) 가져오기 (가능한 엔드포인트들을 순차 시도, 전부 실패해도 에러 던지지 않음)
+  // STT 텍스트(인식 결과) 가져오기 - API 문서에 맞게 수정
   const getSTTText = async (filename) => {
-    // 1) /stt (권장)
     try {
-      const r = await fetch(
+      // GET /api/transcribe/stt 엔드포인트 사용
+      const response = await fetch(
         `${API_BASE}/api/transcribe/stt?filename=${encodeURIComponent(filename)}`,
-        { headers: { Accept: 'application/json' } }
+        { 
+          method: 'GET',
+          headers: { Accept: 'application/json' } 
+        }
       );
-      if (r.ok) {
-        const j = await r.json().catch(() => ({}));
-        const text = j.text || j.transcript || j.recognizedText || '';
-        if (text) return text;
+      
+      if (response.ok) {
+        const result = await response.json().catch(() => ({}));
+        const text = result.text || result.transcript || result.recognizedText || result.translated || '';
+        if (text) {
+          console.log('STT 텍스트 인식 성공:', text);
+          return text;
+        }
       } else {
-        // 404 등일 때는 조용히 폴백
-        console.info('[info] /stt not available:', r.status);
+        console.info('[info] STT GET 요청 실패:', response.status);
       }
-    } catch (e) {
-      console.info('[info] /stt request failed, fallback to /sts json', e?.message || e);
+    } catch (error) {
+      console.info('[info] STT 텍스트 가져오기 오류:', error?.message || error);
     }
 
-    // 2) /sts 를 JSON으로 시도(서버가 텍스트도 줄 수 있는 경우)
-    try {
-      const r2 = await fetch(
-        `${API_BASE}/api/transcribe/sts?filename=${encodeURIComponent(filename)}`,
-        { headers: { Accept: 'application/json' } }
-      );
-      if (r2.ok) {
-        const j2 = await r2.json().catch(() => ({}));
-        const text = j2.text || j2.sourceText || j2.stt || j2.recognizedText || '';
-        if (text) return text;
-      } else {
-        console.info('[info] /sts json not available:', r2.status);
-      }
-    } catch (e) {
-      console.info('[info] /sts json request failed', e?.message || e);
-    }
-
-    // 모든 시도가 실패하면 빈 문자열 반환(에러 미발생)
+    // STT 실패 시 빈 문자열 반환 (에러 미발생)
     return '';
   };
   
@@ -399,9 +387,11 @@ const AITranslation = () => {
 
 
 
-  // 번역 API 호출 (백엔드 연동)
+  // 번역 API 호출 (백엔드 연동) - API 문서에 맞게 수정
   const performTranslation = async (text, from, to) => {
     try {
+      console.log('번역 요청:', { text, from, to });
+      
       const res = await fetch(`${API_BASE}/api/transcribe/tt`, {
         method: 'POST',
         headers: {
@@ -409,7 +399,7 @@ const AITranslation = () => {
           Accept: 'application/json',
         },
         body: JSON.stringify({
-          text,
+          text: text,
           targetLang: to,
         }),
       });
@@ -425,11 +415,17 @@ const AITranslation = () => {
         return { translated: fallbackText };
       });
   
+      console.log('번역 응답:', result);
+      
       // 응답 키 호환 처리
-      const out =
-        result.translated ?? result.translatedText ?? result.text ?? '';
-  
-      return out || '번역 결과를 받지 못했습니다.';
+      const translatedText = result.translated ?? result.translatedText ?? result.text ?? '';
+      
+      if (translatedText) {
+        console.log('번역 성공:', translatedText);
+        return translatedText;
+      } else {
+        throw new Error('번역 결과가 비어있습니다.');
+      }
     } catch (err) {
       console.error('번역 API 오류:', err);
       throw err; // 상위 handleTextTranslation에서 메시지 표출
@@ -439,14 +435,17 @@ const AITranslation = () => {
 
       
 
-  // TTS API 호출 (백엔드 연동)
+  // TTS API 호출 (백엔드 연동) - API 문서에 맞게 수정
   const performTTS = async (text, language) => {
     try {
+      console.log('TTS 요청:', { text, language });
+      
       // 백엔드 TTS API 호출
       const response = await fetch(`${API_BASE}/api/transcribe/tts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'audio/mpeg',
         },
         body: JSON.stringify({
           text: text,
@@ -458,6 +457,8 @@ const AITranslation = () => {
         throw new Error(`TTS 실패: ${response.status}`);
       }
       
+      console.log('TTS 응답 받음, 오디오 재생 시작');
+      
       // 백엔드에서 오디오 파일 받아서 재생
       const audioBlob = await response.blob();
       await playAudioResult(audioBlob);
@@ -466,6 +467,7 @@ const AITranslation = () => {
       console.error('TTS API 오류:', error);
       // 폴백: 브라우저 내장 TTS 사용
       if ('speechSynthesis' in window) {
+        console.log('브라우저 내장 TTS 사용');
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = language === 'ko' ? 'ko-KR' : 'en-US';
         utterance.rate = 0.9;
@@ -486,8 +488,7 @@ const AITranslation = () => {
         </div>
         
         <div className="translation-main">
-          {/* 긴급 상황 표현 버튼들 - 주석처리 */}
-          {/* 
+          {/* 긴급 상황 표현 버튼들 */}
           <div className="emergency-expressions">
             <div className="emergency-header">
               <h3>🚨 긴급 상황 표현</h3>
@@ -522,7 +523,6 @@ const AITranslation = () => {
               ))}
             </div>
           </div>
-          */}
 
           {/* 모드 선택 드롭다운 */}
           <div className="mode-selection">

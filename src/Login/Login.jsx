@@ -104,7 +104,7 @@ export default function Login() {
           // 로그인되지 않은 상태 표시
           <div className="login-header">
             <h1 className="login-title">기기번호 입력</h1>
-            <p className="login-subtitle">부여받은 기기번호 5자리를 입력해주세요</p>
+            <p className="login-subtitle">기기번호를 입력해주세요</p>
           </div>
         )}
         
