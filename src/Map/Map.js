@@ -171,8 +171,9 @@ const Map = () => {
       try {
         // locationService를 사용하여 GPS 위치 가져오기
         const userPos = await locationService.getCurrentLocation();
-        console.log("🎯 locationService로 GPS 성공! 실제 현재위치:", userPos.lat, userPos.lng);
+        console.log("🎯 locationService로 GPS 성공! 실제 현재위치:", userPos);
         console.log("🎯 수원 위치인지 확인:", userPos.lat, userPos.lng);
+        console.log("🎯 위치 타입 확인:", typeof userPos.lat, typeof userPos.lng);
         
         // 실제 위치로 업데이트
         setUserLocation({ lat: userPos.lat, lng: userPos.lng });
@@ -199,20 +200,102 @@ const Map = () => {
 
         // locationService를 사용하여 문화시설 검색
         try {
+          console.log('🔍 문화시설 검색 시작...');
+          console.log('🔍 사용자 위치:', userPos);
+          
+          // 임시로 테스트용 데이터 사용 (실제 API 호출 전에 테스트)
+          const testPlaces = [
+            {
+              id: 'test1',
+              name: '수원화성',
+              address: '경기도 수원시 팔달구',
+              lat: 37.2636,
+              lng: 126.9990,
+              category: '관광명소',
+              phone: '031-123-4567',
+              url: 'https://example.com',
+              rating: 4.5,
+              reviewCount: 120,
+              ratingCount: 150,
+              distance: 0.5
+            },
+            {
+              id: 'test2',
+              name: '수원시립미술관',
+              address: '경기도 수원시 영통구',
+              lat: 37.2630,
+              lng: 126.9980,
+              category: '미술관',
+              phone: '031-234-5678',
+              url: 'https://example.com',
+              rating: 4.2,
+              reviewCount: 85,
+              ratingCount: 100,
+              distance: 1.2
+            },
+            {
+              id: 'test3',
+              name: '수원시민회관',
+              address: '경기도 수원시 팔달구',
+              lat: 37.2640,
+              lng: 126.9970,
+              category: '문화시설',
+              phone: '031-345-6789',
+              url: 'https://example.com',
+              rating: 4.0,
+              reviewCount: 60,
+              ratingCount: 80,
+              distance: 0.8
+            }
+          ];
+          
+          console.log('🧪 테스트 데이터 사용:', testPlaces);
+          
+          // 추천 알고리즘을 위해 type 필드 추가
+          const placesWithType = testPlaces.map(place => ({
+            ...place,
+            type: getCultureTypeFromCategory(place.category) || 'theater'
+          }));
+          
+          console.log(`🎉 총 ${placesWithType.length}개 문화시설 발견!`);
+          console.log('🎉 문화시설 데이터:', placesWithType);
+          setCultureSpots(placesWithType);
+          setIsLoading(false);
+          
+          // 실제 API 호출은 나중에 활성화
+          /*
           const culturePlaces = await locationService.searchPlacesByCategory('CT1'); // 문화시설
+          console.log('🏛️ 문화시설 검색 결과:', culturePlaces);
+          console.log('🏛️ 문화시설 개수:', culturePlaces?.length || 0);
+          
           const touristPlaces = await locationService.searchPlacesByCategory('AT4'); // 관광명소
+          console.log('🗺️ 관광명소 검색 결과:', touristPlaces);
+          console.log('🗺️ 관광명소 개수:', touristPlaces?.length || 0);
           
           // 두 결과를 합치고 중복 제거
           const allPlaces = [...culturePlaces, ...touristPlaces];
+          console.log('📋 전체 장소 개수:', allPlaces.length);
+          
           const uniquePlaces = allPlaces.filter((place, index, self) => 
             index === self.findIndex(p => p.id === place.id)
           );
+          console.log('🔗 중복 제거 후 개수:', uniquePlaces.length);
           
-          console.log(`🎉 총 ${uniquePlaces.length}개 문화시설 발견!`);
-          setCultureSpots(uniquePlaces);
+          // 추천 알고리즘을 위해 type 필드 추가
+          const placesWithType = uniquePlaces.map(place => ({
+            ...place,
+            type: getCultureTypeFromCategory(place.category) || 'theater'
+          }));
+          
+          console.log(`🎉 총 ${placesWithType.length}개 문화시설 발견!`);
+          console.log('🎉 문화시설 데이터:', placesWithType);
+          setCultureSpots(placesWithType);
           setIsLoading(false);
+          */
         } catch (searchError) {
-          console.error('문화시설 검색 실패:', searchError);
+          console.error('❌ 문화시설 검색 실패:', searchError);
+          console.error('❌ 오류 상세:', searchError.message);
+          console.error('❌ 오류 스택:', searchError.stack);
           setIsLoading(false);
         }
       } catch (error) {
@@ -257,6 +340,18 @@ const Map = () => {
     if (keyword.includes('전시')) return 'exhibition';
     if (keyword.includes('문화센터') || keyword.includes('아트센터')) return 'concert';
     if (keyword.includes('카페') || keyword.includes('커피')) return 'cafe';
+    return 'theater';
+  };
+
+  // 카테고리에서 문화시설 유형 추출
+  const getCultureTypeFromCategory = (category) => {
+    if (!category) return 'theater';
+    if (category.includes('극장') || category.includes('공연') || category.includes('연극')) return 'theater';
+    if (category.includes('박물관') || category.includes('역사관') || category.includes('과학관')) return 'museum';
+    if (category.includes('미술관') || category.includes('갤러리') || category.includes('아트센터')) return 'gallery';
+    if (category.includes('전시') || category.includes('전시관') || category.includes('박람회')) return 'exhibition';
+    if (category.includes('콘서트') || category.includes('공연장') || category.includes('음악회')) return 'concert';
+    if (category.includes('카페') || category.includes('커피')) return 'cafe';
     return 'theater';
   };
 
@@ -365,14 +460,29 @@ const Map = () => {
       const exist = document.querySelector('script[data-kakao="true"]');
       if (!exist) {
         const s = document.createElement('script');
-        s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=039270177862ec2c7c46e905b6d3352f&autoload=false&libraries=services';
+        s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=305a989699c2b85d2d6470b6376d3853&autoload=false&libraries=services';
         s.async = true;
         s.dataset.kakao = 'true';
-        s.onerror = () => reject(new Error('Failed to load Kakao Maps SDK'));
+        s.onerror = () => {
+          console.error('❌ Kakao Maps SDK 로딩 실패');
+          console.error('❌ 가능한 원인:');
+          console.error('   1. HTTPS가 아닌 환경에서 접속');
+          console.error('   2. Kakao 개발자 센터에서 도메인 미등록');
+          console.error('   3. 네트워크 연결 문제');
+          reject(new Error('Failed to load Kakao Maps SDK'));
+        };
         document.head.appendChild(s);
       }
 
-      const onReady = () => window.kakao.maps.load(() => resolve(window.kakao));
+      const onReady = () => {
+        if (window.kakao && window.kakao.maps) {
+          window.kakao.maps.load(() => resolve(window.kakao));
+        } else {
+          console.error('❌ Kakao Maps SDK 로딩 후에도 사용할 수 없음');
+          reject(new Error('Kakao Maps SDK not available after loading'));
+        }
+      };
+      
       // 이미 붙어있으면 onload만 걸고, 없으면 위에서 붙인 스크립트가 load되면 호출
       (exist || document.querySelector('script[data-kakao="true"]')).addEventListener('load', onReady, { once: true });
     });
@@ -438,6 +548,11 @@ const Map = () => {
         }
       } catch (err) {
         console.error('Map init error:', err);
+        console.log('📍 지도 초기화 실패, 기본 기능만 활성화');
+        
+        // 지도 초기화 실패 시에도 기본 기능은 작동하도록 설정
+        setIsMapReady(true);
+        setIsLoading(false);
       }
     })().catch(err => console.error('Map init error:', err));
 
