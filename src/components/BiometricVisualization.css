@@ -244,6 +244,21 @@
 }
 
 /* ========================
+   데이터 없음 메시지
+======================== */
+.no-data-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #DDF4E7;
+}
+
+.no-data-message p {
+  font-size: 16px;
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* ========================
    반응형 디자인
 ======================== */
 

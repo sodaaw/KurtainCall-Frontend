@@ -10,6 +10,14 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // referrerPolicy 설정 추가
+  withCredentials: false,
+  // fetch API의 referrerPolicy와 유사한 설정
+  transformRequest: [(data, headers) => {
+    // referrerPolicy: 'no-referrer' 효과를 위해 Referer 헤더 제거
+    delete headers['Referer'];
+    return data;
+  }],
 });
 
 // 요청 인터셉터 (토큰 추가 등)
@@ -227,6 +235,29 @@ export const sensorAPI = {
       return data;
     } catch (error) {
       console.error('Failed to send sensor result:', error);
+      throw error;
+    }
+  },
+
+  // 최신 센서 분석 결과 조회 (가장 최근 데이터만)
+  getLatestSensorResult: async () => {
+    try {
+      console.log('🌐 API 호출: GET /sensor-result');
+      const { data } = await apiClient.get('/sensor-result');
+      console.log('📡 센서 분석 결과:', data);
+      
+      // 배열인 경우 가장 최근 데이터 반환, 단일 객체인 경우 그대로 반환
+      const latestData = Array.isArray(data) ? data[0] : data;
+      console.log('📡 최신 센서 분석 결과:', latestData);
+      return latestData;
+    } catch (error) {
+      console.error('❌ 센서 분석 결과 조회 실패:', error);
+      console.error('🔍 에러 상세:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
       throw error;
     }
   },

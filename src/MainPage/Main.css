@@ -1890,3 +1890,66 @@
   .shows-slider::before,
   .shows-slider::after { display: none; }
 }
+
+/* ========================
+   생체데이터 관련 스타일
+======================== */
+.device-section {
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.biometric-section {
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.biometric-recommendation {
+  margin: 20px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(103, 192, 144, 0.1), rgba(125, 211, 163, 0.05));
+  border: 1px solid rgba(103, 192, 144, 0.3);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.recommendation-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #67C090;
+  margin-bottom: 12px;
+}
+
+.recommendation-message {
+  font-size: 16px;
+  color: #DDF4E7;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.recommendation-reason {
+  font-size: 14px;
+  color: #7dd3a3;
+  margin: 0;
+  font-style: italic;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .biometric-recommendation {
+    margin: 15px 0;
+    padding: 15px;
+  }
+  
+  .recommendation-header h3 {
+    font-size: 18px;
+  }
+  
+  .recommendation-message {
+    font-size: 14px;
+  }
+  
+  .recommendation-reason {
+    font-size: 12px;
+  }
+}

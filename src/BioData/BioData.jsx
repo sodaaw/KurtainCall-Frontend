@@ -3,76 +3,62 @@ import React, { useState, useEffect } from "react";
 import Topnav from "../components/Topnav";
 import BiometricVisualization from "../components/BiometricVisualization";
 import BiometricAnalysis from "../components/BiometricAnalysis";
+import RecommendedPlaces from "../components/RecommendedPlaces";
 import { sensorAPI } from "../services/api";
+import { getBiometricPlaceRecommendation } from "../utils/biometricAnalysis";
 import "./BioData.css";
 
 export default function BioData() {
-  const [gsr, setGsr] = useState(null);
-  const [spo2, setSpo2] = useState(null);
-  const [mood, setMood] = useState("분석 중...");
   const [biometricData, setBiometricData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [biometricRecommendation, setBiometricRecommendation] = useState(null);
 
-  // 실제 센서 데이터 API 연동 (GET /sensor-result)
+  // 실제 API에서 최신 센서 분석 결과 조회
   useEffect(() => {
-    const fetchSensorData = async () => {
+    const loadSensorData = async () => {
+      setLoading(true);
+      setError(null);
+      
       try {
-        setLoading(true);
-        setError(null);
-
-        console.log('🔍 센서 데이터(전체) 조회 시작');
-        const listResponse = await sensorAPI.getAllSensorResults();
-        console.log('📊 전체 결과 응답:', listResponse);
-
-        // 응답 형태: { success: true, count: n, data: [ {...}, {...} ] }
-        const items = Array.isArray(listResponse?.data) ? listResponse.data : [];
-        if (items.length === 0) {
-          console.log('⚠️ 센서 분석 결과가 비어 있습니다');
-          setMood("데이터 없음");
-          setBiometricData(null);
-          return;
-        }
-
-        // 최신(updatedAt 또는 timestamp 기준) 레코드 선택
-        const latest = [...items].sort((a, b) => {
-          const ta = new Date(a.updatedAt || a.timestamp || 0).getTime();
-          const tb = new Date(b.updatedAt || b.timestamp || 0).getTime();
-          return tb - ta;
-        })[0];
-
-        console.log('✅ 선택된 최신 레코드:', latest);
-
+        console.log('🌐 최신 센서 분석 결과 조회 시작...');
+        const data = await sensorAPI.getLatestSensorResult();
+        
+        console.log('📡 API 응답 데이터:', data);
+        
+        // API 데이터를 기존 형식으로 변환
         const transformedData = {
-          id: latest.id || latest._id,
-          timestamp: latest.timestamp || latest.updatedAt || latest.createdAt || new Date().toISOString(),
-          status: latest.status || 'ok',
+          id: data._id || data.id,
+          timestamp: data.timestamp || data.createdAt,
+          status: data.status,
+          user_status: data.user_status,
+          led_signal: data.led_signal,
           analysis: {
-            avg_hr_bpm: latest.heartRate ?? 0,
-            avg_spo2_pct: latest.oxygenSaturation ?? 0,
-            avg_temperature_c: latest.temperature ?? 0,
-            avg_humidity_pct: latest.humidity ?? 0,
+            avg_hr_bpm: data.temperature || 0, // API에서 temperature 필드 사용
+            avg_spo2_pct: data.humidity || 0,   // API에서 humidity 필드 사용
+            avg_temperature_c: data.temperature || 0,
+            avg_humidity_pct: data.humidity || 0,
           },
         };
-
-        console.log('🔄 변환된 데이터:', transformedData);
+        
+        console.log('✅ 변환된 생체데이터:', transformedData);
         setBiometricData(transformedData);
-
-        setGsr(latest.gsr ?? null);
-        setSpo2(latest.oxygenSaturation ?? null);
-        setMood(latest.user_status || mood);
-        console.log('📈 상태 업데이트 완료:', { gsr: latest.gsr, spo2: latest.oxygenSaturation, mood: latest.user_status });
-      } catch (error) {
-        console.error('❌ 센서 데이터(전체) 조회 실패:', error);
-        setError('센서 데이터를 불러올 수 없습니다.');
-        setMood("데이터 로딩 실패");
-      } finally {
+        
+        // 생체데이터 기반 장소 추천 생성
+        const recommendation = getBiometricPlaceRecommendation(transformedData);
+        setBiometricRecommendation(recommendation);
+        console.log('🧠 생체데이터 기반 추천:', recommendation);
+        
         setLoading(false);
-        console.log('🏁 센서 데이터 로딩 완료');
+        
+      } catch (error) {
+        console.error('❌ 센서 데이터 로드 실패:', error);
+        setError(error.message || '센서 데이터를 불러오는데 실패했습니다.');
+        setLoading(false);
       }
     };
 
-    fetchSensorData();
+    loadSensorData();
   }, []);
 
   return (
@@ -105,7 +91,24 @@ export default function BioData() {
       {/* 센서 데이터가 있는 경우 */}
       {!loading && !error && biometricData && (
         <>
-          {/* 새로운 생체데이터 시각화 컴포넌트 */}
+          {/* 센서 상태 정보 */}
+          <div className="sensor-status-container">
+            <div className="status-card">
+              <h3>📊 센서 상태</h3>
+              <div className="status-info">
+                <p><strong>상태:</strong> {biometricData.status}</p>
+                <p><strong>사용자 상태:</strong> {biometricData.user_status}</p>
+                <p><strong>LED 신호:</strong> 
+                  <span className={`led-signal led-${biometricData.led_signal}`}>
+                    {biometricData.led_signal}
+                  </span>
+                </p>
+                <p><strong>측정 시간:</strong> {new Date(biometricData.timestamp).toLocaleString('ko-KR')}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* 생체데이터 시각화 컴포넌트 */}
           <BiometricVisualization data={biometricData} />
 
           {/* 생체데이터 분석 결과 */}
@@ -121,9 +124,30 @@ export default function BioData() {
         </div>
       )}
 
-      <button className="recommend-btn">
-        🎭 추천 공연 보러가기
-      </button>
-    </div>
-  );
-}
+        {/* 생체데이터 기반 추천 메시지 */}
+        {biometricRecommendation && (
+          <div className="biometric-recommendation">
+            <div className="recommendation-header">
+              <h3>🧠 생체데이터 기반 추천</h3>
+              <p className="recommendation-message">{biometricRecommendation.message}</p>
+              <p className="recommendation-reason">💡 {biometricRecommendation.reason}</p>
+            </div>
+          </div>
+        )}
+
+        {/* 생체데이터 기반 추천 장소 섹션 */}
+        {biometricRecommendation && biometricRecommendation.categories.length > 0 ? (
+          <RecommendedPlaces 
+            title={`🧠 ${biometricRecommendation.message}`}
+            genre={biometricRecommendation.categories[0]} // 첫 번째 카테고리 사용
+            limit={6}
+          />
+        ) : (
+          <RecommendedPlaces 
+            title="📍 내 주변 문화시설" 
+            limit={6}
+          />
+        )}
+      </div>
+    );
+  }
