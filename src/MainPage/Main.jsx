@@ -523,7 +523,7 @@ export default function Main() {
       localStorage.setItem('biometric_recommendation', JSON.stringify(recommendation));
       localStorage.setItem('biometric_is_logged_in', 'true');
       
-      console.log('🧠 생체데이터 기반 추천:', recommendation);
+      console.log('🧠 환경데이터 기반 추천:', recommendation);
       console.log('💾 생체데이터 상태가 localStorage에 저장되었습니다.');
       console.log('🔍 저장된 localStorage 확인:', {
         deviceId: localStorage.getItem('biometric_device_id'),
