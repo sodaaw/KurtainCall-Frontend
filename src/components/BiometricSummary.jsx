@@ -27,14 +27,14 @@ const BiometricSummary = ({ data, recommendation, onRefresh, refreshing = false 
     <div className="biometric-summary">
       <div className="summary-header">
         <div className="summary-content">
-          <h3>생체데이터 기반 추천</h3>
+          <h3>환경데이터 기반 추천</h3>
           <p className="summary-message">{getStatusSummary()}</p>
         </div>
         <div className="button-group">
           <button 
             className="detail-button"
             onClick={handleDetailClick}
-            title="생체데이터 자세히 보기"
+            title="환경데이터 자세히 보기"
           >
             자세히 알아보기
           </button>
